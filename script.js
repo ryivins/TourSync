@@ -215,28 +215,43 @@ function renderUsers(search = "") {
   if (!list) return;
 
   const me = localStorage.getItem("activeUser") || "";
-
-  let users = getUsers().filter(u =>
-    u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.username.toLowerCase().includes(search.toLowerCase())
-  );
+  const users = getUsers();
 
   list.innerHTML = "";
 
-  users.forEach(u => {
-    const li = document.createElement("li");
+  users
+    .filter(u =>
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.username.toLowerCase().includes(search.toLowerCase())
+    )
+    .forEach(u => {
+      const li = document.createElement("li");
 
-    li.className = "chat-preview";
+      const lastMsg = getLastMessage(me, u.username);
 
-    li.innerHTML = `
-      <strong>${u.name}</strong><br>
-      <small>${getLastMessage(me, u.username)}</small>
-    `;
+      li.className = "chat-preview";
 
-    li.onclick = () => openChat(u.username);
+      li.innerHTML = `
+        <strong>${u.name}</strong>
+        <small>${lastMsg}</small>
+      `;
 
-    list.appendChild(li);
-  });
+      li.onclick = () => openChat(u.username);
+
+      list.appendChild(li);
+    });
+}
+function getLastMessage(userA, userB) {
+  const chats = getChats();
+  const id = getChatId(userA, userB);
+
+  const msgs = chats[id] || [];
+
+  if (msgs.length === 0) return "No messages yet";
+
+  const last = msgs[msgs.length - 1];
+
+  return `${last.from}: ${last.text}`;
 }
 
 /* OPEN CHAT */
