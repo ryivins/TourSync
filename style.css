@@ -32,19 +32,19 @@ nav a {
   margin-left: 20px;
   text-decoration: none;
   color: #cbd5e1;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 nav a:hover {
   color: #38bdf8;
 }
 
-/* MAIN */
+/* MAIN CONTAINER */
 .container {
   padding: 40px;
 }
 
-/* WELCOME */
+/* PAGE TITLE AREA */
 .welcome {
   margin-bottom: 30px;
 }
@@ -54,7 +54,7 @@ nav a:hover {
   margin-bottom: 8px;
 }
 
-/* GRID DASHBOARD */
+/* DASHBOARD GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -79,13 +79,14 @@ nav a:hover {
   color: #38bdf8;
 }
 
-.card ul {
-  list-style: none;
+.card p,
+.card li {
+  color: #cbd5e1;
 }
 
-.card li {
-  padding: 4px 0;
-  color: #cbd5e1;
+/* LISTS */
+.card ul {
+  list-style: none;
 }
 
 /* FOOTER */
@@ -95,7 +96,10 @@ footer {
   margin-top: 40px;
   border-top: 1px solid #1f2937;
   color: #64748b;
-}.task-input {
+}
+
+/* TASK INPUT AREA */
+.task-input {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
@@ -106,6 +110,7 @@ footer {
   padding: 10px;
   border-radius: 8px;
   border: none;
+  outline: none;
 }
 
 .task-input button {
@@ -115,8 +120,14 @@ footer {
   color: black;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
+.task-input button:hover {
+  background: #0ea5e9;
+}
+
+/* TASK LIST */
 #taskList {
   list-style: none;
 }
@@ -128,9 +139,16 @@ footer {
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
+/* DELETE BUTTON */
 .delete {
-  color: red;
+  color: #ef4444;
   cursor: pointer;
+  font-weight: bold;
+}
+
+.delete:hover {
+  color: #ff6b6b;
 }
