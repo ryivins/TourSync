@@ -44,25 +44,23 @@ function renderContacts() {
   const search =
     document.getElementById("searchInput")?.value.toLowerCase() || "";
 
-  const contacts = getContacts().filter(c =>
-    c.first.toLowerCase().includes(search) ||
-    c.last.toLowerCase().includes(search) ||
-    c.phone.toLowerCase().includes(search) ||
-    c.email.toLowerCase().includes(search)
-  );
-
   list.innerHTML = "";
 
-  contacts.forEach(c => {
-    const li = document.createElement("li");
+  getContacts()
+    .filter(c =>
+      c.first.toLowerCase().includes(search) ||
+      c.last.toLowerCase().includes(search)
+    )
+    .forEach(c => {
+      const li = document.createElement("li");
 
-    li.innerHTML = `
-      <strong>${c.last}, ${c.first}</strong><br>
-      <small>${c.phone}</small>
-    `;
+      li.innerHTML = `
+        <strong>${c.last}, ${c.first}</strong><br>
+        <small>${c.phone}</small>
+      `;
 
-    list.appendChild(li);
-  });
+      list.appendChild(li);
+    });
 }
 
 function deleteContact(id) {
@@ -82,6 +80,7 @@ function editContact(id) {
   deleteContact(id);
 }
 
+
 /* =========================
    TASK SYSTEM
 ========================= */
@@ -96,10 +95,6 @@ function saveTasks(tasks) {
 
 function addTask() {
   const text = document.getElementById("taskInput").value.trim();
-  const priority = document.getElementById("taskPriority")?.value || "medium";
-  const dueDate = document.getElementById("taskDueDate")?.value || "";
-  const assignedTo = document.getElementById("taskAssignee")?.value || "";
-
   if (!text) return;
 
   const tasks = getTasks();
@@ -107,9 +102,9 @@ function addTask() {
   tasks.push({
     id: Date.now(),
     text,
-    priority,
-    dueDate,
-    assignedTo,
+    priority: document.getElementById("taskPriority")?.value || "medium",
+    dueDate: document.getElementById("taskDueDate")?.value || "",
+    assignedTo: document.getElementById("taskAssignee")?.value || "",
     done: false
   });
 
@@ -121,7 +116,7 @@ function addTask() {
 
 function toggleTask(id) {
   saveTasks(
-    getTasks().map(t => t.id === id ? { ...t, done: !t.done } : t)
+    getTasks().map(t => (t.id === id ? { ...t, done: !t.done } : t))
   );
   renderTasks();
 }
@@ -156,8 +151,9 @@ function renderTasks() {
   });
 }
 
+
 /* =========================
-   MESSAGING SYSTEM (FIXED UI + PREVIEWS)
+   MESSAGING SYSTEM (FIXED + CLEAN UI)
 ========================= */
 
 let currentChatUser = null;
@@ -182,7 +178,7 @@ function getChatId(a, b) {
   return [a, b].sort().join("-");
 }
 
-/* CREATE USER */
+/* CREATE USER (ONLY DEMO) */
 function createUser() {
   const name = document.getElementById("name").value.trim();
   const username = document.getElementById("username").value.trim();
@@ -201,25 +197,28 @@ function createUser() {
   renderUsers();
 }
 
-/* GET LAST MESSAGE FOR PREVIEW */
-function getLastMessage(userA, userB) {
+/* GET LAST MESSAGE */
+function getLastMessage(me, other) {
   const chats = getChats();
-  const id = getChatId(userA, userB);
+  const id = getChatId(me, other);
   const msgs = chats[id] || [];
-  return msgs.length ? msgs[msgs.length - 1].text : "No messages yet";
+
+  if (!msgs.length) return "No messages yet";
+
+  const last = msgs[msgs.length - 1];
+  return `${last.from}: ${last.text}`;
 }
 
-/* RENDER USERS WITH PREVIEW */
+/* RENDER CHAT LIST (LIKE YOUR SCREENSHOT) */
 function renderUsers(search = "") {
   const list = document.getElementById("userList");
   if (!list) return;
 
   const me = localStorage.getItem("activeUser") || "";
-  const users = getUsers();
 
   list.innerHTML = "";
 
-  users
+  getUsers()
     .filter(u =>
       u.name.toLowerCase().includes(search.toLowerCase()) ||
       u.username.toLowerCase().includes(search.toLowerCase())
@@ -227,13 +226,13 @@ function renderUsers(search = "") {
     .forEach(u => {
       const li = document.createElement("li");
 
-      const lastMsg = getLastMessage(me, u.username);
+      const preview = getLastMessage(me, u.username);
 
       li.className = "chat-preview";
 
       li.innerHTML = `
         <strong>${u.name}</strong>
-        <small>${lastMsg}</small>
+        <small>${preview}</small>
       `;
 
       li.onclick = () => openChat(u.username);
@@ -241,23 +240,11 @@ function renderUsers(search = "") {
       list.appendChild(li);
     });
 }
-function getLastMessage(userA, userB) {
-  const chats = getChats();
-  const id = getChatId(userA, userB);
-
-  const msgs = chats[id] || [];
-
-  if (msgs.length === 0) return "No messages yet";
-
-  const last = msgs[msgs.length - 1];
-
-  return `${last.from}: ${last.text}`;
-}
 
 /* OPEN CHAT */
 function openChat(username) {
   currentChatUser = username;
-  document.getElementById("chatTitle").innerText = "Chat with @" + username;
+  document.getElementById("chatTitle").innerText = "Chat with " + username;
   renderMessages();
 }
 
@@ -285,10 +272,10 @@ function sendMessage() {
 
   input.value = "";
   renderMessages();
-  renderUsers(); // updates previews instantly
+  renderUsers(); // update previews
 }
 
-/* RENDER MESSAGES (FIXED SPACING) */
+/* RENDER MESSAGES (FIXED SPACING LIKE MESSENGER) */
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
@@ -296,7 +283,7 @@ function renderMessages() {
   const me = localStorage.getItem("activeUser");
 
   if (!currentChatUser) {
-    list.innerHTML = `<li class="msg them">Select a chat</li>`;
+    list.innerHTML = `<li class="msg them">Select a conversation</li>`;
     return;
   }
 
@@ -319,6 +306,7 @@ function renderMessages() {
     list.appendChild(li);
   });
 }
+
 
 /* =========================
    INIT

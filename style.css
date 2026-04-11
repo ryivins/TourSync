@@ -117,29 +117,33 @@ nav a:hover {
 }
 
 /* =========================
-   CHAT PREVIEWS (FIXED SPACING)
+   CHAT PREVIEWS (FIXED LIKE YOUR IMAGE)
 ========================= */
 .chat-preview {
   padding: 14px;
   border-bottom: 1px solid #444;
   cursor: pointer;
-  transition: 0.2s;
+
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+
+  transition: 0.2s;
 }
 
 .chat-preview:hover {
   background: var(--panel2);
 }
 
-.chat-preview strong {
+.chat-name {
+  font-size: 18px;
+  font-weight: bold;
   color: var(--text);
 }
 
-.chat-preview small {
+.chat-message {
+  font-size: 14px;
   color: var(--muted);
-  font-size: 12px;
 }
 
 /* =========================
@@ -149,17 +153,6 @@ nav a:hover {
   list-style: none;
   overflow-y: auto;
   flex: 1;
-}
-
-#userList li {
-  padding: 12px;
-  border-bottom: 1px solid #444;
-  cursor: pointer;
-}
-
-#userList li:hover {
-  background: var(--panel2);
-  color: var(--red);
 }
 
 /* =========================
@@ -177,7 +170,7 @@ nav a:hover {
 }
 
 /* =========================
-   MESSAGE LIST (IMPORTANT FIX)
+   MESSAGE LIST (REAL SPACING FIX)
 ========================= */
 #messageList {
   flex: 1;
@@ -187,11 +180,11 @@ nav a:hover {
 
   display: flex;
   flex-direction: column;
-  gap: 14px; /* 🔥 real spacing between bubbles */
+  gap: 14px;
 }
 
 /* =========================
-   MESSAGE BUBBLES (FIXED)
+   MESSAGE BUBBLES
 ========================= */
 .msg {
   max-width: 65%;
@@ -201,7 +194,7 @@ nav a:hover {
 
   display: flex;
   flex-direction: column;
-  gap: 5px; /* spacing inside bubble */
+  gap: 6px;
 }
 
 /* YOU */
@@ -218,7 +211,7 @@ nav a:hover {
   align-self: flex-start;
 }
 
-/* message timestamp */
+/* timestamp */
 .msg small {
   font-size: 11px;
   opacity: 0.7;
