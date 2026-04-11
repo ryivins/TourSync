@@ -1,4 +1,9 @@
 /* =========================
+   FONT IMPORT (IMPORTANT)
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+
+/* =========================
    RESET
 ========================= */
 * {
@@ -12,13 +17,13 @@
    THEME
 ========================= */
 :root {
-  --bg: #1f1f1f;        /* charcoal background */
-  --panel: #2a2a2a;     /* main panels */
-  --panel2: #333333;    /* secondary panels */
-  --text: #f2f2f2;      /* off-white */
+  --bg: #1f1f1f;        /* charcoal */
+  --panel: #2a2a2a;
+  --panel2: #333333;
+  --text: #f2f2f2;
   --muted: #b5b5b5;
 
-  --red: #e63946;       /* main accent (titles) */
+  --red: #e63946;
   --gold: #c9a227;
   --green: #2a9d8f;
 }
@@ -33,6 +38,15 @@ body {
 }
 
 /* =========================
+   TITLES (OLD ENGLISH FONT)
+========================= */
+h1, h2, h3 {
+  font-family: "UnifrakturMaguntia", cursive;
+  color: var(--red);
+  letter-spacing: 1px;
+}
+
+/* =========================
    TOP BAR
 ========================= */
 .topbar {
@@ -42,11 +56,6 @@ body {
   padding: 18px 30px;
   background: var(--panel);
   border-bottom: 1px solid #444;
-}
-
-.topbar h1 {
-  color: var(--red);
-  letter-spacing: 2px;
 }
 
 nav a {
@@ -62,20 +71,10 @@ nav a:hover {
 }
 
 /* =========================
-   PAGE CONTAINER
+   CONTAINER
 ========================= */
 .container {
   padding: 25px;
-}
-
-/* =========================
-   CARDS
-========================= */
-.card {
-  background: var(--panel);
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #444;
 }
 
 /* =========================
@@ -83,7 +82,8 @@ nav a:hover {
 ========================= */
 .chat-layout {
   display: flex;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 80px);
+  gap: 10px;
 }
 
 /* SIDEBAR */
@@ -95,12 +95,13 @@ nav a:hover {
   flex-direction: column;
 }
 
+/* SIDEBAR HEADER */
 .chat-sidebar h3 {
   padding: 15px;
-  color: var(--red);
   border-bottom: 1px solid #444;
 }
 
+/* INPUTS */
 .chat-sidebar input {
   margin: 8px 10px;
   padding: 10px;
@@ -120,6 +121,7 @@ nav a:hover {
   cursor: pointer;
 }
 
+/* USERS LIST */
 #userList {
   list-style: none;
   overflow-y: auto;
@@ -146,12 +148,10 @@ nav a:hover {
   flex-direction: column;
 }
 
+/* HEADER */
 .chat-header {
   padding: 15px;
   border-bottom: 1px solid #444;
-  color: var(--red);
-  font-size: 18px;
-  font-weight: bold;
 }
 
 /* =========================
@@ -168,11 +168,11 @@ nav a:hover {
   gap: 10px;
 }
 
+/* MESSAGE BOX */
 .msg {
   max-width: 65%;
   padding: 10px 14px;
   border-radius: 12px;
-  line-height: 1.4;
   word-wrap: break-word;
 }
 
@@ -220,19 +220,17 @@ nav a:hover {
 }
 
 /* =========================
-   TASK SYSTEM
+   TASK PRIORITIES (IMPORTANT FIX KEPT)
 ========================= */
-
 .task {
   background: var(--panel);
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 10px;
   border: 1px solid #444;
-  color: var(--text);
 }
 
-/* HIGH */
+/* HIGH PRIORITY */
 .task.high {
   border-left: 6px solid var(--red);
 }
@@ -256,7 +254,6 @@ nav a:hover {
 /* OVERDUE */
 .task.overdue {
   box-shadow: 0 0 10px rgba(230, 57, 70, 0.4);
-  border: 1px solid var(--red);
 }
 
 /* =========================
@@ -271,7 +268,7 @@ nav a:hover {
 }
 
 /* =========================
-   DELETE BUTTON
+   DELETE
 ========================= */
 .delete {
   color: var(--red);
