@@ -10,53 +10,61 @@
 <body>
 
 <header class="topbar">
-  <h1>TourSync</h1>
+  <h1>𝔗𝔬𝔲𝔯𝔖𝔶𝔫𝔠</h1>
+
   <nav>
-    <a href="index.html">Dashboard</a>
-    <a href="schedule.html">Schedule</a>
-    <a href="tasks.html">Tasks</a>
-    <a href="contacts.html">Contacts</a>
-    <a href="messages.html">Messages</a>
+    <a href="index.html">𝐃𝐚𝐬𝐡𝐛𝐨𝐚𝐫𝐝</a>
+    <a href="schedule.html">𝐒𝐜𝐡𝐞𝐝𝐮𝐥𝐞</a>
+    <a href="tasks.html">𝐓𝐚𝐬𝐤𝐬</a>
+    <a href="contacts.html">𝐂𝐨𝐧𝐭𝐚𝐜𝐭𝐬</a>
+    <a href="messages.html">𝐌𝐞𝐬𝐬𝐚𝐠𝐞𝐬</a>
   </nav>
 </header>
 
-<main class="container">
+<main class="chat-layout">
 
-  <div class="messages-layout">
+  <!-- SIDEBAR -->
+  <aside class="chat-sidebar">
 
-    <!-- LEFT SIDEBAR -->
-    <div class="sidebar">
+    <h3>Users</h3>
 
-      <div class="card">
-        <h3>Create Profile</h3>
-        <input id="name" placeholder="Name">
-        <input id="username" placeholder="Username">
-        <button onclick="createUser()">Create / Switch</button>
-      </div>
-
-      <input id="search" placeholder="Search users..." onkeyup="renderUsers(this.value)">
-
-      <ul id="userList"></ul>
-
+    <!-- CREATE PROFILE -->
+    <div class="profile-box">
+      <input id="name" placeholder="Name">
+      <input id="username" placeholder="Username">
+      <button onclick="createUser()">Create Profile</button>
     </div>
 
-    <!-- CHAT AREA -->
-    <div class="chat">
+    <!-- SEARCH USERS -->
+    <input
+      id="userSearch"
+      placeholder="Search users..."
+      onkeyup="renderUsers(this.value)"
+    >
 
-      <div class="card chat-header">
-        <h3 id="chatTitle">Select a user</h3>
-      </div>
+    <!-- USER LIST -->
+    <ul id="userList"></ul>
 
-      <ul id="messageList" class="message-list"></ul>
+  </aside>
 
-      <div class="message-box">
-        <input id="messageInput" placeholder="Type message...">
-        <button onclick="sendMessage()">Send</button>
-      </div>
+  <!-- CHAT WINDOW -->
+  <section class="chat-window">
 
+    <!-- HEADER -->
+    <div class="chat-header">
+      <h3 id="chatTitle">Select a conversation</h3>
     </div>
 
-  </div>
+    <!-- MESSAGES -->
+    <ul id="messageList"></ul>
+
+    <!-- INPUT -->
+    <div class="chat-input">
+      <input id="messageInput" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+  </section>
 
 </main>
 

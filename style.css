@@ -6,23 +6,18 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Georgia", "Times New Roman", serif;
-  transition: all 0.2s ease;
 }
 
 /* =========================
-   ROOT THEME COLORS
+   THEME
 ========================= */
 :root {
   --bg: #0b0b10;
   --panel: #141420;
-  --panel-2: #1b1b2a;
+  --panel2: #1b1b2a;
   --text: #e8e6e3;
   --muted: #a7a7a7;
-
-  --accent: #c9a227;   /* gold */
-  --accent2: #7c3aed;  /* purple */
-  --danger: #b91c1c;
-  --success: #15803d;
+  --accent: #c9a227;
 }
 
 /* =========================
@@ -31,32 +26,30 @@
 body {
   background: radial-gradient(circle at top, #141420, var(--bg));
   color: var(--text);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* =========================
-   TOP BAR
+   TOP BAR (OLD ENGLISH)
 ========================= */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background: rgba(20, 20, 32, 0.9);
+  padding: 18px 30px;
+  background: rgba(20, 20, 32, 0.92);
   border-bottom: 1px solid #2a2a3d;
-  backdrop-filter: blur(10px);
 }
 
 .topbar h1 {
-  font-family: "Georgia", serif;
-  letter-spacing: 2px;
   color: var(--accent);
+  letter-spacing: 3px;
   font-weight: bold;
-  text-transform: uppercase;
 }
 
 nav a {
-  margin-left: 20px;
+  margin-left: 16px;
   text-decoration: none;
   color: var(--muted);
   letter-spacing: 1px;
@@ -64,233 +57,145 @@ nav a {
 
 nav a:hover {
   color: var(--accent);
-  text-shadow: 0 0 8px rgba(201, 162, 39, 0.6);
 }
 
 /* =========================
-   MAIN
+   CHAT LAYOUT (MESSENGER STYLE)
 ========================= */
-.container {
-  padding: 40px;
+.chat-layout {
+  display: flex;
+  height: calc(100vh - 70px);
 }
 
 /* =========================
-   CARDS
+   SIDEBAR
 ========================= */
-.card {
-  background: linear-gradient(145deg, var(--panel), var(--panel-2));
-  padding: 20px;
-  border-radius: 14px;
-  border: 1px solid #2a2a3d;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+.chat-sidebar {
+  width: 300px;
+  background: var(--panel);
+  border-right: 1px solid #2a2a3d;
+  display: flex;
+  flex-direction: column;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent);
-}
-
-.card h3 {
-  margin-bottom: 10px;
+.chat-sidebar h3 {
+  padding: 15px;
   color: var(--accent);
+  border-bottom: 1px solid #2a2a3d;
   letter-spacing: 1px;
 }
 
-.card p,
-.card li {
-  color: var(--muted);
-}
-
-/* =========================
-   PAGE TITLES
-========================= */
-.page-title h2 {
-  font-size: 34px;
-  color: var(--accent);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.page-title p {
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-/* =========================
-   TASK SYSTEM
-========================= */
-
-/* STATS */
-.task-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.task-stats div {
-  background: var(--panel);
-  padding: 12px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid #2a2a3d;
-}
-
-/* INPUT AREA */
-.task-input {
+/* profile box */
+.profile-box {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 12px;
-  background: var(--panel);
-  border-radius: 14px;
-  border: 1px solid #2a2a3d;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
 }
 
-.task-input input,
-.task-input select {
+.chat-sidebar input {
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #2a2a3d;
   background: #0e0e18;
   color: var(--text);
 }
 
-.task-input button {
-  padding: 10px 15px;
+.chat-sidebar button {
+  padding: 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--accent);
-  color: black;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.task-input button:hover {
-  background: #e2c35a;
+/* search */
+#userSearch {
+  margin: 10px;
 }
 
-/* TASK LIST */
-#taskList {
+/* users list */
+#userList {
   list-style: none;
+  overflow-y: auto;
+  flex: 1;
 }
 
-/* TASK CARD */
-.task {
-  background: var(--panel);
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 14px;
-  border: 1px solid #2a2a3d;
-  display: flex;
-  justify-content: space-between;
-}
-
-/* PRIORITY */
-.task.high {
-  border-left: 6px solid var(--danger);
-}
-
-.task.medium {
-  border-left: 6px solid var(--accent);
-}
-
-.task.low {
-  border-left: 6px solid var(--success);
-}
-
-/* DONE */
-.task.done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-/* OVERDUE */
-.task.overdue {
-  box-shadow: 0 0 10px rgba(185, 28, 28, 0.4);
-}
-
-/* =========================
-   CONTACTS
-========================= */
-.contact-form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.contact-form input {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #2a2a3d;
-  background: #0e0e18;
-  color: var(--text);
-}
-
-.contact-form button {
-  grid-column: span 2;
-  padding: 10px;
-  background: var(--accent);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* CONTACT LIST */
-#contactList li {
-  background: var(--panel);
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  border: 1px solid #2a2a3d;
-}
-
-/* =========================
-   MESSAGES (MESSENGER STYLE)
-========================= */
 #userList li {
-  background: var(--panel);
   padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #2a2a3d;
+  border-bottom: 1px solid #2a2a3d;
   cursor: pointer;
 }
 
 #userList li:hover {
-  border-color: var(--accent);
+  background: var(--panel2);
+  color: var(--accent);
 }
 
+/* =========================
+   CHAT WINDOW
+========================= */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* chat header */
+.chat-header {
+  padding: 15px;
+  border-bottom: 1px solid #2a2a3d;
+  color: var(--accent);
+}
+
+/* =========================
+   MESSAGES
+========================= */
 #messageList {
+  flex: 1;
   list-style: none;
-  margin-top: 10px;
+  padding: 15px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.message {
-  max-width: 60%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 12px;
+/* message bubble */
+.msg {
+  max-width: 65%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.4;
+  font-size: 14px;
+  word-wrap: break-word;
 }
 
-/* outgoing */
-.message.me {
+/* YOU (right side) */
+.msg.me {
   background: var(--accent);
-  color: black;
-  margin-left: auto;
+  color: #000;
+  align-self: flex-end;
+  text-align: right;
 }
 
-/* incoming */
-.message.other {
-  background: var(--panel-2);
+/* THEM (left side) */
+.msg.them {
+  background: var(--panel2);
   color: var(--text);
+  align-self: flex-start;
 }
 
-/* message input */
+/* =========================
+   INPUT AREA
+========================= */
 .message-box {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  padding: 12px;
+  border-top: 1px solid #2a2a3d;
 }
 
 .message-box input {
@@ -299,7 +204,7 @@ nav a:hover {
   border-radius: 10px;
   border: 1px solid #2a2a3d;
   background: #0e0e18;
-  color: white;
+  color: var(--text);
 }
 
 .message-box button {
@@ -307,27 +212,16 @@ nav a:hover {
   border: none;
   border-radius: 10px;
   background: var(--accent);
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* =========================
-   DELETE
-========================= */
-.delete {
-  color: var(--danger);
   cursor: pointer;
   font-weight: bold;
 }
 
 /* =========================
-   FOOTER
+   FOOTER (optional)
 ========================= */
 footer {
   text-align: center;
   padding: 20px;
-  margin-top: 40px;
-  border-top: 1px solid #2a2a3d;
   color: var(--muted);
-  font-style: italic;
+  border-top: 1px solid #2a2a3d;
 }
