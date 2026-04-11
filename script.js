@@ -137,7 +137,7 @@ function renderTasks() {
 }
 
 /* =========================
-   MESSAGING SYSTEM
+   MESSAGING SYSTEM (FIXED)
 ========================= */
 
 let currentChatUser = null;
@@ -174,9 +174,13 @@ function getChatId(a, b) {
   return [a, b].sort().join("__");
 }
 
-/* ---------- SAFE DEMO DATA ---------- */
+/* ---------- DEMO DATA (HARD RESET SAFE) ---------- */
 
 function initializeDemoData() {
+  if (!getActiveUser()) {
+    setActiveUser("me");
+  }
+
   let users = getUsers();
 
   if (!Array.isArray(users) || users.length === 0) {
@@ -188,29 +192,25 @@ function initializeDemoData() {
     saveUsers(users);
   }
 
-  if (!getActiveUser()) {
-    setActiveUser("me");
-  }
-
   const me = getActiveUser();
-  let chats = getChats();
 
-  const seed = {
-    [getChatId(me, "u1")]: [
-      { from: "u1", text: "Hey, are we still meeting?", time: "9:04 AM" },
-      { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
-    ],
-    [getChatId(me, "u2")]: [
-      { from: "u2", text: "Got the schedule 👍", time: "8:12 AM" },
-      { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
-    ],
-    [getChatId(me, "u3")]: [
-      { from: "u3", text: "I'll check it out", time: "7:58 AM" },
-      { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
-    ]
-  };
+  const chats = {};
 
-  chats = { ...chats, ...seed };
+  chats[getChatId(me, "u1")] = [
+    { from: "u1", text: "Hey, are we still meeting?", time: "9:04 AM" },
+    { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
+  ];
+
+  chats[getChatId(me, "u2")] = [
+    { from: "u2", text: "Got the schedule 👍", time: "8:12 AM" },
+    { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
+  ];
+
+  chats[getChatId(me, "u3")] = [
+    { from: "u3", text: "I'll check it out", time: "7:58 AM" },
+    { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
+  ];
+
   saveChats(chats);
 }
 
@@ -331,7 +331,7 @@ function renderMessages() {
 }
 
 /* =========================
-   INIT
+   INIT (FINAL FIX)
 ========================= */
 
 window.addEventListener("load", () => {
