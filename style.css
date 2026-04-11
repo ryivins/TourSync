@@ -123,14 +123,20 @@ nav a:hover {
   flex: 1;
 }
 
-#userList li {
+#userList li,
+.chat-sidebar li {
   padding: 12px;
-  border-bottom: 1px solid #444;
+  margin: 8px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: var(--panel2);
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-#userList li:hover {
-  background: var(--panel2);
+#userList li:hover,
+.chat-sidebar li:hover {
+  background: #3a3a3a;
   color: var(--red);
 }
 
