@@ -28,8 +28,6 @@ function addContact() {
     email
   });
 
-  contacts.sort((a, b) => a.last.localeCompare(b.last));
-
   saveContacts(contacts);
   renderContacts();
 
@@ -43,12 +41,9 @@ function renderContacts() {
   const list = document.getElementById("contactList");
   if (!list) return;
 
-  const searchEl = document.getElementById("searchInput");
-  const search = searchEl ? searchEl.value.toLowerCase() : "";
+  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
 
-  let contacts = getContacts();
-
-  contacts = contacts.filter(c =>
+  let contacts = getContacts().filter(c =>
     c.first.toLowerCase().includes(search) ||
     c.last.toLowerCase().includes(search) ||
     c.phone.toLowerCase().includes(search) ||
@@ -78,13 +73,13 @@ function renderContacts() {
 }
 
 function deleteContact(id) {
-  let contacts = getContacts().filter(c => c.id !== id);
+  const contacts = getContacts().filter(c => c.id !== id);
   saveContacts(contacts);
   renderContacts();
 }
 
 function editContact(id) {
-  let contacts = getContacts();
+  const contacts = getContacts();
   const c = contacts.find(x => x.id === id);
 
   document.getElementById("firstName").value = c.first;
@@ -94,6 +89,7 @@ function editContact(id) {
 
   deleteContact(id);
 }
+
 
 // =========================
 // TASK SYSTEM
@@ -107,11 +103,6 @@ function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function sortTasks(tasks) {
-  const order = { high: 1, medium: 2, low: 3 };
-  return tasks.sort((a, b) => order[a.priority] - order[b.priority]);
-}
-
 function addTask() {
   const text = document.getElementById("taskInput").value.trim();
   const priority = document.getElementById("taskPriority")?.value || "medium";
@@ -120,7 +111,7 @@ function addTask() {
 
   if (!text) return;
 
-  let tasks = getTasks();
+  const tasks = getTasks();
 
   tasks.push({
     id: Date.now(),
@@ -131,8 +122,6 @@ function addTask() {
     done: false
   });
 
-  tasks = sortTasks(tasks);
-
   saveTasks(tasks);
   renderTasks();
 
@@ -140,9 +129,7 @@ function addTask() {
 }
 
 function toggleTask(id) {
-  let tasks = getTasks();
-
-  tasks = tasks.map(t =>
+  const tasks = getTasks().map(t =>
     t.id === id ? { ...t, done: !t.done } : t
   );
 
@@ -151,21 +138,20 @@ function toggleTask(id) {
 }
 
 function deleteTask(id) {
-  let tasks = getTasks().filter(t => t.id !== id);
+  const tasks = getTasks().filter(t => t.id !== id);
   saveTasks(tasks);
   renderTasks();
 }
 
 function isOverdue(task) {
-  if (!task.dueDate || task.done) return false;
-  return new Date(task.dueDate) < new Date();
+  return task.dueDate && !task.done && new Date(task.dueDate) < new Date();
 }
 
 function renderTasks() {
   const list = document.getElementById("taskList");
   if (!list) return;
 
-  let tasks = sortTasks(getTasks());
+  const tasks = getTasks();
 
   list.innerHTML = "";
 
@@ -189,82 +175,155 @@ function renderTasks() {
 
     list.appendChild(li);
   });
-
-  updateStats(tasks);
 }
 
-function updateStats(tasks) {
-  const stats = { high: 0, medium: 0, low: 0, overdue: 0 };
 
-  tasks.forEach(t => {
-    stats[t.priority]++;
-    if (isOverdue(t)) stats.overdue++;
-  });
+// =========================
+// MESSAGING SYSTEM (CLEAN FACEBOOK STYLE)
+// =========================
 
-  if (document.getElementById("statHigh")) {
-    document.getElementById("statHigh").innerText = `High: ${stats.high}`;
-    document.getElementById("statMedium").innerText = `Medium: ${stats.medium}`;
-    document.getElementById("statLow").innerText = `Low: ${stats.low}`;
-    document.getElementById("statOverdue").innerText = `Overdue: ${stats.overdue}`;
+let currentChatUser = null;
+
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users")) || [];
+}
+
+function saveUsers(users) {
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+function createUser() {
+  const name = document.getElementById("name").value.trim();
+  const username = document.getElementById("username").value.trim();
+
+  if (!name || !username) return;
+
+  let users = getUsers();
+
+  if (!users.find(u => u.username === username)) {
+    users.push({ id: Date.now(), name, username });
   }
+
+  localStorage.setItem("activeUser", username);
+  saveUsers(users);
+
+  renderUsers();
 }
 
-// =========================
-// MESSAGES SYSTEM
-// =========================
-
-function loadMessages() {
-  const list = document.getElementById("messageList");
+function renderUsers(search = "") {
+  const list = document.getElementById("userList");
   if (!list) return;
+
+  const active = localStorage.getItem("activeUser");
+
+  let users = getUsers().filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.username.toLowerCase().includes(search.toLowerCase())
+  );
 
   list.innerHTML = "";
 
-  const messages = JSON.parse(localStorage.getItem("messages")) || [];
-
-  messages.forEach((msg, index) => {
+  users.forEach(u => {
     const li = document.createElement("li");
-    li.className = "message";
+
+    if (u.username === active) li.style.border = "1px solid #38bdf8";
 
     li.innerHTML = `
-      <span>${msg}</span>
-      <button onclick="deleteMessage(${index})">✕</button>
+      <strong>${u.name}</strong><br>
+      <small>@${u.username}</small>
+    `;
+
+    li.onclick = () => openChat(u.username);
+
+    list.appendChild(li);
+  });
+}
+
+
+// CHATS
+function getChats() {
+  return JSON.parse(localStorage.getItem("chats")) || {};
+}
+
+function saveChats(chats) {
+  localStorage.setItem("chats", JSON.stringify(chats));
+}
+
+function getChatId(a, b) {
+  return [a, b].sort().join("-");
+}
+
+
+// OPEN CHAT
+function openChat(username) {
+  currentChatUser = username;
+  document.getElementById("chatTitle").innerText = "Chat with @" + username;
+  renderMessages();
+}
+
+
+// SEND MESSAGE
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+
+  if (!text || !currentChatUser) return;
+
+  const me = localStorage.getItem("activeUser");
+
+  const chats = getChats();
+  const chatId = getChatId(me, currentChatUser);
+
+  if (!chats[chatId]) chats[chatId] = [];
+
+  chats[chatId].push({
+    from: me,
+    text,
+    time: new Date().toLocaleTimeString()
+  });
+
+  saveChats(chats);
+
+  input.value = "";
+  renderMessages();
+}
+
+
+// RENDER MESSAGES (MESSENGER STYLE)
+function renderMessages() {
+  const list = document.getElementById("messageList");
+  if (!list || !currentChatUser) return;
+
+  const me = localStorage.getItem("activeUser");
+
+  const chats = getChats();
+  const chatId = getChatId(me, currentChatUser);
+
+  const messages = chats[chatId] || [];
+
+  list.innerHTML = "";
+
+  messages.forEach(m => {
+    const li = document.createElement("li");
+
+    li.className = `msg ${m.from === me ? "me" : "them"}`;
+
+    li.innerHTML = `
+      <div>${m.text}</div>
+      <small>${m.time}</small>
     `;
 
     list.appendChild(li);
   });
 }
 
-function sendMessage() {
-  const input = document.getElementById("messageInput");
-  const text = input.value.trim();
-
-  if (!text) return;
-
-  const messages = JSON.parse(localStorage.getItem("messages")) || [];
-
-  messages.push(text);
-
-  localStorage.setItem("messages", JSON.stringify(messages));
-
-  input.value = "";
-  loadMessages();
-}
-
-function deleteMessage(index) {
-  const messages = JSON.parse(localStorage.getItem("messages")) || [];
-
-  messages.splice(index, 1);
-
-  localStorage.setItem("messages", JSON.stringify(messages));
-  loadMessages();
-}
 
 // =========================
-// SINGLE UNIFIED LOAD SYSTEM
+// INIT
 // =========================
 
 window.addEventListener("load", () => {
   renderContacts();
   renderTasks();
-  loadMessages();
+  renderUsers();
 });

@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <title>Messages</title>
   <link rel="stylesheet" href="style.css">
-  <script defer src="users.js"></script>
-  <script defer src="messages.js"></script>
+  <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -23,31 +22,40 @@
 
 <main class="container">
 
-  <h2>Team Messaging System</h2>
+  <div class="messages-layout">
 
-  <!-- PROFILE CREATION -->
-  <div class="card">
-    <input id="name" placeholder="Name">
-    <input id="username" placeholder="Username">
-    <button onclick="createUser()">Create Profile</button>
-  </div>
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
 
-  <!-- SEARCH -->
-  <input id="search" placeholder="Search users..." onkeyup="renderUsers(this.value)">
+      <div class="card">
+        <h3>Create Profile</h3>
+        <input id="name" placeholder="Name">
+        <input id="username" placeholder="Username">
+        <button onclick="createUser()">Create / Switch</button>
+      </div>
 
-  <!-- USER LIST -->
-  <ul id="userList"></ul>
+      <input id="search" placeholder="Search users..." onkeyup="renderUsers(this.value)">
 
-  <!-- CHAT AREA -->
-  <div class="card">
-    <h3 id="chatTitle">Select a user to chat</h3>
+      <ul id="userList"></ul>
 
-    <ul id="messageList"></ul>
-
-    <div class="message-box">
-      <input id="messageInput" placeholder="Type message...">
-      <button onclick="sendMessage()">Send</button>
     </div>
+
+    <!-- CHAT AREA -->
+    <div class="chat">
+
+      <div class="card chat-header">
+        <h3 id="chatTitle">Select a user</h3>
+      </div>
+
+      <ul id="messageList" class="message-list"></ul>
+
+      <div class="message-box">
+        <input id="messageInput" placeholder="Type message...">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+    </div>
+
   </div>
 
 </main>

@@ -5,21 +5,32 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Georgia", "Times New Roman", serif;
   transition: all 0.2s ease;
 }
 
-/* SMOOTH SCROLL */
-html {
-  scroll-behavior: smooth;
+/* =========================
+   ROOT THEME COLORS
+========================= */
+:root {
+  --bg: #0b0b10;
+  --panel: #141420;
+  --panel-2: #1b1b2a;
+  --text: #e8e6e3;
+  --muted: #a7a7a7;
+
+  --accent: #c9a227;   /* gold */
+  --accent2: #7c3aed;  /* purple */
+  --danger: #b91c1c;
+  --success: #15803d;
 }
 
 /* =========================
    BODY
 ========================= */
 body {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: radial-gradient(circle at top, #141420, var(--bg));
+  color: var(--text);
   min-height: 100vh;
 }
 
@@ -31,83 +42,78 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background: #111827;
-  border-bottom: 1px solid #1f2937;
+  background: rgba(20, 20, 32, 0.9);
+  border-bottom: 1px solid #2a2a3d;
+  backdrop-filter: blur(10px);
 }
 
 .topbar h1 {
-  font-size: 20px;
-  color: #38bdf8;
+  font-family: "Georgia", serif;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 nav a {
   margin-left: 20px;
   text-decoration: none;
-  color: #cbd5e1;
+  color: var(--muted);
+  letter-spacing: 1px;
 }
 
 nav a:hover {
-  color: #38bdf8;
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(201, 162, 39, 0.6);
 }
 
 /* =========================
-   MAIN LAYOUT
+   MAIN
 ========================= */
 .container {
   padding: 40px;
 }
 
 /* =========================
-   DASHBOARD GRID
-========================= */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-/* =========================
    CARDS
 ========================= */
 .card {
-  background: #1e293b;
+  background: linear-gradient(145deg, var(--panel), var(--panel-2));
   padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #334155;
+  border-radius: 14px;
+  border: 1px solid #2a2a3d;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  border-color: var(--accent);
 }
 
 .card h3 {
   margin-bottom: 10px;
-  color: #38bdf8;
+  color: var(--accent);
+  letter-spacing: 1px;
 }
 
 .card p,
 .card li {
-  color: #cbd5e1;
-}
-
-.card ul {
-  list-style: none;
+  color: var(--muted);
 }
 
 /* =========================
-   PAGE TITLE
+   PAGE TITLES
 ========================= */
-.page-title {
-  margin-bottom: 20px;
-}
-
 .page-title h2 {
-  font-size: 32px;
-  color: #38bdf8;
+  font-size: 34px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .page-title p {
-  color: #94a3b8;
+  color: var(--muted);
+  margin-top: 5px;
 }
 
 /* =========================
@@ -123,47 +129,45 @@ nav a:hover {
 }
 
 .task-stats div {
-  background: #1e293b;
+  background: var(--panel);
   padding: 12px;
   border-radius: 12px;
   text-align: center;
-  font-weight: bold;
-  border: 1px solid #334155;
+  border: 1px solid #2a2a3d;
 }
 
 /* INPUT AREA */
 .task-input {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
   flex-wrap: wrap;
   padding: 12px;
-  background: #1e293b;
-  border-radius: 12px;
-  border: 1px solid #334155;
+  background: var(--panel);
+  border-radius: 14px;
+  border: 1px solid #2a2a3d;
 }
 
 .task-input input,
 .task-input select {
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e2e8f0;
+  border: 1px solid #2a2a3d;
+  background: #0e0e18;
+  color: var(--text);
 }
 
 .task-input button {
   padding: 10px 15px;
   border: none;
   border-radius: 10px;
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--accent);
+  color: black;
   font-weight: bold;
   cursor: pointer;
 }
 
 .task-input button:hover {
-  transform: scale(1.05);
+  background: #e2c35a;
 }
 
 /* TASK LIST */
@@ -171,34 +175,28 @@ nav a:hover {
   list-style: none;
 }
 
-/* TASK ITEM */
+/* TASK CARD */
 .task {
-  background: #1e293b;
+  background: var(--panel);
   padding: 14px;
   margin-bottom: 12px;
-  border-radius: 12px;
-  border: 1px solid #334155;
+  border-radius: 14px;
+  border: 1px solid #2a2a3d;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
 }
 
 /* PRIORITY */
 .task.high {
-  border-left: 6px solid #ef4444;
+  border-left: 6px solid var(--danger);
 }
 
 .task.medium {
-  border-left: 6px solid #f59e0b;
+  border-left: 6px solid var(--accent);
 }
 
 .task.low {
-  border-left: 6px solid #22c55e;
-}
-
-/* OVERDUE */
-.task.overdue {
-  outline: 2px solid #ef4444;
+  border-left: 6px solid var(--success);
 }
 
 /* DONE */
@@ -207,88 +205,119 @@ nav a:hover {
   text-decoration: line-through;
 }
 
-/* =========================
-   CONTACT SYSTEM
-========================= */
+/* OVERDUE */
+.task.overdue {
+  box-shadow: 0 0 10px rgba(185, 28, 28, 0.4);
+}
 
+/* =========================
+   CONTACTS
+========================= */
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-bottom: 15px;
 }
 
 .contact-form input {
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e2e8f0;
+  border: 1px solid #2a2a3d;
+  background: #0e0e18;
+  color: var(--text);
 }
 
 .contact-form button {
   grid-column: span 2;
   padding: 10px;
-  background: #38bdf8;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
+  cursor: pointer;
   font-weight: bold;
+}
+
+/* CONTACT LIST */
+#contactList li {
+  background: var(--panel);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 1px solid #2a2a3d;
+}
+
+/* =========================
+   MESSAGES (MESSENGER STYLE)
+========================= */
+#userList li {
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #2a2a3d;
   cursor: pointer;
 }
 
-#searchInput {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #e2e8f0;
+#userList li:hover {
+  border-color: var(--accent);
 }
 
-#contactList {
+#messageList {
   list-style: none;
+  margin-top: 10px;
 }
 
-#contactList li {
-  background: #1e293b;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid #334155;
-  display: flex;
-  justify-content: space-between;
-}
-
-#userSearch {
-  width: 100%;
+.message {
+  max-width: 60%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+}
+
+/* outgoing */
+.message.me {
+  background: var(--accent);
+  color: black;
+  margin-left: auto;
+}
+
+/* incoming */
+.message.other {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+/* message input */
+.message-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.message-box input {
+  flex: 1;
+  padding: 10px;
   border-radius: 10px;
-  border: 1px solid #334155;
-  background: #0f172a;
+  border: 1px solid #2a2a3d;
+  background: #0e0e18;
   color: white;
 }
 
-#userList {
-  display: grid;
-  gap: 10px;
+.message-box button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  font-weight: bold;
+  cursor: pointer;
 }
 
-#chatWith {
-  margin-top: 10px;
-  color: #38bdf8;
-}
-
-/* DELETE (GLOBAL CLEAN VERSION) */
+/* =========================
+   DELETE
+========================= */
 .delete {
-  color: #ef4444;
+  color: var(--danger);
   cursor: pointer;
   font-weight: bold;
-}
-
-.delete:hover {
-  color: #ff6b6b;
 }
 
 /* =========================
@@ -298,6 +327,7 @@ footer {
   text-align: center;
   padding: 20px;
   margin-top: 40px;
-  border-top: 1px solid #1f2937;
-  color: #64748b;
+  border-top: 1px solid #2a2a3d;
+  color: var(--muted);
+  font-style: italic;
 }
