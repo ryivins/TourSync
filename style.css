@@ -5,58 +5,77 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 /* =========================
    THEME
 ========================= */
 :root {
-  --bg: #0b0b10;
-  --panel: #141420;
-  --panel2: #1b1b2a;
-  --text: #e8e6e3;
-  --muted: #a7a7a7;
-  --accent: #c9a227;
+  --bg: #1f1f1f;        /* charcoal background */
+  --panel: #2a2a2a;     /* main panels */
+  --panel2: #333333;    /* secondary panels */
+  --text: #f2f2f2;      /* off-white */
+  --muted: #b5b5b5;
+
+  --red: #e63946;       /* main accent (titles) */
+  --gold: #c9a227;
+  --green: #2a9d8f;
 }
 
 /* =========================
    BODY
 ========================= */
 body {
-  background: radial-gradient(circle at top, #141420, var(--bg));
+  background: var(--bg);
   color: var(--text);
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 /* =========================
-   TOP BAR (OLD ENGLISH)
+   TOP BAR
 ========================= */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px 30px;
-  background: rgba(20, 20, 32, 0.92);
-  border-bottom: 1px solid #2a2a3d;
+  background: var(--panel);
+  border-bottom: 1px solid #444;
 }
 
 .topbar h1 {
-  color: var(--accent);
-  letter-spacing: 3px;
-  font-weight: bold;
+  color: var(--red);
+  letter-spacing: 2px;
 }
 
 nav a {
-  margin-left: 16px;
+  margin-left: 15px;
   text-decoration: none;
-  color: var(--muted);
-  letter-spacing: 1px;
+  color: var(--text);
+  opacity: 0.8;
 }
 
 nav a:hover {
-  color: var(--accent);
+  color: var(--red);
+  opacity: 1;
+}
+
+/* =========================
+   PAGE CONTAINER
+========================= */
+.container {
+  padding: 25px;
+}
+
+/* =========================
+   CARDS
+========================= */
+.card {
+  background: var(--panel);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #444;
 }
 
 /* =========================
@@ -67,55 +86,40 @@ nav a:hover {
   height: calc(100vh - 70px);
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 .chat-sidebar {
   width: 300px;
   background: var(--panel);
-  border-right: 1px solid #2a2a3d;
+  border-right: 1px solid #444;
   display: flex;
   flex-direction: column;
 }
 
 .chat-sidebar h3 {
   padding: 15px;
-  color: var(--accent);
-  border-bottom: 1px solid #2a2a3d;
-  letter-spacing: 1px;
-}
-
-/* profile box */
-.profile-box {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
+  color: var(--red);
+  border-bottom: 1px solid #444;
 }
 
 .chat-sidebar input {
+  margin: 8px 10px;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #2a2a3d;
-  background: #0e0e18;
+  border: 1px solid #444;
+  background: #1a1a1a;
   color: var(--text);
 }
 
 .chat-sidebar button {
+  margin: 0 10px 10px 10px;
   padding: 10px;
   border: none;
   border-radius: 8px;
-  background: var(--accent);
+  background: var(--red);
+  color: white;
   cursor: pointer;
-  font-weight: bold;
 }
 
-/* search */
-#userSearch {
-  margin: 10px;
-}
-
-/* users list */
 #userList {
   list-style: none;
   overflow-y: auto;
@@ -124,13 +128,13 @@ nav a:hover {
 
 #userList li {
   padding: 12px;
-  border-bottom: 1px solid #2a2a3d;
+  border-bottom: 1px solid #444;
   cursor: pointer;
 }
 
 #userList li:hover {
   background: var(--panel2);
-  color: var(--accent);
+  color: var(--red);
 }
 
 /* =========================
@@ -142,11 +146,12 @@ nav a:hover {
   flex-direction: column;
 }
 
-/* chat header */
 .chat-header {
   padding: 15px;
-  border-bottom: 1px solid #2a2a3d;
-  color: var(--accent);
+  border-bottom: 1px solid #444;
+  color: var(--red);
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* =========================
@@ -163,25 +168,22 @@ nav a:hover {
   gap: 10px;
 }
 
-/* message bubble */
 .msg {
   max-width: 65%;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: 12px;
   line-height: 1.4;
-  font-size: 14px;
   word-wrap: break-word;
 }
 
-/* YOU (right side) */
+/* YOU */
 .msg.me {
-  background: var(--accent);
-  color: #000;
+  background: var(--red);
+  color: white;
   align-self: flex-end;
-  text-align: right;
 }
 
-/* THEM (left side) */
+/* THEM */
 .msg.them {
   background: var(--panel2);
   color: var(--text);
@@ -189,39 +191,100 @@ nav a:hover {
 }
 
 /* =========================
-   INPUT AREA
+   MESSAGE INPUT
 ========================= */
 .message-box {
   display: flex;
   gap: 10px;
   padding: 12px;
-  border-top: 1px solid #2a2a3d;
+  border-top: 1px solid #444;
+  background: var(--panel);
 }
 
 .message-box input {
   flex: 1;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #2a2a3d;
-  background: #0e0e18;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #1a1a1a;
   color: var(--text);
 }
 
 .message-box button {
   padding: 10px 15px;
   border: none;
+  border-radius: 8px;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+}
+
+/* =========================
+   TASK SYSTEM
+========================= */
+
+.task {
+  background: var(--panel);
+  padding: 12px;
+  margin-bottom: 10px;
   border-radius: 10px;
-  background: var(--accent);
+  border: 1px solid #444;
+  color: var(--text);
+}
+
+/* HIGH */
+.task.high {
+  border-left: 6px solid var(--red);
+}
+
+/* MEDIUM */
+.task.medium {
+  border-left: 6px solid var(--gold);
+}
+
+/* LOW */
+.task.low {
+  border-left: 6px solid var(--green);
+}
+
+/* DONE */
+.task.done {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* OVERDUE */
+.task.overdue {
+  box-shadow: 0 0 10px rgba(230, 57, 70, 0.4);
+  border: 1px solid var(--red);
+}
+
+/* =========================
+   CONTACTS
+========================= */
+#contactList li {
+  background: var(--panel);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #444;
+}
+
+/* =========================
+   DELETE BUTTON
+========================= */
+.delete {
+  color: var(--red);
   cursor: pointer;
   font-weight: bold;
 }
 
 /* =========================
-   FOOTER (optional)
+   FOOTER
 ========================= */
 footer {
   text-align: center;
   padding: 20px;
   color: var(--muted);
-  border-top: 1px solid #2a2a3d;
+  border-top: 1px solid #444;
 }
