@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Messages</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="users.js"></script>
   <script defer src="messages.js"></script>
 </head>
 
@@ -22,14 +23,32 @@
 
 <main class="container">
 
-  <h2>Team Messages</h2>
+  <h2>Team Messaging System</h2>
 
-  <div class="message-box">
-    <input id="messageInput" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Send</button>
+  <!-- PROFILE CREATION -->
+  <div class="card">
+    <input id="name" placeholder="Name">
+    <input id="username" placeholder="Username">
+    <button onclick="createUser()">Create Profile</button>
   </div>
 
-  <ul id="messageList"></ul>
+  <!-- SEARCH -->
+  <input id="search" placeholder="Search users..." onkeyup="renderUsers(this.value)">
+
+  <!-- USER LIST -->
+  <ul id="userList"></ul>
+
+  <!-- CHAT AREA -->
+  <div class="card">
+    <h3 id="chatTitle">Select a user to chat</h3>
+
+    <ul id="messageList"></ul>
+
+    <div class="message-box">
+      <input id="messageInput" placeholder="Type message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
 
 </main>
 

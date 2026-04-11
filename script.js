@@ -1,4 +1,6 @@
-// ---------------- CONTACT SYSTEM ----------------
+// =========================
+// CONTACT SYSTEM
+// =========================
 
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
@@ -8,7 +10,6 @@ function saveContacts(contacts) {
   localStorage.setItem("contacts", JSON.stringify(contacts));
 }
 
-// ADD CONTACT
 function addContact() {
   const first = document.getElementById("firstName").value.trim();
   const last = document.getElementById("lastName").value.trim();
@@ -38,7 +39,6 @@ function addContact() {
   document.getElementById("email").value = "";
 }
 
-// RENDER CONTACTS
 function renderContacts() {
   const list = document.getElementById("contactList");
   if (!list) return;
@@ -63,8 +63,8 @@ function renderContacts() {
     li.innerHTML = `
       <div>
         <strong>${c.last}, ${c.first}</strong><br>
-        <a href="tel:${c.phone}">📞 ${c.phone}</a><br>
-        <a href="mailto:${c.email}">✉️ ${c.email}</a>
+        <a href="tel:${c.phone}">${c.phone}</a><br>
+        <a href="mailto:${c.email}">${c.email}</a>
       </div>
 
       <div class="actions">
@@ -77,16 +77,12 @@ function renderContacts() {
   });
 }
 
-// DELETE
 function deleteContact(id) {
-  let contacts = getContacts();
-  contacts = contacts.filter(c => c.id !== id);
-
+  let contacts = getContacts().filter(c => c.id !== id);
   saveContacts(contacts);
   renderContacts();
 }
 
-// EDIT
 function editContact(id) {
   let contacts = getContacts();
   const c = contacts.find(x => x.id === id);
@@ -99,12 +95,9 @@ function editContact(id) {
   deleteContact(id);
 }
 
-// LOAD ON START
-window.addEventListener("load", () => {
-  renderContacts();
-});
-
-// ---------------- TASK SYSTEM (FULL UPGRADE) ----------------
+// =========================
+// TASK SYSTEM
+// =========================
 
 function getTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
@@ -114,18 +107,16 @@ function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// SORT BY PRIORITY
 function sortTasks(tasks) {
   const order = { high: 1, medium: 2, low: 3 };
   return tasks.sort((a, b) => order[a.priority] - order[b.priority]);
 }
 
-// ADD TASK
 function addTask() {
   const text = document.getElementById("taskInput").value.trim();
-  const priority = document.getElementById("taskPriority").value;
-  const dueDate = document.getElementById("taskDueDate").value;
-  const assignedTo = document.getElementById("taskAssignee").value.trim();
+  const priority = document.getElementById("taskPriority")?.value || "medium";
+  const dueDate = document.getElementById("taskDueDate")?.value || "";
+  const assignedTo = document.getElementById("taskAssignee")?.value || "";
 
   if (!text) return;
 
@@ -146,11 +137,8 @@ function addTask() {
   renderTasks();
 
   document.getElementById("taskInput").value = "";
-  document.getElementById("taskDueDate").value = "";
-  document.getElementById("taskAssignee").value = "";
 }
 
-// TOGGLE COMPLETE
 function toggleTask(id) {
   let tasks = getTasks();
 
@@ -162,62 +150,38 @@ function toggleTask(id) {
   renderTasks();
 }
 
-// DELETE
 function deleteTask(id) {
   let tasks = getTasks().filter(t => t.id !== id);
   saveTasks(tasks);
   renderTasks();
 }
 
-// CHECK OVERDUE
 function isOverdue(task) {
   if (!task.dueDate || task.done) return false;
   return new Date(task.dueDate) < new Date();
 }
 
-// RENDER TASKS
 function renderTasks() {
   const list = document.getElementById("taskList");
   if (!list) return;
 
-  let tasks = getTasks();
-  tasks = sortTasks(tasks);
+  let tasks = sortTasks(getTasks());
 
   list.innerHTML = "";
 
-  let stats = {
-    high: 0,
-    medium: 0,
-    low: 0,
-    overdue: 0
-  };
-
   tasks.forEach(t => {
-    if (t.priority === "high") stats.high++;
-    if (t.priority === "medium") stats.medium++;
-    if (t.priority === "low") stats.low++;
-    if (isOverdue(t)) stats.overdue++;
-
     const li = document.createElement("li");
 
-    const overdueClass = isOverdue(t) ? "overdue" : "";
-
-    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${overdueClass}`;
+    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${isOverdue(t) ? "overdue" : ""}`;
 
     li.innerHTML = `
       <div class="task-left">
-
-        <input type="checkbox" ${t.done ? "checked" : ""} onclick="toggleTask(${t.id})">
+        <input type="checkbox" onclick="toggleTask(${t.id})" ${t.done ? "checked" : ""}>
 
         <div>
           <strong>${t.text}</strong><br>
-
-          <small>
-            📅 ${t.dueDate ? t.dueDate : "No due date"} |
-            👤 ${t.assignedTo ? t.assignedTo : "Unassigned"}
-          </small>
+          <small>📅 ${t.dueDate || "No due date"} | 👤 ${t.assignedTo || "Unassigned"}</small>
         </div>
-
       </div>
 
       <span class="delete" onclick="deleteTask(${t.id})">✕</span>
@@ -226,18 +190,33 @@ function renderTasks() {
     list.appendChild(li);
   });
 
-  // UPDATE DASHBOARD STATS
-  document.getElementById("statHigh").innerText = `High: ${stats.high}`;
-  document.getElementById("statMedium").innerText = `Medium: ${stats.medium}`;
-  document.getElementById("statLow").innerText = `Low: ${stats.low}`;
-  document.getElementById("statOverdue").innerText = `Overdue: ${stats.overdue}`;
+  updateStats(tasks);
 }
 
-// LOAD
-window.addEventListener("load", renderTasks);
+function updateStats(tasks) {
+  const stats = { high: 0, medium: 0, low: 0, overdue: 0 };
+
+  tasks.forEach(t => {
+    stats[t.priority]++;
+    if (isOverdue(t)) stats.overdue++;
+  });
+
+  if (document.getElementById("statHigh")) {
+    document.getElementById("statHigh").innerText = `High: ${stats.high}`;
+    document.getElementById("statMedium").innerText = `Medium: ${stats.medium}`;
+    document.getElementById("statLow").innerText = `Low: ${stats.low}`;
+    document.getElementById("statOverdue").innerText = `Overdue: ${stats.overdue}`;
+  }
+}
+
+// =========================
+// MESSAGES SYSTEM
+// =========================
 
 function loadMessages() {
   const list = document.getElementById("messageList");
+  if (!list) return;
+
   list.innerHTML = "";
 
   const messages = JSON.parse(localStorage.getItem("messages")) || [];
@@ -245,10 +224,12 @@ function loadMessages() {
   messages.forEach((msg, index) => {
     const li = document.createElement("li");
     li.className = "message";
+
     li.innerHTML = `
       <span>${msg}</span>
       <button onclick="deleteMessage(${index})">✕</button>
     `;
+
     list.appendChild(li);
   });
 }
@@ -260,6 +241,7 @@ function sendMessage() {
   if (!text) return;
 
   const messages = JSON.parse(localStorage.getItem("messages")) || [];
+
   messages.push(text);
 
   localStorage.setItem("messages", JSON.stringify(messages));
@@ -270,10 +252,19 @@ function sendMessage() {
 
 function deleteMessage(index) {
   const messages = JSON.parse(localStorage.getItem("messages")) || [];
+
   messages.splice(index, 1);
 
   localStorage.setItem("messages", JSON.stringify(messages));
   loadMessages();
 }
 
-window.onload = loadMessages;
+// =========================
+// SINGLE UNIFIED LOAD SYSTEM
+// =========================
+
+window.addEventListener("load", () => {
+  renderContacts();
+  renderTasks();
+  loadMessages();
+});
