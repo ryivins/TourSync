@@ -1,3 +1,5 @@
+// ---------------- CONTACT SYSTEM ----------------
+
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
 }
@@ -36,10 +38,13 @@ function addContact() {
   document.getElementById("email").value = "";
 }
 
-// RENDER CONTACTS (with search)
+// RENDER CONTACTS
 function renderContacts() {
   const list = document.getElementById("contactList");
-  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  if (!list) return;
+
+  const searchEl = document.getElementById("searchInput");
+  const search = searchEl ? searchEl.value.toLowerCase() : "";
 
   let contacts = getContacts();
 
@@ -72,7 +77,7 @@ function renderContacts() {
   });
 }
 
-// DELETE CONTACT
+// DELETE
 function deleteContact(id) {
   let contacts = getContacts();
   contacts = contacts.filter(c => c.id !== id);
@@ -81,7 +86,7 @@ function deleteContact(id) {
   renderContacts();
 }
 
-// EDIT CONTACT
+// EDIT
 function editContact(id) {
   let contacts = getContacts();
   const c = contacts.find(x => x.id === id);
@@ -95,4 +100,6 @@ function editContact(id) {
 }
 
 // LOAD ON START
-window.addEventListener("load", renderContacts);
+window.addEventListener("load", () => {
+  renderContacts();
+});

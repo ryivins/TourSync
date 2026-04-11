@@ -23,19 +23,23 @@
 
   <h2>Contacts</h2>
 
-<div class="contact-form">
-  <input id="firstName" placeholder="First Name">
-  <input id="lastName" placeholder="Last Name">
-  <input id="phone" placeholder="Phone">
-  <input id="email" placeholder="Email">
+  <!-- INPUT FORM -->
+  <div class="contact-form">
 
-  <button onclick="addContact()">Add Contact</button>
-</div>
+    <input id="firstName" type="text" placeholder="First Name">
+    <input id="lastName" type="text" placeholder="Last Name">
+    <input id="phone" type="text" placeholder="Phone Number">
+    <input id="email" type="text" placeholder="Email">
 
-<!-- SEARCH BAR -->
-<input id="searchInput" oninput="renderContacts()" placeholder="Search contacts...">
+    <button onclick="addContact()">Add Contact</button>
 
-<ul id="contactList"></ul>
+  </div>
+
+  <!-- SEARCH -->
+  <input id="searchInput" oninput="renderContacts()" placeholder="Search contacts...">
+
+  <!-- LIST -->
+  <ul id="contactList"></ul>
 
 </main>
 

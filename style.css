@@ -152,13 +152,38 @@ footer {
 .delete:hover {
   color: #ff6b6b;
 }
+.contact-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.contact-form input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.contact-form button {
+  grid-column: span 2;
+  padding: 10px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
 #searchInput {
   width: 100%;
   padding: 10px;
-  margin: 15px 0;
+  margin-bottom: 15px;
   border-radius: 8px;
   border: none;
+}
+
+#contactList {
+  list-style: none;
 }
 
 #contactList li {
@@ -169,11 +194,6 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-#contactList a {
-  color: #38bdf8;
-  text-decoration: none;
 }
 
 .actions {
@@ -190,6 +210,8 @@ footer {
   cursor: pointer;
 }
 
-.actions button:hover {
-  background: #0ea5e9;
+.delete {
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
 }
