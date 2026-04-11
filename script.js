@@ -235,3 +235,45 @@ function renderTasks() {
 
 // LOAD
 window.addEventListener("load", renderTasks);
+
+function loadMessages() {
+  const list = document.getElementById("messageList");
+  list.innerHTML = "";
+
+  const messages = JSON.parse(localStorage.getItem("messages")) || [];
+
+  messages.forEach((msg, index) => {
+    const li = document.createElement("li");
+    li.className = "message";
+    li.innerHTML = `
+      <span>${msg}</span>
+      <button onclick="deleteMessage(${index})">✕</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  const messages = JSON.parse(localStorage.getItem("messages")) || [];
+  messages.push(text);
+
+  localStorage.setItem("messages", JSON.stringify(messages));
+
+  input.value = "";
+  loadMessages();
+}
+
+function deleteMessage(index) {
+  const messages = JSON.parse(localStorage.getItem("messages")) || [];
+  messages.splice(index, 1);
+
+  localStorage.setItem("messages", JSON.stringify(messages));
+  loadMessages();
+}
+
+window.onload = loadMessages;

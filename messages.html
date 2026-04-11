@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Messages</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="messages.js"></script>
+</head>
+
+<body>
+
+<header class="topbar">
+  <h1>TourSync</h1>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
+</header>
+
+<main class="container">
+
+  <h2>Team Messages</h2>
+
+  <div class="message-box">
+    <input id="messageInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <ul id="messageList"></ul>
+
+</main>
+
+</body>
+</html>
