@@ -1,6 +1,7 @@
-// =========================
-// CONTACT SYSTEM
-// =========================
+
+/* =========================
+   CONTACT SYSTEM
+========================= */
 
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
@@ -44,7 +45,7 @@ function renderContacts() {
   const search =
     document.getElementById("searchInput")?.value.toLowerCase() || "";
 
-  let contacts = getContacts().filter(c =>
+  const contacts = getContacts().filter(c =>
     c.first.toLowerCase().includes(search) ||
     c.last.toLowerCase().includes(search) ||
     c.phone.toLowerCase().includes(search) ||
@@ -83,6 +84,8 @@ function editContact(id) {
   const contacts = getContacts();
   const c = contacts.find(x => x.id === id);
 
+  if (!c) return;
+
   document.getElementById("firstName").value = c.first;
   document.getElementById("lastName").value = c.last;
   document.getElementById("phone").value = c.phone;
@@ -92,9 +95,9 @@ function editContact(id) {
 }
 
 
-// =========================
-// TASK SYSTEM (PRESERVED)
-// =========================
+/* =========================
+   TASK SYSTEM
+========================= */
 
 function getTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
@@ -182,9 +185,9 @@ function renderTasks() {
 }
 
 
-// =========================
-// MESSAGING SYSTEM (FIXED + CLEAN)
-// =========================
+/* =========================
+   MESSAGING SYSTEM (FIXED CLEAN VERSION)
+========================= */
 
 let currentChatUser = null;
 
@@ -209,7 +212,7 @@ function getChatId(a, b) {
 }
 
 
-// CREATE USER (ONLY USED WHEN NEEDED)
+/* CREATE USER */
 function createUser() {
   const name = document.getElementById("name").value.trim();
   const username = document.getElementById("username").value.trim();
@@ -232,7 +235,7 @@ function createUser() {
 }
 
 
-// RENDER USERS (CHAT LIST)
+/* RENDER USERS */
 function renderUsers(search = "") {
   const list = document.getElementById("userList");
   if (!list) return;
@@ -252,10 +255,8 @@ function renderUsers(search = "") {
     li.className = "chat-preview";
 
     li.innerHTML = `
-      <div>
-        <strong>${u.name}</strong><br>
-        <small>@${u.username}</small>
-      </div>
+      <strong>${u.name}</strong><br>
+      <small>@${u.username}</small>
     `;
 
     if (u.username === active) {
@@ -269,18 +270,15 @@ function renderUsers(search = "") {
 }
 
 
-// OPEN CHAT
+/* OPEN CHAT */
 function openChat(username) {
   currentChatUser = username;
-
-  document.getElementById("chatTitle").innerText =
-    "Chat with @" + username;
-
+  document.getElementById("chatTitle").innerText = "Chat with @" + username;
   renderMessages();
 }
 
 
-// SEND MESSAGE
+/* SEND MESSAGE */
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
@@ -307,7 +305,7 @@ function sendMessage() {
 }
 
 
-// RENDER MESSAGES (FIXED EMPTY STATES)
+/* RENDER MESSAGES (ONLY ONE VERSION - FIXED) */
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
@@ -315,8 +313,7 @@ function renderMessages() {
   const me = localStorage.getItem("activeUser");
 
   if (!currentChatUser) {
-    list.innerHTML =
-      `<li class="msg them">Select a conversation to start chatting</li>`;
+    list.innerHTML = `<li class="msg them">Select a conversation</li>`;
     return;
   }
 
@@ -324,13 +321,12 @@ function renderMessages() {
   const chatId = getChatId(me, currentChatUser);
   const messages = chats[chatId] || [];
 
-  list.innerHTML = "";
-
   if (messages.length === 0) {
-    list.innerHTML =
-      `<li class="msg them">No messages yet. Say hello 👋</li>`;
+    list.innerHTML = `<li class="msg them">No messages yet 👋</li>`;
     return;
   }
+
+  list.innerHTML = "";
 
   messages.forEach(m => {
     const li = document.createElement("li");
@@ -339,7 +335,7 @@ function renderMessages() {
 
     li.innerHTML = `
       <div>${m.text}</div>
-      <small style="opacity:0.6">${m.time}</small>
+      <small>${m.from} • ${m.time}</small>
     `;
 
     list.appendChild(li);
@@ -347,9 +343,9 @@ function renderMessages() {
 }
 
 
-// =========================
-// INIT
-// =========================
+/* =========================
+   INIT
+========================= */
 
 window.addEventListener("load", () => {
   renderContacts();
