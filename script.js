@@ -137,13 +137,12 @@ function renderTasks() {
   });
 }
 
-/* =========================
-   MESSAGING SYSTEM (FIXED CORE)
-========================= */
-
+/
 let currentChatUser = null;
 
-/* ---------- STORAGE ---------- */
+/* =========================
+   STORAGE
+========================= */
 
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
@@ -169,22 +168,26 @@ function setActiveUser(id) {
   localStorage.setItem("activeUser", id);
 }
 
-/* ---------- CHAT KEY ---------- */
+/* =========================
+   CHAT KEY (IMPORTANT)
+========================= */
 
 function getChatId(a, b) {
   return [a, b].sort().join("__");
 }
 
-/* ---------- DEMO DATA (FORCED FIX) ---------- */
+/* =========================
+   SAFE DEMO SEED (FIXED)
+========================= */
 
 function initializeDemoData() {
   let users = getUsers();
 
-  if (!Array.isArray(users) || users.length === 0) {
+  if (!users.length) {
     users = [
-      { id: "u1", name: "Matt Klein", username: "Matt" },
-      { id: "u2", name: "Sidney Castillo", username: "Sidney" },
-      { id: "u3", name: "Jonah Payne", username: "Jonah" }
+      { id: "u1", name: "Matt Klein" },
+      { id: "u2", name: "Sidney Castillo" },
+      { id: "u3", name: "Jonah Payne" }
     ];
     saveUsers(users);
   }
@@ -196,7 +199,7 @@ function initializeDemoData() {
   const me = getActiveUser();
   let chats = getChats();
 
-  const demoChats = {
+  const seed = {
     [getChatId(me, "u1")]: [
       { from: "u1", text: "Hey, are we still meeting?", time: "9:04 AM" },
       { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
@@ -211,22 +214,22 @@ function initializeDemoData() {
     ]
   };
 
-  // FORCE SEED (this fixes your issue)
-  for (const id in demoChats) {
-    chats[id] = demoChats[id];
-  }
+  // ALWAYS overwrite (prevents silent failure)
+  chats = { ...chats, ...seed };
 
   saveChats(chats);
 }
 
-/* ---------- SIDEBAR ---------- */
+/* =========================
+   SIDEBAR PREVIEW
+========================= */
 
-function getLastMessage(me, otherId) {
+function getLastMessage(me, other) {
   const chats = getChats();
-  const id = getChatId(me, otherId);
+  const id = getChatId(me, other);
   const msgs = chats[id];
 
-  if (!msgs || msgs.length === 0) return "No messages yet";
+  if (!msgs || !msgs.length) return "No messages yet";
 
   const last = msgs[msgs.length - 1];
   return `${last.from}: ${last.text}`;
@@ -261,7 +264,9 @@ function renderUsers() {
   });
 }
 
-/* ---------- CHAT ---------- */
+/* =========================
+   CHAT
+========================= */
 
 function openChat(userId) {
   currentChatUser = userId;
@@ -336,11 +341,12 @@ function renderMessages() {
 }
 
 /* =========================
-   INIT
+   INIT (CRITICAL FIX)
 ========================= */
 
 window.addEventListener("load", () => {
   initializeDemoData();
+
   renderContacts();
   renderTasks();
   renderUsers();
