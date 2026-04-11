@@ -11,10 +11,10 @@ function saveContacts(contacts) {
 }
 
 function addContact() {
-  const first = document.getElementById("firstName")?.value.trim();
-  const last = document.getElementById("lastName")?.value.trim();
-  const phone = document.getElementById("phone")?.value.trim();
-  const email = document.getElementById("email")?.value.trim();
+  const first = document.getElementById("firstName").value.trim();
+  const last = document.getElementById("lastName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
 
   if (!first || !last) return;
 
@@ -31,10 +31,10 @@ function addContact() {
   saveContacts(contacts);
   renderContacts();
 
-  ["firstName", "lastName", "phone", "email"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
+  document.getElementById("firstName").value = "";
+  document.getElementById("lastName").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("email").value = "";
 }
 
 function renderContacts() {
@@ -45,9 +45,10 @@ function renderContacts() {
     document.getElementById("searchInput")?.value.toLowerCase() || "";
 
   const contacts = getContacts().filter(c =>
-    `${c.first} ${c.last} ${c.phone} ${c.email}`
-      .toLowerCase()
-      .includes(search)
+    c.first.toLowerCase().includes(search) ||
+    c.last.toLowerCase().includes(search) ||
+    c.phone.toLowerCase().includes(search) ||
+    c.email.toLowerCase().includes(search)
   );
 
   list.innerHTML = "";
@@ -56,11 +57,8 @@ function renderContacts() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      <div>
-        <strong>${c.first} ${c.last}</strong><br>
-        <small>${c.phone || ""}</small><br>
-        <small>${c.email || ""}</small>
-      </div>
+      <strong>${c.last}, ${c.first}</strong><br>
+      <small>${c.phone}</small>
     `;
 
     list.appendChild(li);
@@ -84,7 +82,6 @@ function editContact(id) {
   deleteContact(id);
 }
 
-
 /* =========================
    TASK SYSTEM
 ========================= */
@@ -98,7 +95,7 @@ function saveTasks(tasks) {
 }
 
 function addTask() {
-  const text = document.getElementById("taskInput")?.value.trim();
+  const text = document.getElementById("taskInput").value.trim();
   const priority = document.getElementById("taskPriority")?.value || "medium";
   const dueDate = document.getElementById("taskDueDate")?.value || "";
   const assignedTo = document.getElementById("taskAssignee")?.value || "";
@@ -119,16 +116,13 @@ function addTask() {
   saveTasks(tasks);
   renderTasks();
 
-  const input = document.getElementById("taskInput");
-  if (input) input.value = "";
+  document.getElementById("taskInput").value = "";
 }
 
 function toggleTask(id) {
-  const tasks = getTasks().map(t =>
-    t.id === id ? { ...t, done: !t.done } : t
+  saveTasks(
+    getTasks().map(t => t.id === id ? { ...t, done: !t.done } : t)
   );
-
-  saveTasks(tasks);
   renderTasks();
 }
 
@@ -150,28 +144,20 @@ function renderTasks() {
   getTasks().forEach(t => {
     const li = document.createElement("li");
 
-    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${
-      isOverdue(t) ? "overdue" : ""
-    }`;
+    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${isOverdue(t) ? "overdue" : ""}`;
 
     li.innerHTML = `
-      <div>
-        <input type="checkbox" onclick="toggleTask(${t.id})" ${
-      t.done ? "checked" : ""
-    }>
-        <strong>${t.text}</strong>
-      </div>
-
-      <span class="delete" onclick="deleteTask(${t.id})">✕</span>
+      <input type="checkbox" onclick="toggleTask(${t.id})" ${t.done ? "checked" : ""}>
+      <strong>${t.text}</strong><br>
+      <small>${t.dueDate || "No due date"} | ${t.assignedTo || "Unassigned"}</small>
     `;
 
     list.appendChild(li);
   });
 }
 
-
 /* =========================
-   MESSAGING SYSTEM (FIXED + PREVIEWS)
+   MESSAGING SYSTEM (FIXED UI + PREVIEWS)
 ========================= */
 
 let currentChatUser = null;
@@ -196,11 +182,10 @@ function getChatId(a, b) {
   return [a, b].sort().join("-");
 }
 
-
 /* CREATE USER */
 function createUser() {
-  const name = document.getElementById("name")?.value.trim();
-  const username = document.getElementById("username")?.value.trim();
+  const name = document.getElementById("name").value.trim();
+  const username = document.getElementById("username").value.trim();
 
   if (!name || !username) return;
 
@@ -213,39 +198,39 @@ function createUser() {
   localStorage.setItem("activeUser", username);
   saveUsers(users);
 
-  const box = document.querySelector(".profile-box");
-  if (box) box.style.display = "none";
-
   renderUsers();
 }
 
+/* GET LAST MESSAGE FOR PREVIEW */
+function getLastMessage(userA, userB) {
+  const chats = getChats();
+  const id = getChatId(userA, userB);
+  const msgs = chats[id] || [];
+  return msgs.length ? msgs[msgs.length - 1].text : "No messages yet";
+}
 
-/* RENDER USERS (WITH LAST MESSAGE PREVIEW) */
+/* RENDER USERS WITH PREVIEW */
 function renderUsers(search = "") {
   const list = document.getElementById("userList");
   if (!list) return;
 
   const me = localStorage.getItem("activeUser") || "";
-  const chats = getChats();
 
-  const users = getUsers().filter(u =>
-    (u.name + u.username).toLowerCase().includes(search.toLowerCase())
+  let users = getUsers().filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.username.toLowerCase().includes(search.toLowerCase())
   );
 
   list.innerHTML = "";
 
   users.forEach(u => {
-    const id = getChatId(me, u.username);
-    const lastMsg = chats[id]?.at(-1);
-
     const li = document.createElement("li");
+
     li.className = "chat-preview";
 
     li.innerHTML = `
-      <div>
-        <strong>${u.name}</strong><br>
-        <small>${lastMsg ? lastMsg.text : "No messages yet"}</small>
-      </div>
+      <strong>${u.name}</strong><br>
+      <small>${getLastMessage(me, u.username)}</small>
     `;
 
     li.onclick = () => openChat(u.username);
@@ -254,7 +239,6 @@ function renderUsers(search = "") {
   });
 }
 
-
 /* OPEN CHAT */
 function openChat(username) {
   currentChatUser = username;
@@ -262,11 +246,10 @@ function openChat(username) {
   renderMessages();
 }
 
-
 /* SEND MESSAGE */
 function sendMessage() {
   const input = document.getElementById("messageInput");
-  const text = input?.value.trim();
+  const text = input.value.trim();
 
   if (!text || !currentChatUser) return;
 
@@ -286,11 +269,9 @@ function sendMessage() {
   saveChats(chats);
 
   input.value = "";
-
   renderMessages();
-  renderUsers(); // updates previews
+  renderUsers(); // updates previews instantly
 }
-
 
 /* RENDER MESSAGES (FIXED SPACING) */
 function renderMessages() {
@@ -300,7 +281,7 @@ function renderMessages() {
   const me = localStorage.getItem("activeUser");
 
   if (!currentChatUser) {
-    list.innerHTML = `<li class="msg them">Select a conversation</li>`;
+    list.innerHTML = `<li class="msg them">Select a chat</li>`;
     return;
   }
 
@@ -309,11 +290,6 @@ function renderMessages() {
   const messages = chats[id] || [];
 
   list.innerHTML = "";
-
-  if (messages.length === 0) {
-    list.innerHTML = `<li class="msg them">Start chatting 👋</li>`;
-    return;
-  }
 
   messages.forEach(m => {
     const li = document.createElement("li");
@@ -328,7 +304,6 @@ function renderMessages() {
     list.appendChild(li);
   });
 }
-
 
 /* =========================
    INIT
