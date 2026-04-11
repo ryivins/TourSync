@@ -178,6 +178,50 @@ function getChatId(a, b) {
   return [a, b].sort().join("-");
 }
 
+function initializeDemoData() {
+  const defaultUser = "tourguide";
+
+  if (!localStorage.getItem("activeUser")) {
+    localStorage.setItem("activeUser", defaultUser);
+  }
+
+  let users = getUsers();
+  if (!users.length) {
+    users = [
+      { id: 1, name: "Matt Klein", username: "matt" },
+      { id: 2, name: "Sidney Castillo", username: "sarah" },
+      { id: 3, name: "Jonah Payne", username: "jordan" }
+    ];
+    saveUsers(users);
+  }
+
+  const chats = getChats();
+  const me = localStorage.getItem("activeUser");
+
+  const demoConversations = {
+    [getChatId(me, "matt")]: [
+      { from: "matt", text: "Hey, are we still meeting?", time: "9:04 AM" },
+      { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
+    ],
+    [getChatId(me, "sarah")]: [
+      { from: "sarah", text: "Got the schedule 👍", time: "8:12 AM" },
+      { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
+    ],
+    [getChatId(me, "jordan")]: [
+      { from: "jordan", text: "I'll check it out", time: "7:58 AM" },
+      { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
+    ]
+  };
+
+  Object.keys(demoConversations).forEach(id => {
+    if (!chats[id] || !chats[id].length) {
+      chats[id] = demoConversations[id];
+    }
+  });
+
+  saveChats(chats);
+}
+
 /* CREATE USER (ONLY DEMO) */
 function createUser() {
   const name = document.getElementById("name").value.trim();
@@ -313,7 +357,13 @@ function renderMessages() {
 ========================= */
 
 window.addEventListener("load", () => {
+  initializeDemoData();
   renderContacts();
   renderTasks();
   renderUsers();
+
+  const users = getUsers();
+  if (users.length) {
+    openChat(users[0].username);
+  }
 });
