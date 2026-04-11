@@ -37,7 +37,6 @@ body {
    TITLES
 ========================= */
 h1, h2, h3 {
-  font-family: Georgia, "Times New Roman", serif;
   color: var(--red);
   font-weight: bold;
 }
@@ -117,7 +116,16 @@ nav a:hover {
 }
 
 /* =========================
-   CHAT PREVIEWS (FIXED LIKE YOUR IMAGE)
+   USERS LIST
+========================= */
+#userList {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* =========================
+   CHAT PREVIEW (FIXED FOR YOUR JS)
 ========================= */
 .chat-preview {
   padding: 14px;
@@ -135,24 +143,22 @@ nav a:hover {
   background: var(--panel2);
 }
 
-.chat-name {
+/* ACTIVE CHAT (optional but useful) */
+.chat-preview.active {
+  background: var(--panel2);
+  border-left: 4px solid var(--red);
+}
+
+/* FIXED STYLING FOR JS ELEMENTS */
+.chat-preview strong {
   font-size: 18px;
   font-weight: bold;
   color: var(--text);
 }
 
-.chat-message {
+.chat-preview small {
   font-size: 14px;
   color: var(--muted);
-}
-
-/* =========================
-   USERS LIST
-========================= */
-#userList {
-  list-style: none;
-  overflow-y: auto;
-  flex: 1;
 }
 
 /* =========================
@@ -170,7 +176,7 @@ nav a:hover {
 }
 
 /* =========================
-   MESSAGE LIST (REAL SPACING FIX)
+   MESSAGE LIST
 ========================= */
 #messageList {
   flex: 1;
@@ -181,6 +187,8 @@ nav a:hover {
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  scroll-behavior: smooth;
 }
 
 /* =========================
@@ -190,11 +198,17 @@ nav a:hover {
   max-width: 65%;
   padding: 10px 14px;
   border-radius: 14px;
-  word-wrap: break-word;
 
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  word-break: break-word;
+}
+
+/* message text safety */
+.msg div {
+  word-break: break-word;
 }
 
 /* YOU */
