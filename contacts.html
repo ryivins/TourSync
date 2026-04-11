@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Contacts</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -19,13 +20,23 @@
 </header>
 
 <main class="container">
+
   <h2>Contacts</h2>
 
-  <div class="card">
-    <p>Tour Manager — Alex</p>
-    <p>Sound Engineer — Jordan</p>
-    <p>Lighting — Sam</p>
-  </div>
+<div class="contact-form">
+  <input id="firstName" placeholder="First Name">
+  <input id="lastName" placeholder="Last Name">
+  <input id="phone" placeholder="Phone">
+  <input id="email" placeholder="Email">
+
+  <button onclick="addContact()">Add Contact</button>
+</div>
+
+<!-- SEARCH BAR -->
+<input id="searchInput" oninput="renderContacts()" placeholder="Search contacts...">
+
+<ul id="contactList"></ul>
+
 </main>
 
 </body>
