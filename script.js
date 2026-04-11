@@ -186,7 +186,9 @@ function initializeDemoData() {
   }
 
   let users = getUsers();
-  if (!users.length) {
+  const hasValidUsers = Array.isArray(users) && users.some(u => u.username && u.name);
+
+  if (!hasValidUsers) {
     users = [
       { id: 1, name: "Matt Klein", username: "matt" },
       { id: 2, name: "Sidney Castillo", username: "sarah" },
@@ -207,8 +209,8 @@ function initializeDemoData() {
       { from: "sarah", text: "Got the schedule 👍", time: "8:12 AM" },
       { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
     ],
-    [getChatId(me, "jordan")]: [
-      { from: "jordan", text: "I'll check it out", time: "7:58 AM" },
+    [getChatId(me, "jonah")]: [
+      { from: "jonah", text: "I'll check it out", time: "7:58 AM" },
       { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
     ]
   };
@@ -220,6 +222,42 @@ function initializeDemoData() {
   });
 
   saveChats(chats);
+}
+
+function renderUsers(search = "") {
+  const list = document.getElementById("userList");
+  if (!list) return;
+
+  const users = getUsers();
+  if (!users.length) {
+    initializeDemoData();
+  }
+
+  const me = localStorage.getItem("activeUser") || "";
+
+  list.innerHTML = "";
+
+  getUsers()
+    .filter(u =>
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.username.toLowerCase().includes(search.toLowerCase())
+    )
+    .forEach(u => {
+      const li = document.createElement("li");
+
+      const preview = getLastMessage(me, u.username);
+
+      li.className = "chat-preview";
+
+      li.innerHTML = `
+        <strong>${u.name}</strong>
+        <small>${preview}</small>
+      `;
+
+      li.onclick = () => openChat(u.username);
+
+      list.appendChild(li);
+    });
 }
 
 /* CREATE USER (ONLY DEMO) */
@@ -251,38 +289,6 @@ function getLastMessage(me, other) {
 
   const last = msgs[msgs.length - 1];
   return `${last.from}: ${last.text}`;
-}
-
-/* RENDER CHAT LIST (LIKE YOUR SCREENSHOT) */
-function renderUsers(search = "") {
-  const list = document.getElementById("userList");
-  if (!list) return;
-
-  const me = localStorage.getItem("activeUser") || "";
-
-  list.innerHTML = "";
-
-  getUsers()
-    .filter(u =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.username.toLowerCase().includes(search.toLowerCase())
-    )
-    .forEach(u => {
-      const li = document.createElement("li");
-
-      const preview = getLastMessage(me, u.username);
-
-      li.className = "chat-preview";
-
-      li.innerHTML = `
-        <strong>${u.name}</strong>
-        <small>${preview}</small>
-      `;
-
-      li.onclick = () => openChat(u.username);
-
-      list.appendChild(li);
-    });
 }
 
 /* OPEN CHAT */
