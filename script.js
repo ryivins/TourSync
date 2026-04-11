@@ -1,4 +1,3 @@
-
 /* =========================
    CONTACT SYSTEM
 ========================= */
@@ -12,10 +11,10 @@ function saveContacts(contacts) {
 }
 
 function addContact() {
-  const first = document.getElementById("firstName").value.trim();
-  const last = document.getElementById("lastName").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const first = document.getElementById("firstName")?.value.trim();
+  const last = document.getElementById("lastName")?.value.trim();
+  const phone = document.getElementById("phone")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
 
   if (!first || !last) return;
 
@@ -32,10 +31,10 @@ function addContact() {
   saveContacts(contacts);
   renderContacts();
 
-  document.getElementById("firstName").value = "";
-  document.getElementById("lastName").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("email").value = "";
+  ["firstName", "lastName", "phone", "email"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
 }
 
 function renderContacts() {
@@ -46,10 +45,9 @@ function renderContacts() {
     document.getElementById("searchInput")?.value.toLowerCase() || "";
 
   const contacts = getContacts().filter(c =>
-    c.first.toLowerCase().includes(search) ||
-    c.last.toLowerCase().includes(search) ||
-    c.phone.toLowerCase().includes(search) ||
-    c.email.toLowerCase().includes(search)
+    `${c.first} ${c.last} ${c.phone} ${c.email}`
+      .toLowerCase()
+      .includes(search)
   );
 
   list.innerHTML = "";
@@ -59,14 +57,9 @@ function renderContacts() {
 
     li.innerHTML = `
       <div>
-        <strong>${c.last}, ${c.first}</strong><br>
-        <a href="tel:${c.phone}">${c.phone}</a><br>
-        <a href="mailto:${c.email}">${c.email}</a>
-      </div>
-
-      <div class="actions">
-        <button onclick="editContact(${c.id})">Edit</button>
-        <span class="delete" onclick="deleteContact(${c.id})">✕</span>
+        <strong>${c.first} ${c.last}</strong><br>
+        <small>${c.phone || ""}</small><br>
+        <small>${c.email || ""}</small>
       </div>
     `;
 
@@ -75,15 +68,12 @@ function renderContacts() {
 }
 
 function deleteContact(id) {
-  const contacts = getContacts().filter(c => c.id !== id);
-  saveContacts(contacts);
+  saveContacts(getContacts().filter(c => c.id !== id));
   renderContacts();
 }
 
 function editContact(id) {
-  const contacts = getContacts();
-  const c = contacts.find(x => x.id === id);
-
+  const c = getContacts().find(x => x.id === id);
   if (!c) return;
 
   document.getElementById("firstName").value = c.first;
@@ -108,7 +98,7 @@ function saveTasks(tasks) {
 }
 
 function addTask() {
-  const text = document.getElementById("taskInput").value.trim();
+  const text = document.getElementById("taskInput")?.value.trim();
   const priority = document.getElementById("taskPriority")?.value || "medium";
   const dueDate = document.getElementById("taskDueDate")?.value || "";
   const assignedTo = document.getElementById("taskAssignee")?.value || "";
@@ -129,7 +119,8 @@ function addTask() {
   saveTasks(tasks);
   renderTasks();
 
-  document.getElementById("taskInput").value = "";
+  const input = document.getElementById("taskInput");
+  if (input) input.value = "";
 }
 
 function toggleTask(id) {
@@ -142,8 +133,7 @@ function toggleTask(id) {
 }
 
 function deleteTask(id) {
-  const tasks = getTasks().filter(t => t.id !== id);
-  saveTasks(tasks);
+  saveTasks(getTasks().filter(t => t.id !== id));
   renderTasks();
 }
 
@@ -155,10 +145,9 @@ function renderTasks() {
   const list = document.getElementById("taskList");
   if (!list) return;
 
-  const tasks = getTasks();
   list.innerHTML = "";
 
-  tasks.forEach(t => {
+  getTasks().forEach(t => {
     const li = document.createElement("li");
 
     li.className = `task ${t.priority} ${t.done ? "done" : ""} ${
@@ -170,11 +159,7 @@ function renderTasks() {
         <input type="checkbox" onclick="toggleTask(${t.id})" ${
       t.done ? "checked" : ""
     }>
-
-        <strong>${t.text}</strong><br>
-        <small>📅 ${t.dueDate || "No due date"} | 👤 ${
-      t.assignedTo || "Unassigned"
-    }</small>
+        <strong>${t.text}</strong>
       </div>
 
       <span class="delete" onclick="deleteTask(${t.id})">✕</span>
@@ -186,7 +171,7 @@ function renderTasks() {
 
 
 /* =========================
-   MESSAGING SYSTEM (FIXED CLEAN VERSION)
+   MESSAGING SYSTEM (FIXED + PREVIEWS)
 ========================= */
 
 let currentChatUser = null;
@@ -214,8 +199,8 @@ function getChatId(a, b) {
 
 /* CREATE USER */
 function createUser() {
-  const name = document.getElementById("name").value.trim();
-  const username = document.getElementById("username").value.trim();
+  const name = document.getElementById("name")?.value.trim();
+  const username = document.getElementById("username")?.value.trim();
 
   if (!name || !username) return;
 
@@ -235,33 +220,33 @@ function createUser() {
 }
 
 
-/* RENDER USERS */
+/* RENDER USERS (WITH LAST MESSAGE PREVIEW) */
 function renderUsers(search = "") {
   const list = document.getElementById("userList");
   if (!list) return;
 
-  const active = localStorage.getItem("activeUser") || "";
+  const me = localStorage.getItem("activeUser") || "";
+  const chats = getChats();
 
-  let users = getUsers().filter(u =>
-    u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.username.toLowerCase().includes(search.toLowerCase())
+  const users = getUsers().filter(u =>
+    (u.name + u.username).toLowerCase().includes(search.toLowerCase())
   );
 
   list.innerHTML = "";
 
   users.forEach(u => {
-    const li = document.createElement("li");
+    const id = getChatId(me, u.username);
+    const lastMsg = chats[id]?.at(-1);
 
+    const li = document.createElement("li");
     li.className = "chat-preview";
 
     li.innerHTML = `
-      <strong>${u.name}</strong><br>
-      <small>@${u.username}</small>
+      <div>
+        <strong>${u.name}</strong><br>
+        <small>${lastMsg ? lastMsg.text : "No messages yet"}</small>
+      </div>
     `;
-
-    if (u.username === active) {
-      li.style.borderLeft = "3px solid #e63946";
-    }
 
     li.onclick = () => openChat(u.username);
 
@@ -281,18 +266,18 @@ function openChat(username) {
 /* SEND MESSAGE */
 function sendMessage() {
   const input = document.getElementById("messageInput");
-  const text = input.value.trim();
+  const text = input?.value.trim();
 
   if (!text || !currentChatUser) return;
 
   const me = localStorage.getItem("activeUser");
 
   const chats = getChats();
-  const chatId = getChatId(me, currentChatUser);
+  const id = getChatId(me, currentChatUser);
 
-  if (!chats[chatId]) chats[chatId] = [];
+  if (!chats[id]) chats[id] = [];
 
-  chats[chatId].push({
+  chats[id].push({
     from: me,
     text,
     time: new Date().toLocaleTimeString()
@@ -301,11 +286,13 @@ function sendMessage() {
   saveChats(chats);
 
   input.value = "";
+
   renderMessages();
+  renderUsers(); // updates previews
 }
 
 
-/* RENDER MESSAGES (ONLY ONE VERSION - FIXED) */
+/* RENDER MESSAGES (FIXED SPACING) */
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
@@ -318,15 +305,15 @@ function renderMessages() {
   }
 
   const chats = getChats();
-  const chatId = getChatId(me, currentChatUser);
-  const messages = chats[chatId] || [];
-
-  if (messages.length === 0) {
-    list.innerHTML = `<li class="msg them">No messages yet 👋</li>`;
-    return;
-  }
+  const id = getChatId(me, currentChatUser);
+  const messages = chats[id] || [];
 
   list.innerHTML = "";
+
+  if (messages.length === 0) {
+    list.innerHTML = `<li class="msg them">Start chatting 👋</li>`;
+    return;
+  }
 
   messages.forEach(m => {
     const li = document.createElement("li");

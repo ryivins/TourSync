@@ -12,11 +12,11 @@
    THEME
 ========================= */
 :root {
-  --bg: #1f1f1f;        /* charcoal */
+  --bg: #1f1f1f;
   --panel: #2a2a2a;
   --panel2: #333333;
 
-  --text: #f2f2f2;      /* off-white */
+  --text: #f2f2f2;
   --muted: #b5b5b5;
 
   --red: #e63946;
@@ -34,7 +34,7 @@ body {
 }
 
 /* =========================
-   TITLES (NORMAL FONT NOW)
+   TITLES
 ========================= */
 h1, h2, h3 {
   font-family: Georgia, "Times New Roman", serif;
@@ -74,14 +74,16 @@ nav a:hover {
 }
 
 /* =========================
-   CHAT LAYOUT (MESSENGER STYLE)
+   CHAT LAYOUT
 ========================= */
 .chat-layout {
   display: flex;
   height: calc(100vh - 80px);
 }
 
-/* SIDEBAR */
+/* =========================
+   SIDEBAR
+========================= */
 .chat-sidebar {
   width: 300px;
   background: var(--panel);
@@ -90,13 +92,11 @@ nav a:hover {
   flex-direction: column;
 }
 
-/* SIDEBAR HEADER */
 .chat-sidebar h3 {
   padding: 15px;
   border-bottom: 1px solid #444;
 }
 
-/* SIDEBAR INPUTS */
 .chat-sidebar input {
   margin: 8px 10px;
   padding: 10px;
@@ -116,27 +116,49 @@ nav a:hover {
   cursor: pointer;
 }
 
-/* USERS LIST */
+/* =========================
+   CHAT PREVIEWS (FIXED SPACING)
+========================= */
+.chat-preview {
+  padding: 14px;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chat-preview:hover {
+  background: var(--panel2);
+}
+
+.chat-preview strong {
+  color: var(--text);
+}
+
+.chat-preview small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* =========================
+   USERS LIST
+========================= */
 #userList {
   list-style: none;
   overflow-y: auto;
   flex: 1;
 }
 
-#userList li,
-.chat-sidebar li {
+#userList li {
   padding: 12px;
-  margin: 8px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: var(--panel2);
+  border-bottom: 1px solid #444;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
-#userList li:hover,
-.chat-sidebar li:hover {
-  background: #3a3a3a;
+#userList li:hover {
+  background: var(--panel2);
   color: var(--red);
 }
 
@@ -149,30 +171,37 @@ nav a:hover {
   flex-direction: column;
 }
 
-/* HEADER */
 .chat-header {
   padding: 15px;
   border-bottom: 1px solid #444;
 }
 
 /* =========================
-   MESSAGES
+   MESSAGE LIST (IMPORTANT FIX)
 ========================= */
 #messageList {
   flex: 1;
   list-style: none;
-  padding: 15px;
+  padding: 20px;
   overflow-y: auto;
+
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px; /* 🔥 real spacing between bubbles */
 }
 
+/* =========================
+   MESSAGE BUBBLES (FIXED)
+========================= */
 .msg {
   max-width: 65%;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   word-wrap: break-word;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* spacing inside bubble */
 }
 
 /* YOU */
@@ -187,6 +216,12 @@ nav a:hover {
   background: var(--panel2);
   color: var(--text);
   align-self: flex-start;
+}
+
+/* message timestamp */
+.msg small {
+  font-size: 11px;
+  opacity: 0.7;
 }
 
 /* =========================
@@ -217,27 +252,9 @@ nav a:hover {
   color: white;
   cursor: pointer;
 }
-.chat-preview {
-  padding: 12px;
-  border-bottom: 1px solid #444;
-  cursor: pointer;
-  transition: 0.2s;
-}
 
-.chat-preview:hover {
-  background: var(--panel2);
-}
-
-.chat-preview strong {
-  color: var(--text);
-}
-
-.chat-preview small {
-  color: var(--muted);
-  font-size: 12px;
-}
 /* =========================
-   TASK SYSTEM (IMPORTANT)
+   TASK SYSTEM
 ========================= */
 .task {
   background: var(--panel);
@@ -247,26 +264,15 @@ nav a:hover {
   border: 1px solid #444;
 }
 
-/* PRIORITIES */
-.task.high {
-  border-left: 6px solid var(--red);
-}
+.task.high { border-left: 6px solid var(--red); }
+.task.medium { border-left: 6px solid var(--gold); }
+.task.low { border-left: 6px solid var(--green); }
 
-.task.medium {
-  border-left: 6px solid var(--gold);
-}
-
-.task.low {
-  border-left: 6px solid var(--green);
-}
-
-/* DONE */
 .task.done {
   opacity: 0.5;
   text-decoration: line-through;
 }
 
-/* OVERDUE */
 .task.overdue {
   box-shadow: 0 0 10px rgba(230, 57, 70, 0.4);
 }
