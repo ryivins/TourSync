@@ -1,4 +1,3 @@
-
 /* =========================
    CONTACT SYSTEM
 ========================= */
@@ -12,10 +11,10 @@ function saveContacts(contacts) {
 }
 
 function addContact() {
-  const first = document.getElementById("firstName").value.trim();
-  const last = document.getElementById("lastName").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const first = document.getElementById("firstName")?.value.trim();
+  const last = document.getElementById("lastName")?.value.trim();
+  const phone = document.getElementById("phone")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
 
   if (!first || !last) return;
 
@@ -82,7 +81,7 @@ function saveTasks(tasks) {
 }
 
 function addTask() {
-  const text = document.getElementById("taskInput").value.trim();
+  const text = document.getElementById("taskInput")?.value.trim();
   if (!text) return;
 
   const tasks = getTasks();
@@ -137,12 +136,13 @@ function renderTasks() {
   });
 }
 
-/
+/* =========================
+   MESSAGING SYSTEM
+========================= */
+
 let currentChatUser = null;
 
-/* =========================
-   STORAGE
-========================= */
+/* ---------- STORAGE ---------- */
 
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
@@ -168,22 +168,18 @@ function setActiveUser(id) {
   localStorage.setItem("activeUser", id);
 }
 
-/* =========================
-   CHAT KEY (IMPORTANT)
-========================= */
+/* ---------- CHAT KEY ---------- */
 
 function getChatId(a, b) {
   return [a, b].sort().join("__");
 }
 
-/* =========================
-   SAFE DEMO SEED (FIXED)
-========================= */
+/* ---------- SAFE DEMO DATA ---------- */
 
 function initializeDemoData() {
   let users = getUsers();
 
-  if (!users.length) {
+  if (!Array.isArray(users) || users.length === 0) {
     users = [
       { id: "u1", name: "Matt Klein" },
       { id: "u2", name: "Sidney Castillo" },
@@ -214,15 +210,11 @@ function initializeDemoData() {
     ]
   };
 
-  // ALWAYS overwrite (prevents silent failure)
   chats = { ...chats, ...seed };
-
   saveChats(chats);
 }
 
-/* =========================
-   SIDEBAR PREVIEW
-========================= */
+/* ---------- SIDEBAR ---------- */
 
 function getLastMessage(me, other) {
   const chats = getChats();
@@ -264,24 +256,22 @@ function renderUsers() {
   });
 }
 
-/* =========================
-   CHAT
-========================= */
+/* ---------- CHAT ---------- */
 
 function openChat(userId) {
   currentChatUser = userId;
 
   const user = getUsers().find(u => u.id === userId);
 
-  document.getElementById("chatTitle").textContent =
-    "Chat with " + (user?.name || userId);
+  const title = document.getElementById("chatTitle");
+  if (title) title.textContent = "Chat with " + (user?.name || userId);
 
   renderMessages();
 }
 
 function sendMessage() {
   const input = document.getElementById("messageInput");
-  const text = input.value.trim();
+  const text = input?.value.trim();
 
   if (!text || !currentChatUser) return;
 
@@ -341,7 +331,7 @@ function renderMessages() {
 }
 
 /* =========================
-   INIT (CRITICAL FIX)
+   INIT
 ========================= */
 
 window.addEventListener("load", () => {
