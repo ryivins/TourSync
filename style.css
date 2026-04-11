@@ -1,9 +1,4 @@
 /* =========================
-   FONT IMPORT (IMPORTANT)
-========================= */
-@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-
-/* =========================
    RESET
 ========================= */
 * {
@@ -20,7 +15,8 @@
   --bg: #1f1f1f;        /* charcoal */
   --panel: #2a2a2a;
   --panel2: #333333;
-  --text: #f2f2f2;
+
+  --text: #f2f2f2;      /* off-white */
   --muted: #b5b5b5;
 
   --red: #e63946;
@@ -38,12 +34,12 @@ body {
 }
 
 /* =========================
-   TITLES (OLD ENGLISH FONT)
+   TITLES (NORMAL FONT NOW)
 ========================= */
 h1, h2, h3 {
-  font-family: "UnifrakturMaguntia", cursive;
+  font-family: Georgia, "Times New Roman", serif;
   color: var(--red);
-  letter-spacing: 1px;
+  font-weight: bold;
 }
 
 /* =========================
@@ -71,7 +67,7 @@ nav a:hover {
 }
 
 /* =========================
-   CONTAINER
+   PAGE CONTAINER
 ========================= */
 .container {
   padding: 25px;
@@ -83,7 +79,6 @@ nav a:hover {
 .chat-layout {
   display: flex;
   height: calc(100vh - 80px);
-  gap: 10px;
 }
 
 /* SIDEBAR */
@@ -101,7 +96,7 @@ nav a:hover {
   border-bottom: 1px solid #444;
 }
 
-/* INPUTS */
+/* SIDEBAR INPUTS */
 .chat-sidebar input {
   margin: 8px 10px;
   padding: 10px;
@@ -162,13 +157,11 @@ nav a:hover {
   list-style: none;
   padding: 15px;
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* MESSAGE BOX */
 .msg {
   max-width: 65%;
   padding: 10px 14px;
@@ -220,7 +213,7 @@ nav a:hover {
 }
 
 /* =========================
-   TASK PRIORITIES (IMPORTANT FIX KEPT)
+   TASK SYSTEM (IMPORTANT)
 ========================= */
 .task {
   background: var(--panel);
@@ -230,17 +223,15 @@ nav a:hover {
   border: 1px solid #444;
 }
 
-/* HIGH PRIORITY */
+/* PRIORITIES */
 .task.high {
   border-left: 6px solid var(--red);
 }
 
-/* MEDIUM */
 .task.medium {
   border-left: 6px solid var(--gold);
 }
 
-/* LOW */
 .task.low {
   border-left: 6px solid var(--green);
 }
@@ -268,7 +259,7 @@ nav a:hover {
 }
 
 /* =========================
-   DELETE
+   DELETE BUTTON
 ========================= */
 .delete {
   color: var(--red);

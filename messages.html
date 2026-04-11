@@ -13,26 +13,28 @@
   <h1>𝔗𝔬𝔲𝔯𝔖𝔶𝔫𝔠</h1>
 
   <nav>
-    <a href="index.html">𝐃𝐚𝐬𝐡𝐛𝐨𝐚𝐫𝐝</a>
-    <a href="schedule.html">𝐒𝐜𝐡𝐞𝐝𝐮𝐥𝐞</a>
-    <a href="tasks.html">𝐓𝐚𝐬𝐤𝐬</a>
-    <a href="contacts.html">𝐂𝐨𝐧𝐭𝐚𝐜𝐭𝐬</a>
-    <a href="messages.html">𝐌𝐞𝐬𝐬𝐚𝐠𝐞𝐬</a>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
   </nav>
 </header>
 
 <main class="chat-layout">
 
-  <!-- SIDEBAR -->
+  <!-- =========================
+       SIDEBAR (USERS / CHAT LIST)
+  ========================== -->
   <aside class="chat-sidebar">
 
     <h3>Users</h3>
 
-    <!-- CREATE PROFILE -->
+    <!-- CREATE USER -->
     <div class="profile-box">
       <input id="name" placeholder="Name">
       <input id="username" placeholder="Username">
-      <button onclick="createUser()">Create Profile</button>
+      <button onclick="createUser()">Create User</button>
     </div>
 
     <!-- SEARCH USERS -->
@@ -47,7 +49,9 @@
 
   </aside>
 
-  <!-- CHAT WINDOW -->
+  <!-- =========================
+       CHAT WINDOW
+  ========================== -->
   <section class="chat-window">
 
     <!-- HEADER -->
@@ -55,12 +59,21 @@
       <h3 id="chatTitle">Select a conversation</h3>
     </div>
 
+    <!-- EMPTY STATE -->
+    <div id="emptyState" style="
+      text-align:center;
+      padding:20px;
+      color:#b5b5b5;
+    ">
+      Select a user to start chatting
+    </div>
+
     <!-- MESSAGES -->
     <ul id="messageList"></ul>
 
-    <!-- INPUT -->
-    <div class="chat-input">
-      <input id="messageInput" placeholder="Type your message...">
+    <!-- MESSAGE INPUT -->
+    <div class="message-box">
+      <input id="messageInput" placeholder="Type thy message...">
       <button onclick="sendMessage()">Send</button>
     </div>
 
