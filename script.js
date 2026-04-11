@@ -1,3 +1,4 @@
+
 /* =========================
    CONTACT SYSTEM
 ========================= */
@@ -68,23 +69,6 @@ function renderContacts() {
     });
 }
 
-function deleteContact(id) {
-  saveContacts(getContacts().filter(c => c.id !== id));
-  renderContacts();
-}
-
-function editContact(id) {
-  const c = getContacts().find(x => x.id === id);
-  if (!c) return;
-
-  document.getElementById("firstName").value = c.first;
-  document.getElementById("lastName").value = c.last;
-  document.getElementById("phone").value = c.phone;
-  document.getElementById("email").value = c.email;
-
-  deleteContact(id);
-}
-
 /* =========================
    TASK SYSTEM
 ========================= */
@@ -119,17 +103,8 @@ function addTask() {
 }
 
 function toggleTask(id) {
-  saveTasks(getTasks().map(t => (t.id === id ? { ...t, done: !t.done } : t)));
+  saveTasks(getTasks().map(t => t.id === id ? { ...t, done: !t.done } : t));
   renderTasks();
-}
-
-function deleteTask(id) {
-  saveTasks(getTasks().filter(t => t.id !== id));
-  renderTasks();
-}
-
-function isOverdue(task) {
-  return task.dueDate && !task.done && new Date(task.dueDate) < new Date();
 }
 
 function renderTasks() {
@@ -140,8 +115,7 @@ function renderTasks() {
 
   getTasks().forEach(t => {
     const li = document.createElement("li");
-
-    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${isOverdue(t) ? "overdue" : ""}`;
+    li.className = `task ${t.priority} ${t.done ? "done" : ""}`;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -164,10 +138,12 @@ function renderTasks() {
 }
 
 /* =========================
-   MESSAGING SYSTEM (FIXED)
+   MESSAGING SYSTEM (FIXED CORE)
 ========================= */
 
 let currentChatUser = null;
+
+/* ---------- STORAGE ---------- */
 
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
@@ -193,11 +169,13 @@ function setActiveUser(id) {
   localStorage.setItem("activeUser", id);
 }
 
+/* ---------- CHAT KEY ---------- */
+
 function getChatId(a, b) {
   return [a, b].sort().join("__");
 }
 
-/* ---------- DEMO DATA ---------- */
+/* ---------- DEMO DATA (FORCED FIX) ---------- */
 
 function initializeDemoData() {
   let users = getUsers();
@@ -219,22 +197,23 @@ function initializeDemoData() {
   let chats = getChats();
 
   const demoChats = {
-    [getChatId(me, "Matt Klein")]: [
-      { from: "Matt Klein", text: "Hey, are we still meeting?", time: "9:04 AM" },
+    [getChatId(me, "u1")]: [
+      { from: "u1", text: "Hey, are we still meeting?", time: "9:04 AM" },
       { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
     ],
-    [getChatId(me, "Sidney Castillo")]: [
-      { from: "Sidney Castillo", text: "Got the schedule 👍", time: "8:12 AM" },
+    [getChatId(me, "u2")]: [
+      { from: "u2", text: "Got the schedule 👍", time: "8:12 AM" },
       { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
     ],
-    [getChatId(me, "Jonah Payne")]: [
-      { from: "Jonah Payne", text: "I'll check it out", time: "7:58 AM" },
+    [getChatId(me, "u3")]: [
+      { from: "u3", text: "I'll check it out", time: "7:58 AM" },
       { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
     ]
   };
 
+  // FORCE SEED (this fixes your issue)
   for (const id in demoChats) {
-    if (!chats[id]) chats[id] = demoChats[id];
+    chats[id] = demoChats[id];
   }
 
   saveChats(chats);
@@ -253,7 +232,7 @@ function getLastMessage(me, otherId) {
   return `${last.from}: ${last.text}`;
 }
 
-function renderUsers(search = "") {
+function renderUsers() {
   const list = document.getElementById("userList");
   if (!list) return;
 
@@ -262,29 +241,24 @@ function renderUsers(search = "") {
 
   list.innerHTML = "";
 
-  users
-    .filter(u =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.username.toLowerCase().includes(search.toLowerCase())
-    )
-    .forEach(u => {
-      const li = document.createElement("li");
-      li.className = "chat-preview";
+  users.forEach(u => {
+    const li = document.createElement("li");
+    li.className = "chat-preview";
 
-      const name = document.createElement("strong");
-      name.textContent = u.name;
+    const name = document.createElement("strong");
+    name.textContent = u.name;
 
-      const preview = document.createElement("small");
-      preview.textContent = getLastMessage(me, u.id);
+    const preview = document.createElement("small");
+    preview.textContent = getLastMessage(me, u.id);
 
-      li.appendChild(name);
-      li.appendChild(document.createElement("br"));
-      li.appendChild(preview);
+    li.appendChild(name);
+    li.appendChild(document.createElement("br"));
+    li.appendChild(preview);
 
-      li.onclick = () => openChat(u.id);
+    li.onclick = () => openChat(u.id);
 
-      list.appendChild(li);
-    });
+    list.appendChild(li);
+  });
 }
 
 /* ---------- CHAT ---------- */
