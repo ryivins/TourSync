@@ -1,29 +1,60 @@
-<h2>Tasks</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tasks</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
 
-<!-- DASHBOARD STATS -->
-<div class="task-stats">
-  <div id="statHigh"></div>
-  <div id="statMedium"></div>
-  <div id="statLow"></div>
-  <div id="statOverdue"></div>
-</div>
+<body>
 
-<!-- INPUT AREA -->
-<div class="task-input">
+<header class="topbar">
+  <h1>TourSync</h1>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+  </nav>
+</header>
 
-  <input id="taskInput" type="text" placeholder="Task name">
+<main class="container">
 
-  <select id="taskPriority">
-    <option value="high">High</option>
-    <option value="medium">Medium</option>
-    <option value="low">Low</option>
-  </select>
+  <div class="page-title">
+    <h2>Tasks</h2>
+    <p>Manage tour responsibilities in real time</p>
+  </div>
 
-  <input id="taskDueDate" type="date">
+  <!-- STATS -->
+  <div class="task-stats">
+    <div id="statHigh"></div>
+    <div id="statMedium"></div>
+    <div id="statLow"></div>
+    <div id="statOverdue"></div>
+  </div>
 
-  <input id="taskAssignee" type="text" placeholder="Assign to (contact name)">
+  <!-- INPUT CARD -->
+  <div class="task-card">
 
-  <button onclick="addTask()">Add Task</button>
-</div>
+    <div class="task-input">
+      <input id="taskInput" type="text" placeholder="Task name">
+      <select id="taskPriority">
+        <option value="high">High Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="low">Low Priority</option>
+      </select>
+      <input id="taskDueDate" type="date">
+      <input id="taskAssignee" type="text" placeholder="Assign to">
+      <button onclick="addTask()">+ Add Task</button>
+    </div>
 
-<ul id="taskList"></ul>
+  </div>
+
+  <!-- TASK LIST -->
+  <ul id="taskList"></ul>
+
+</main>
+
+</body>
+</html>
