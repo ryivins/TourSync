@@ -12,9 +12,6 @@
 <header class="topbar">
   <h1>TourSync</h1>
 
-  <!-- HAMBURGER (optional future use) -->
-  <div class="hamburger" onclick="toggleMenu()">☰</div>
-
   <nav>
     <a href="index.html">Dashboard</a>
     <a href="schedule.html">Schedule</a>
@@ -27,21 +24,31 @@
 <main class="chat-layout">
 
   <!-- =========================
-       SIDEBAR (CHAT LIST)
+       SIDEBAR
   ========================== -->
   <aside class="chat-sidebar">
 
-    <h3>Chats</h3>
+    <!-- HAMBURGER (for future toggle) -->
+    <div class="sidebar-top">
+      <button class="hamburger">☰</button>
+      <h3>Chats</h3>
+    </div>
 
-    <!-- SEARCH CHATS -->
+    <!-- SEARCH PEOPLE -->
     <input
       id="userSearch"
-      placeholder="Search chats..."
-      onkeyup="renderChatList(this.value)"
+      placeholder="Search people..."
+      onkeyup="renderUsers(this.value)"
     >
 
-    <!-- CHAT LIST -->
-    <ul id="chatList"></ul>
+    <!-- CREATE GROUP CHAT -->
+    <div class="group-create">
+      <input id="groupName" placeholder="Group name...">
+      <button onclick="createGroupChat()">+ Group Chat</button>
+    </div>
+
+    <!-- USER / CHAT LIST -->
+    <ul id="userList"></ul>
 
   </aside>
 
@@ -50,26 +57,17 @@
   ========================== -->
   <section class="chat-window">
 
-    <!-- HEADER -->
+    <!-- CHAT HEADER -->
     <div class="chat-header">
-      <h3 id="chatTitle">Select a conversation</h3>
+      <h3 id="chatTitle">Select a chat</h3>
     </div>
 
-    <!-- EMPTY STATE -->
-    <div id="emptyState" style="
-      text-align:center;
-      padding:20px;
-      color:#b5b5b5;
-    ">
-      Select a chat to start messaging
-    </div>
-
-    <!-- MESSAGES -->
+    <!-- CHAT MESSAGES -->
     <ul id="messageList"></ul>
 
-    <!-- INPUT -->
+    <!-- MESSAGE INPUT -->
     <div class="message-box">
-      <input id="messageInput" placeholder="Type thy message...">
+      <input id="messageInput" placeholder="Type your message...">
       <button onclick="sendMessage()">Send</button>
     </div>
 
