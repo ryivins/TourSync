@@ -95,4 +95,42 @@ footer {
   margin-top: 40px;
   border-top: 1px solid #1f2937;
   color: #64748b;
+}.task-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.task-input button {
+  padding: 10px 15px;
+  border: none;
+  background: #38bdf8;
+  color: black;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#taskList {
+  list-style: none;
+}
+
+#taskList li {
+  background: #1e293b;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete {
+  color: red;
+  cursor: pointer;
 }

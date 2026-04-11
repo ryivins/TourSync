@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TourSync Dashboard</title>
+  <title>Tasks</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -20,20 +20,16 @@
 </header>
 
 <main class="container">
-  <h2>Dashboard</h2>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Next Show</h3>
-      <p>Dallas, TX — April 12</p>
-    </div>
+  <h2>Tasks</h2>
 
-    <div class="card">
-      <h3>Quick Stats</h3>
-      <p>3 upcoming shows</p>
-      <p>5 active tasks</p>
-    </div>
+  <div class="task-input">
+    <input id="taskInput" type="text" placeholder="Add new task...">
+    <button onclick="addTask()">Add</button>
   </div>
+
+  <ul id="taskList"></ul>
+
 </main>
 
 </body>
