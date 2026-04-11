@@ -103,3 +103,135 @@ function editContact(id) {
 window.addEventListener("load", () => {
   renderContacts();
 });
+
+// ---------------- TASK SYSTEM (FULL UPGRADE) ----------------
+
+function getTasks() {
+  return JSON.parse(localStorage.getItem("tasks")) || [];
+}
+
+function saveTasks(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// SORT BY PRIORITY
+function sortTasks(tasks) {
+  const order = { high: 1, medium: 2, low: 3 };
+  return tasks.sort((a, b) => order[a.priority] - order[b.priority]);
+}
+
+// ADD TASK
+function addTask() {
+  const text = document.getElementById("taskInput").value.trim();
+  const priority = document.getElementById("taskPriority").value;
+  const dueDate = document.getElementById("taskDueDate").value;
+  const assignedTo = document.getElementById("taskAssignee").value.trim();
+
+  if (!text) return;
+
+  let tasks = getTasks();
+
+  tasks.push({
+    id: Date.now(),
+    text,
+    priority,
+    dueDate,
+    assignedTo,
+    done: false
+  });
+
+  tasks = sortTasks(tasks);
+
+  saveTasks(tasks);
+  renderTasks();
+
+  document.getElementById("taskInput").value = "";
+  document.getElementById("taskDueDate").value = "";
+  document.getElementById("taskAssignee").value = "";
+}
+
+// TOGGLE COMPLETE
+function toggleTask(id) {
+  let tasks = getTasks();
+
+  tasks = tasks.map(t =>
+    t.id === id ? { ...t, done: !t.done } : t
+  );
+
+  saveTasks(tasks);
+  renderTasks();
+}
+
+// DELETE
+function deleteTask(id) {
+  let tasks = getTasks().filter(t => t.id !== id);
+  saveTasks(tasks);
+  renderTasks();
+}
+
+// CHECK OVERDUE
+function isOverdue(task) {
+  if (!task.dueDate || task.done) return false;
+  return new Date(task.dueDate) < new Date();
+}
+
+// RENDER TASKS
+function renderTasks() {
+  const list = document.getElementById("taskList");
+  if (!list) return;
+
+  let tasks = getTasks();
+  tasks = sortTasks(tasks);
+
+  list.innerHTML = "";
+
+  let stats = {
+    high: 0,
+    medium: 0,
+    low: 0,
+    overdue: 0
+  };
+
+  tasks.forEach(t => {
+    if (t.priority === "high") stats.high++;
+    if (t.priority === "medium") stats.medium++;
+    if (t.priority === "low") stats.low++;
+    if (isOverdue(t)) stats.overdue++;
+
+    const li = document.createElement("li");
+
+    const overdueClass = isOverdue(t) ? "overdue" : "";
+
+    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${overdueClass}`;
+
+    li.innerHTML = `
+      <div class="task-left">
+
+        <input type="checkbox" ${t.done ? "checked" : ""} onclick="toggleTask(${t.id})">
+
+        <div>
+          <strong>${t.text}</strong><br>
+
+          <small>
+            📅 ${t.dueDate ? t.dueDate : "No due date"} |
+            👤 ${t.assignedTo ? t.assignedTo : "Unassigned"}
+          </small>
+        </div>
+
+      </div>
+
+      <span class="delete" onclick="deleteTask(${t.id})">✕</span>
+    `;
+
+    list.appendChild(li);
+  });
+
+  // UPDATE DASHBOARD STATS
+  document.getElementById("statHigh").innerText = `High: ${stats.high}`;
+  document.getElementById("statMedium").innerText = `Medium: ${stats.medium}`;
+  document.getElementById("statLow").innerText = `Low: ${stats.low}`;
+  document.getElementById("statOverdue").innerText = `Overdue: ${stats.overdue}`;
+}
+
+// LOAD
+window.addEventListener("load", renderTasks);

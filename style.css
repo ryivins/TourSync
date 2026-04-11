@@ -44,17 +44,7 @@ nav a:hover {
   padding: 40px;
 }
 
-/* PAGE TITLE AREA */
-.welcome {
-  margin-bottom: 30px;
-}
-
-.welcome h2 {
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-
-/* DASHBOARD GRID */
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -84,7 +74,6 @@ nav a:hover {
   color: #cbd5e1;
 }
 
-/* LISTS */
 .card ul {
   list-style: none;
 }
@@ -98,33 +87,36 @@ footer {
   color: #64748b;
 }
 
-/* TASK INPUT AREA */
+/* ========================= */
+/* TASK SYSTEM */
+/* ========================= */
+
+.task-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.task-stats div {
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
 .task-input {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
-.task-input input {
-  flex: 1;
+.task-input input,
+.task-input select {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  outline: none;
-}
-
-.task-input button {
-  padding: 10px 15px;
-  border: none;
-  background: #38bdf8;
-  color: black;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.task-input button:hover {
-  background: #0ea5e9;
 }
 
 /* TASK LIST */
@@ -132,13 +124,48 @@ footer {
   list-style: none;
 }
 
-#taskList li {
-  background: #1e293b;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 8px;
+/* TASK ITEM */
+.task {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* PRIORITY COLORS */
+.task.high {
+  border-left: 6px solid #ef4444;
+  background: #7f1d1d;
+}
+
+.task.medium {
+  border-left: 6px solid #f59e0b;
+  background: #78350f;
+}
+
+.task.low {
+  border-left: 6px solid #22c55e;
+  background: #14532d;
+}
+
+/* OVERDUE */
+.task.overdue {
+  outline: 2px solid #ef4444;
+}
+
+/* DONE */
+.task.done {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* LEFT SIDE */
+.task-left {
+  display: flex;
+  gap: 10px;
   align-items: center;
 }
 
@@ -152,6 +179,11 @@ footer {
 .delete:hover {
   color: #ff6b6b;
 }
+
+/* ========================= */
+/* CONTACT SYSTEM */
+/* ========================= */
+
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -196,6 +228,7 @@ footer {
   align-items: center;
 }
 
+/* CONTACT ACTIONS */
 .actions {
   display: flex;
   gap: 10px;
@@ -210,8 +243,13 @@ footer {
   cursor: pointer;
 }
 
+/* DELETE (GLOBAL) */
 .delete {
-  color: red;
+  color: #ef4444;
   cursor: pointer;
   font-weight: bold;
+}
+
+.delete:hover {
+  color: #ff6b6b;
 }

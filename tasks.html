@@ -1,36 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Tasks</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
-</head>
+<h2>Tasks</h2>
 
-<body>
+<!-- DASHBOARD STATS -->
+<div class="task-stats">
+  <div id="statHigh"></div>
+  <div id="statMedium"></div>
+  <div id="statLow"></div>
+  <div id="statOverdue"></div>
+</div>
 
-<header class="topbar">
-  <h1>TourSync</h1>
-  <nav>
-    <a href="index.html">Dashboard</a>
-    <a href="schedule.html">Schedule</a>
-    <a href="tasks.html">Tasks</a>
-    <a href="contacts.html">Contacts</a>
-  </nav>
-</header>
+<!-- INPUT AREA -->
+<div class="task-input">
 
-<main class="container">
+  <input id="taskInput" type="text" placeholder="Task name">
 
-  <h2>Tasks</h2>
+  <select id="taskPriority">
+    <option value="high">High</option>
+    <option value="medium">Medium</option>
+    <option value="low">Low</option>
+  </select>
 
-  <div class="task-input">
-    <input id="taskInput" type="text" placeholder="Add new task...">
-    <button onclick="addTask()">Add</button>
-  </div>
+  <input id="taskDueDate" type="date">
 
-  <ul id="taskList"></ul>
+  <input id="taskAssignee" type="text" placeholder="Assign to (contact name)">
 
-</main>
+  <button onclick="addTask()">Add Task</button>
+</div>
 
-</body>
-</html>
+<ul id="taskList"></ul>
