@@ -10,7 +10,10 @@
 <body>
 
 <header class="topbar">
-  <h1>𝔗𝔬𝔲𝔯𝔖𝔶𝔫𝔠</h1>
+  <h1>TourSync</h1>
+
+  <!-- HAMBURGER (optional future use) -->
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
 
   <nav>
     <a href="index.html">Dashboard</a>
@@ -24,28 +27,21 @@
 <main class="chat-layout">
 
   <!-- =========================
-       SIDEBAR (USERS / CHAT LIST)
+       SIDEBAR (CHAT LIST)
   ========================== -->
   <aside class="chat-sidebar">
 
-    <h3>Users</h3>
+    <h3>Chats</h3>
 
-    <!-- CREATE USER -->
-    <div class="profile-box">
-      <input id="name" placeholder="Name">
-      <input id="username" placeholder="Username">
-      <button onclick="createUser()">Create User</button>
-    </div>
-
-    <!-- SEARCH USERS -->
+    <!-- SEARCH CHATS -->
     <input
       id="userSearch"
-      placeholder="Search users..."
-      onkeyup="renderUsers(this.value)"
+      placeholder="Search chats..."
+      onkeyup="renderChatList(this.value)"
     >
 
-    <!-- USER LIST -->
-    <ul id="userList"></ul>
+    <!-- CHAT LIST -->
+    <ul id="chatList"></ul>
 
   </aside>
 
@@ -65,13 +61,13 @@
       padding:20px;
       color:#b5b5b5;
     ">
-      Select a user to start chatting
+      Select a chat to start messaging
     </div>
 
     <!-- MESSAGES -->
     <ul id="messageList"></ul>
 
-    <!-- MESSAGE INPUT -->
+    <!-- INPUT -->
     <div class="message-box">
       <input id="messageInput" placeholder="Type thy message...">
       <button onclick="sendMessage()">Send</button>

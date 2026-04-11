@@ -41,7 +41,8 @@ function renderContacts() {
   const list = document.getElementById("contactList");
   if (!list) return;
 
-  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  const search =
+    document.getElementById("searchInput")?.value.toLowerCase() || "";
 
   let contacts = getContacts().filter(c =>
     c.first.toLowerCase().includes(search) ||
@@ -92,7 +93,7 @@ function editContact(id) {
 
 
 // =========================
-// TASK SYSTEM
+// TASK SYSTEM (PRESERVED)
 // =========================
 
 function getTasks() {
@@ -152,22 +153,25 @@ function renderTasks() {
   if (!list) return;
 
   const tasks = getTasks();
-
   list.innerHTML = "";
 
   tasks.forEach(t => {
     const li = document.createElement("li");
 
-    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${isOverdue(t) ? "overdue" : ""}`;
+    li.className = `task ${t.priority} ${t.done ? "done" : ""} ${
+      isOverdue(t) ? "overdue" : ""
+    }`;
 
     li.innerHTML = `
-      <div class="task-left">
-        <input type="checkbox" onclick="toggleTask(${t.id})" ${t.done ? "checked" : ""}>
+      <div>
+        <input type="checkbox" onclick="toggleTask(${t.id})" ${
+      t.done ? "checked" : ""
+    }>
 
-        <div>
-          <strong>${t.text}</strong><br>
-          <small>📅 ${t.dueDate || "No due date"} | 👤 ${t.assignedTo || "Unassigned"}</small>
-        </div>
+        <strong>${t.text}</strong><br>
+        <small>📅 ${t.dueDate || "No due date"} | 👤 ${
+      t.assignedTo || "Unassigned"
+    }</small>
       </div>
 
       <span class="delete" onclick="deleteTask(${t.id})">✕</span>
@@ -179,7 +183,7 @@ function renderTasks() {
 
 
 // =========================
-// MESSAGING SYSTEM (CLEAN FACEBOOK STYLE)
+// MESSAGING SYSTEM (FIXED + CLEAN)
 // =========================
 
 let currentChatUser = null;
@@ -192,6 +196,20 @@ function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
+function getChats() {
+  return JSON.parse(localStorage.getItem("chats")) || {};
+}
+
+function saveChats(chats) {
+  localStorage.setItem("chats", JSON.stringify(chats));
+}
+
+function getChatId(a, b) {
+  return [a, b].sort().join("-");
+}
+
+
+// CREATE USER (ONLY USED WHEN NEEDED)
 function createUser() {
   const name = document.getElementById("name").value.trim();
   const username = document.getElementById("username").value.trim();
@@ -207,14 +225,19 @@ function createUser() {
   localStorage.setItem("activeUser", username);
   saveUsers(users);
 
+  const box = document.querySelector(".profile-box");
+  if (box) box.style.display = "none";
+
   renderUsers();
 }
 
+
+// RENDER USERS (CHAT LIST)
 function renderUsers(search = "") {
   const list = document.getElementById("userList");
   if (!list) return;
 
-  const active = localStorage.getItem("activeUser");
+  const active = localStorage.getItem("activeUser") || "";
 
   let users = getUsers().filter(u =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -226,12 +249,18 @@ function renderUsers(search = "") {
   users.forEach(u => {
     const li = document.createElement("li");
 
-    if (u.username === active) li.style.border = "1px solid #38bdf8";
+    li.className = "chat-preview";
 
     li.innerHTML = `
-      <strong>${u.name}</strong><br>
-      <small>@${u.username}</small>
+      <div>
+        <strong>${u.name}</strong><br>
+        <small>@${u.username}</small>
+      </div>
     `;
+
+    if (u.username === active) {
+      li.style.borderLeft = "3px solid #e63946";
+    }
 
     li.onclick = () => openChat(u.username);
 
@@ -240,24 +269,13 @@ function renderUsers(search = "") {
 }
 
 
-// CHATS
-function getChats() {
-  return JSON.parse(localStorage.getItem("chats")) || {};
-}
-
-function saveChats(chats) {
-  localStorage.setItem("chats", JSON.stringify(chats));
-}
-
-function getChatId(a, b) {
-  return [a, b].sort().join("-");
-}
-
-
 // OPEN CHAT
 function openChat(username) {
   currentChatUser = username;
-  document.getElementById("chatTitle").innerText = "Chat with @" + username;
+
+  document.getElementById("chatTitle").innerText =
+    "Chat with @" + username;
+
   renderMessages();
 }
 
@@ -289,19 +307,30 @@ function sendMessage() {
 }
 
 
-// RENDER MESSAGES (MESSENGER STYLE)
+// RENDER MESSAGES (FIXED EMPTY STATES)
 function renderMessages() {
   const list = document.getElementById("messageList");
-  if (!list || !currentChatUser) return;
+  if (!list) return;
 
   const me = localStorage.getItem("activeUser");
 
+  if (!currentChatUser) {
+    list.innerHTML =
+      `<li class="msg them">Select a conversation to start chatting</li>`;
+    return;
+  }
+
   const chats = getChats();
   const chatId = getChatId(me, currentChatUser);
-
   const messages = chats[chatId] || [];
 
   list.innerHTML = "";
+
+  if (messages.length === 0) {
+    list.innerHTML =
+      `<li class="msg them">No messages yet. Say hello 👋</li>`;
+    return;
+  }
 
   messages.forEach(m => {
     const li = document.createElement("li");
@@ -310,7 +339,7 @@ function renderMessages() {
 
     li.innerHTML = `
       <div>${m.text}</div>
-      <small>${m.time}</small>
+      <small style="opacity:0.6">${m.time}</small>
     `;
 
     list.appendChild(li);
