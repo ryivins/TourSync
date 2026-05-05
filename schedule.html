@@ -10,24 +10,71 @@
 
 <header class="topbar">
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
 </header>
 
 <main class="container">
   <h2>Tour Schedule</h2>
 
+  <!-- ADD EVENT FORM -->
   <div class="card">
-    <p>April 12 — Dallas, TX</p>
-    <p>April 14 — Austin, TX</p>
-    <p>April 16 — Houston, TX</p>
+    <h3>Add Event</h3>
+
+    <div style="display:flex; flex-direction:column; gap:10px;">
+
+      <input type="date" id="dateInput">
+      <input type="time" id="timeInput">
+      <input type="text" id="locationInput" placeholder="Location (City, Venue)">
+      <input type="text" id="notesInput" placeholder="Notes (optional)">
+
+      <button onclick="addEvent()">Add Event</button>
+
+    </div>
   </div>
+
+  <!-- EVENTS LIST -->
+  <div id="scheduleList"></div>
+
 </main>
+
+<script>
+  const scheduleList = document.getElementById("scheduleList");
+
+  function addEvent() {
+    const date = document.getElementById("dateInput").value;
+    const time = document.getElementById("timeInput").value;
+    const location = document.getElementById("locationInput").value;
+    const notes = document.getElementById("notesInput").value;
+
+    if (!date || !location) {
+      alert("Please enter at least a date and location.");
+      return;
+    }
+
+    const eventCard = document.createElement("div");
+    eventCard.className = "card";
+
+    eventCard.innerHTML = `
+      <strong>${date}</strong> ${time ? `— ${time}` : ""}<br>
+      <div>${location}</div>
+      ${notes ? `<small>${notes}</small>` : ""}
+    `;
+
+    scheduleList.appendChild(eventCard);
+
+    // clear inputs
+    document.getElementById("dateInput").value = "";
+    document.getElementById("timeInput").value = "";
+    document.getElementById("locationInput").value = "";
+    document.getElementById("notesInput").value = "";
+  }
+</script>
 
 </body>
 </html>

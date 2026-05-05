@@ -1,7 +1,50 @@
 /* =========================
    CONTACT SYSTEM
 ========================= */
+function signUp() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("Account created!"))
+    .catch(err => alert(err.message));
+}
+
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => alert("Logged in!"))
+    .catch(err => alert(err.message));
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("profileForm");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("You must log in first");
+        return;
+      }
+
+      await db.collection("profiles").doc(user.uid).set({
+        name: document.getElementById("name").value,
+        role: document.getElementById("role").value,
+        location: document.getElementById("location").value,
+        bio: document.getElementById("bio").value,
+        email: user.email,
+        createdAt: new Date()
+      });
+
+      alert("Profile saved!");
+    });
+  }
+});
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
 }

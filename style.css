@@ -22,6 +22,15 @@
   --red: #e63946;
   --gold: #c9a227;
   --green: #2a9d8f;
+
+  /* spacing system */
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  --radius: 12px;
 }
 
 /* =========================
@@ -31,14 +40,38 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  line-height: 1.5;
 }
 
 /* =========================
-   TITLES
+   TYPOGRAPHY
 ========================= */
+h1 {
+  font-size: 28px;
+  margin-bottom: var(--space-md);
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: var(--space-sm);
+}
+
+h3 {
+  font-size: 18px;
+}
+
 h1, h2, h3 {
   color: var(--red);
   font-weight: bold;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.container {
+  padding: var(--space-lg);
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 /* =========================
@@ -48,16 +81,17 @@ h1, h2, h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 30px;
+  padding: var(--space-md) var(--space-lg);
   background: var(--panel);
   border-bottom: 1px solid #444;
 }
 
 nav a {
-  margin-left: 15px;
+  margin-left: var(--space-md);
   text-decoration: none;
   color: var(--text);
   opacity: 0.8;
+  transition: 0.2s;
 }
 
 nav a:hover {
@@ -66,10 +100,61 @@ nav a:hover {
 }
 
 /* =========================
-   PAGE CONTAINER
+   FORM ELEMENTS (GLOBAL)
 ========================= */
-.container {
-  padding: 25px;
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: var(--text);
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+/* =========================
+   BUTTONS (GLOBAL)
+========================= */
+button {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   CARD SYSTEM
+========================= */
+.card {
+  background: var(--panel);
+  border: 1px solid #444;
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.card-header {
+  margin-bottom: var(--space-sm);
+  font-weight: bold;
+}
+
+.card strong {
+  font-size: 16px;
+}
+
+.card small {
+  color: var(--muted);
 }
 
 /* =========================
@@ -80,11 +165,9 @@ nav a:hover {
   height: calc(100vh - 80px);
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 .chat-sidebar {
-  width: 300px;
+  width: 280px;
   background: var(--panel);
   border-right: 1px solid #444;
   display: flex;
@@ -92,50 +175,33 @@ nav a:hover {
 }
 
 .chat-sidebar h3 {
-  padding: 15px;
+  padding: var(--space-md);
   border-bottom: 1px solid #444;
 }
 
 .chat-sidebar input {
-  margin: 8px 10px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: var(--text);
+  margin: var(--space-sm);
 }
 
 .chat-sidebar button {
-  margin: 0 10px 10px 10px;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: var(--red);
-  color: white;
-  cursor: pointer;
+  margin: 0 var(--space-sm) var(--space-sm);
 }
 
-/* =========================
-   USERS LIST
-========================= */
+/* USERS LIST */
 #userList {
   list-style: none;
   overflow-y: auto;
   flex: 1;
 }
 
-/* =========================
-   CHAT PREVIEW (FIXED FOR YOUR JS)
-========================= */
+/* CHAT PREVIEW */
 .chat-preview {
-  padding: 14px;
+  padding: var(--space-md);
   border-bottom: 1px solid #444;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
-  gap: 5px;
-
+  gap: var(--space-xs);
   transition: 0.2s;
 }
 
@@ -143,27 +209,21 @@ nav a:hover {
   background: var(--panel2);
 }
 
-/* ACTIVE CHAT (optional but useful) */
 .chat-preview.active {
   background: var(--panel2);
   border-left: 4px solid var(--red);
 }
 
-/* FIXED STYLING FOR JS ELEMENTS */
 .chat-preview strong {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--text);
+  font-size: 16px;
 }
 
 .chat-preview small {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--muted);
 }
 
-/* =========================
-   CHAT WINDOW
-========================= */
+/* CHAT WINDOW */
 .chat-window {
   flex: 1;
   display: flex;
@@ -171,93 +231,58 @@ nav a:hover {
 }
 
 .chat-header {
-  padding: 15px;
+  padding: var(--space-md);
   border-bottom: 1px solid #444;
 }
 
-/* =========================
-   MESSAGE LIST
-========================= */
+/* MESSAGES */
 #messageList {
   flex: 1;
   list-style: none;
-  padding: 20px;
+  padding: var(--space-md);
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
-  gap: 14px;
-
-  scroll-behavior: smooth;
+  gap: var(--space-sm);
 }
 
-/* =========================
-   MESSAGE BUBBLES
-========================= */
+/* MESSAGE BUBBLES */
 .msg {
   max-width: 65%;
-  padding: 10px 14px;
-  border-radius: 14px;
-
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
-  word-break: break-word;
+  gap: var(--space-xs);
 }
 
-/* message text safety */
-.msg div {
-  word-break: break-word;
-}
-
-/* YOU */
 .msg.me {
   background: var(--red);
   color: white;
   align-self: flex-end;
 }
 
-/* THEM */
 .msg.them {
   background: var(--panel2);
-  color: var(--text);
   align-self: flex-start;
 }
 
-/* timestamp */
 .msg small {
   font-size: 11px;
   opacity: 0.7;
 }
 
-/* =========================
-   MESSAGE INPUT
-========================= */
+/* MESSAGE INPUT */
 .message-box {
   display: flex;
-  gap: 10px;
-  padding: 12px;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
   border-top: 1px solid #444;
   background: var(--panel);
 }
 
 .message-box input {
   flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: var(--text);
-}
-
-.message-box button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  background: var(--red);
-  color: white;
-  cursor: pointer;
 }
 
 /* =========================
@@ -265,15 +290,15 @@ nav a:hover {
 ========================= */
 .task {
   background: var(--panel);
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  padding: var(--space-md);
+  border-radius: var(--radius);
   border: 1px solid #444;
+  margin-bottom: var(--space-sm);
 }
 
-.task.high { border-left: 6px solid var(--red); }
-.task.medium { border-left: 6px solid var(--gold); }
-.task.low { border-left: 6px solid var(--green); }
+.task.high { border-left: 5px solid var(--red); }
+.task.medium { border-left: 5px solid var(--gold); }
+.task.low { border-left: 5px solid var(--green); }
 
 .task.done {
   opacity: 0.5;
@@ -281,7 +306,7 @@ nav a:hover {
 }
 
 .task.overdue {
-  box-shadow: 0 0 10px rgba(230, 57, 70, 0.4);
+  box-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
 }
 
 /* =========================
@@ -289,10 +314,19 @@ nav a:hover {
 ========================= */
 #contactList li {
   background: var(--panel);
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  padding: var(--space-md);
+  border-radius: var(--radius);
   border: 1px solid #444;
+  margin-bottom: var(--space-sm);
+}
+
+/* =========================
+   SCHEDULE
+========================= */
+#scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 /* =========================
@@ -300,8 +334,8 @@ nav a:hover {
 ========================= */
 .delete {
   color: var(--red);
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
 }
 
 /* =========================
@@ -309,7 +343,7 @@ nav a:hover {
 ========================= */
 footer {
   text-align: center;
-  padding: 20px;
+  padding: var(--space-lg);
   color: var(--muted);
   border-top: 1px solid #444;
 }

@@ -6,7 +6,25 @@
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCk-l6R0FTrGPF1VXJeFiJ7u9QSxFFTia8",
+  authDomain: "toursync-d0231.firebaseapp.com",
+  projectId: "toursync-d0231",
+  storageBucket: "toursync-d0231.firebasestorage.app",
+  messagingSenderId: "18080380018",
+  appId: "1:18080380018:web:e62e0e26b9843d2b08beeb"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const auth = firebase.auth();
+</script>
 <body>
 
 <header class="topbar">
@@ -22,7 +40,23 @@
 
 <main class="container">
   <h2>Dashboard</h2>
-
+<div class="card">
+  <h3>Login</h3>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="signUp()">Sign Up</button>
+  <button onclick="login()">Login</button>
+</div>
+<div class="card">
+  <h3>Create Profile</h3>
+  <form id="profileForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="text" id="role" placeholder="Role" required>
+    <input type="text" id="location" placeholder="Location">
+    <textarea id="bio" placeholder="Bio"></textarea>
+    <button type="submit">Save Profile</button>
+  </form>
+</div>
   <div class="grid">
     <div class="card">
       <h3>Next Show</h3>
