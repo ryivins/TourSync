@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TourSync Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+    <h2>TourSync</h2>
+    <p>Login or Create Profile</p>
+
+    <input id="username" placeholder="Enter name">
+
+    <button onclick="login()">Login</button>
+    <button onclick="login()">Create Profile</button>
+
+  </div>
+
+</div>
+
+<script>
+function login() {
+  const name = document.getElementById("username").value;
+
+  if (!name) {
+    alert("Enter a name");
+    return;
+  }
+
+  localStorage.setItem("tourUser", name);
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

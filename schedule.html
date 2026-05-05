@@ -20,6 +20,7 @@
 </header>
 
 <main class="container">
+
   <h2>Tour Schedule</h2>
 
   <!-- ADD EVENT FORM -->
@@ -44,36 +45,78 @@
 </main>
 
 <script>
-  const scheduleList = document.getElementById("scheduleList");
+const scheduleList = document.getElementById("scheduleList");
 
-  function addEvent() {
-    const date = document.getElementById("dateInput").value;
-    const time = document.getElementById("timeInput").value;
-    const location = document.getElementById("locationInput").value;
-    const notes = document.getElementById("notesInput").value;
+// LOAD ON START
+function renderEvents() {
+  let events = JSON.parse(localStorage.getItem("events")) || [];
 
-    if (!date || !location) {
-      alert("Please enter at least a date and location.");
-      return;
-    }
+  scheduleList.innerHTML = "";
 
-    const eventCard = document.createElement("div");
-    eventCard.className = "card";
+  events.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    eventCard.innerHTML = `
-      <strong>${date}</strong> ${time ? `— ${time}` : ""}<br>
-      <div>${location}</div>
-      ${notes ? `<small>${notes}</small>` : ""}
+  events.forEach((e, index) => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <strong>${e.date}</strong> ${e.time ? "— " + e.time : ""}<br>
+      <div>${e.location}</div>
+      ${e.notes ? `<small>${e.notes}</small>` : ""}
+
+      <br><br>
+      <button onclick="deleteEvent(${index})">Delete</button>
     `;
 
-    scheduleList.appendChild(eventCard);
+    scheduleList.appendChild(div);
+  });
+}
 
-    // clear inputs
-    document.getElementById("dateInput").value = "";
-    document.getElementById("timeInput").value = "";
-    document.getElementById("locationInput").value = "";
-    document.getElementById("notesInput").value = "";
+// ADD EVENT
+function addEvent() {
+  const date = document.getElementById("dateInput").value;
+  const time = document.getElementById("timeInput").value;
+  const location = document.getElementById("locationInput").value;
+  const notes = document.getElementById("notesInput").value;
+
+  if (!date || !location) {
+    alert("Please enter at least a date and location.");
+    return;
   }
+
+  let events = JSON.parse(localStorage.getItem("events")) || [];
+
+  events.push({
+    date,
+    time,
+    location,
+    notes
+  });
+
+  localStorage.setItem("events", JSON.stringify(events));
+
+  renderEvents();
+
+  // clear inputs
+  document.getElementById("dateInput").value = "";
+  document.getElementById("timeInput").value = "";
+  document.getElementById("locationInput").value = "";
+  document.getElementById("notesInput").value = "";
+}
+
+// DELETE EVENT
+function deleteEvent(index) {
+  let events = JSON.parse(localStorage.getItem("events")) || [];
+
+  events.splice(index, 1);
+
+  localStorage.setItem("events", JSON.stringify(events));
+
+  renderEvents();
+}
+
+// INIT
+renderEvents();
 </script>
 
 </body>

@@ -4,20 +4,19 @@
   <meta charset="UTF-8">
   <title>Contacts</title>
   <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
 </head>
 
 <body>
 
 <header class="topbar">
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
 </header>
 
 <main class="container">
@@ -25,7 +24,7 @@
   <h2>Contacts</h2>
 
   <!-- INPUT FORM -->
-  <div class="contact-form">
+  <div class="card contact-form">
 
     <input id="firstName" type="text" placeholder="First Name">
     <input id="lastName" type="text" placeholder="Last Name">
@@ -43,6 +42,82 @@
   <ul id="contactList"></ul>
 
 </main>
+
+<script>
+const contactList = document.getElementById("contactList");
+
+// ADD CONTACT
+function addContact() {
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+
+  if (!firstName || !lastName) {
+    alert("Please enter at least first and last name");
+    return;
+  }
+
+  let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+  contacts.push({
+    firstName,
+    lastName,
+    phone,
+    email
+  });
+
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+
+  renderContacts();
+
+  // clear inputs
+  document.getElementById("firstName").value = "";
+  document.getElementById("lastName").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("email").value = "";
+}
+
+// RENDER CONTACTS
+function renderContacts() {
+  let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
+  contactList.innerHTML = "";
+
+  contacts
+    .filter(c =>
+      (c.firstName + " " + c.lastName).toLowerCase().includes(search)
+    )
+    .forEach((c, index) => {
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <strong>${c.firstName} ${c.lastName}</strong><br>
+        ${c.phone || ""}<br>
+        ${c.email || ""}<br><br>
+        <span class="delete" onclick="deleteContact(${index})">Delete</span>
+      `;
+
+      contactList.appendChild(li);
+    });
+}
+
+// DELETE CONTACT
+function deleteContact(index) {
+  let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+  contacts.splice(index, 1);
+
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+
+  renderContacts();
+}
+
+// INIT
+renderContacts();
+</script>
 
 </body>
 </html>

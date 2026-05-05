@@ -1,75 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>TourSync Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
+
+  <!-- LOGIN GUARD -->
+  <script>
+    const user = localStorage.getItem("tourUser");
+
+    if (!user) {
+      window.location.href = "login.html";
+    }
+  </script>
 </head>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCk-l6R0FTrGPF1VXJeFiJ7u9QSxFFTia8",
-  authDomain: "toursync-d0231.firebaseapp.com",
-  projectId: "toursync-d0231",
-  storageBucket: "toursync-d0231.firebasestorage.app",
-  messagingSenderId: "18080380018",
-  appId: "1:18080380018:web:e62e0e26b9843d2b08beeb"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore();
-const auth = firebase.auth();
-</script>
 <body>
 
+<!-- =========================
+     TOP BAR
+========================= -->
 <header class="topbar">
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
+
+  <button onclick="logout()">Logout</button>
 </header>
 
+<!-- =========================
+     DASHBOARD
+========================= -->
 <main class="container">
+
   <h2>Dashboard</h2>
-<div class="card">
-  <h3>Login</h3>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="signUp()">Sign Up</button>
-  <button onclick="login()">Login</button>
-</div>
-<div class="card">
-  <h3>Create Profile</h3>
-  <form id="profileForm">
-    <input type="text" id="name" placeholder="Name" required>
-    <input type="text" id="role" placeholder="Role" required>
-    <input type="text" id="location" placeholder="Location">
-    <textarea id="bio" placeholder="Bio"></textarea>
-    <button type="submit">Save Profile</button>
-  </form>
-</div>
+  <p id="welcome"></p>
+
+  <!-- TODAY SUMMARY -->
+  <div class="card today-summary">
+
+    <h3>Today</h3>
+
+    <div class="today-summary-item">
+      <span>Events</span>
+      <span id="todayEvents">0</span>
+    </div>
+
+    <div class="today-summary-item">
+      <span>Tasks Due</span>
+      <span id="todayTasks">0</span>
+    </div>
+
+  </div>
+
+  <!-- CONTROL CENTER GRID -->
   <div class="grid">
+
     <div class="card">
-      <h3>Next Show</h3>
-      <p>Dallas, TX — April 12</p>
+      <h3>Next Event</h3>
+      <div id="nextEvent">Loading...</div>
     </div>
 
     <div class="card">
-      <h3>Quick Stats</h3>
-      <p>3 upcoming shows</p>
-      <p>5 active tasks</p>
+      <h3>Tasks</h3>
+      <div id="taskSummary">Loading...</div>
     </div>
+
+    <div class="card">
+      <h3>Contacts</h3>
+      <div id="contactSummary">Loading...</div>
+    </div>
+
+    <div class="card">
+      <h3>Quick Actions</h3>
+      <button onclick="location.href='schedule.html'">Add Event</button>
+      <button onclick="location.href='tasks.html'">Add Task</button>
+      <button onclick="location.href='contacts.html'">Add Contact</button>
+    </div>
+
   </div>
+
 </main>
+
+<!-- =========================
+     SCRIPT
+========================= -->
+<script>
+  // USER DISPLAY
+  const userName = localStorage.getItem("tourUser");
+  document.getElementById("welcome").innerText = "Welcome, " + userName;
+
+  // LOGOUT
+  function logout() {
+    localStorage.removeItem("tourUser");
+    window.location.href = "login.html";
+  }
+
+  // NEXT EVENT (sorted)
+  function loadNextEvent() {
+    let events = JSON.parse(localStorage.getItem("events")) || [];
+
+    if (events.length === 0) {
+      document.getElementById("nextEvent").innerText = "No events yet";
+      return;
+    }
+
+    events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const next = events[0];
+
+    document.getElementById("nextEvent").innerHTML = `
+      <strong>${next.date}</strong><br>
+      ${next.time || ""}<br>
+      ${next.location || ""}
+    `;
+  }
+
+  // TASK SUMMARY
+  function loadTasks() {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    const total = tasks.length;
+    const done = tasks.filter(t => t.done).length;
+
+    document.getElementById("taskSummary").innerHTML = `
+      ${done}/${total} completed
+    `;
+  }
+
+  // CONTACT SUMMARY
+  function loadContacts() {
+    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+    document.getElementById("contactSummary").innerHTML = `
+      ${contacts.length} saved contacts
+    `;
+  }
+
+  // TODAY SUMMARY
+  function loadTodaySummary() {
+    let events = JSON.parse(localStorage.getItem("events")) || [];
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const todayEvents = events.filter(e => e.date === today).length;
+    const todayTasks = tasks.filter(t => !t.done).length;
+
+    document.getElementById("todayEvents").innerText = todayEvents;
+    document.getElementById("todayTasks").innerText = todayTasks;
+  }
+
+  // INIT
+  loadNextEvent();
+  loadTasks();
+  loadContacts();
+  loadTodaySummary();
+</script>
 
 </body>
 </html>
