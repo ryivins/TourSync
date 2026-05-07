@@ -4,7 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>TourSync Dashboard</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <!-- Your JS -->
   <script defer src="script.js"></script>
 
   <!-- LOGIN GUARD -->
@@ -61,109 +67,190 @@
 
   </div>
 
-  <!-- CONTROL CENTER GRID -->
+  <!-- GRID -->
   <div class="grid">
 
-    <div class="card">
+    <!-- NEXT EVENT -->
+    <div class="card" data-link="schedule.html">
       <h3>Next Event</h3>
       <div id="nextEvent">Loading...</div>
     </div>
 
-    <div class="card">
+    <!-- TASKS -->
+    <div class="card" data-link="tasks.html">
       <h3>Tasks</h3>
       <div id="taskSummary">Loading...</div>
     </div>
 
-    <div class="card">
+    <!-- CONTACTS -->
+    <div class="card" data-link="contacts.html">
       <h3>Contacts</h3>
       <div id="contactSummary">Loading...</div>
     </div>
 
+    <!-- QUICK ACTIONS (NO NAV LINK) -->
     <div class="card">
+
       <h3>Quick Actions</h3>
-      <button onclick="location.href='schedule.html'">Add Event</button>
-      <button onclick="location.href='tasks.html'">Add Task</button>
-      <button onclick="location.href='contacts.html'">Add Contact</button>
+
+      <button onclick="location.href='schedule.html'">
+        Add Event
+      </button>
+
+      <button onclick="location.href='tasks.html'">
+        Add Task
+      </button>
+
+      <button onclick="location.href='contacts.html'">
+        Add Contact
+      </button>
+
     </div>
+
+  </div>
+
+  <!-- TOUR SCHEDULER -->
+  <div class="card">
+
+    <h3>Schedule Tour Event</h3>
+
+    <input id="tourName" type="text" placeholder="Artist / Manager Name">
+    <input id="tourEmail" type="email" placeholder="Email">
+    <input id="tourVenue" type="text" placeholder="Venue Name">
+
+    <input id="tourDate" type="date">
+    <input id="tourTime" type="time">
+
+    <button onclick="scheduleTour()">
+      Schedule Event
+    </button>
+
+  </div>
+
+  <!-- UPCOMING TOURS -->
+  <div class="card">
+
+    <h3>Upcoming Tour Events</h3>
+
+    <ul id="tourList"></ul>
 
   </div>
 
 </main>
 
 <!-- =========================
-     SCRIPT
+     PAGE SCRIPT (NAVIGATION FIX)
 ========================= -->
 <script>
-  // USER DISPLAY
-  const userName = localStorage.getItem("tourUser");
-  document.getElementById("welcome").innerText = "Welcome, " + userName;
 
-  // LOGOUT
+  /* =========================
+     USER
+  ========================= */
+
+  const userName = localStorage.getItem("tourUser");
+
+  document.getElementById("welcome").innerText =
+    "Welcome, " + userName;
+
   function logout() {
     localStorage.removeItem("tourUser");
     window.location.href = "login.html";
   }
 
-  // NEXT EVENT (sorted)
+  /* =========================
+     LOAD FUNCTIONS
+  ========================= */
+
   function loadNextEvent() {
-    let events = JSON.parse(localStorage.getItem("events")) || [];
+    let events =
+      JSON.parse(localStorage.getItem("tours")) || [];
 
     if (events.length === 0) {
-      document.getElementById("nextEvent").innerText = "No events yet";
+      document.getElementById("nextEvent").innerText =
+        "No events yet";
       return;
     }
 
-    events.sort((a, b) => new Date(a.date) - new Date(b.date));
+    events.sort((a, b) =>
+      new Date(a.date) - new Date(b.date)
+    );
 
     const next = events[0];
 
     document.getElementById("nextEvent").innerHTML = `
       <strong>${next.date}</strong><br>
       ${next.time || ""}<br>
-      ${next.location || ""}
+      ${next.venue || ""}
     `;
   }
 
-  // TASK SUMMARY
   function loadTasks() {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    let tasks =
+      JSON.parse(localStorage.getItem("tasks")) || [];
 
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
 
-    document.getElementById("taskSummary").innerHTML = `
-      ${done}/${total} completed
-    `;
+    document.getElementById("taskSummary").innerHTML =
+      `${done}/${total} completed`;
   }
 
-  // CONTACT SUMMARY
   function loadContacts() {
-    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+    let contacts =
+      JSON.parse(localStorage.getItem("contacts")) || [];
 
-    document.getElementById("contactSummary").innerHTML = `
-      ${contacts.length} saved contacts
-    `;
+    document.getElementById("contactSummary").innerHTML =
+      `${contacts.length} saved contacts`;
   }
 
-  // TODAY SUMMARY
   function loadTodaySummary() {
-    let events = JSON.parse(localStorage.getItem("events")) || [];
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    let events =
+      JSON.parse(localStorage.getItem("tours")) || [];
 
-    const today = new Date().toISOString().split("T")[0];
+    let tasks =
+      JSON.parse(localStorage.getItem("tasks")) || [];
 
-    const todayEvents = events.filter(e => e.date === today).length;
-    const todayTasks = tasks.filter(t => !t.done).length;
+    const today =
+      new Date().toISOString().split("T")[0];
 
-    document.getElementById("todayEvents").innerText = todayEvents;
-    document.getElementById("todayTasks").innerText = todayTasks;
+    const todayEvents =
+      events.filter(e => e.date === today).length;
+
+    const todayTasks =
+      tasks.filter(t => !t.done).length;
+
+    document.getElementById("todayEvents").innerText =
+      todayEvents;
+
+    document.getElementById("todayTasks").innerText =
+      todayTasks;
   }
 
-  // INIT
+  /* =========================
+     CARD CLICK NAVIGATION
+  ========================= */
+
+  document.querySelectorAll(".card[data-link]").forEach(card => {
+    card.addEventListener("click", () => {
+      window.location.href = card.dataset.link;
+    });
+  });
+
+  document.querySelectorAll(".card button").forEach(button => {
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
+
+  /* =========================
+     INIT
+  ========================= */
+
   loadNextEvent();
   loadTasks();
   loadContacts();
   loadTodaySummary();
+
 </script>
 
 </body>

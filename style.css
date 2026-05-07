@@ -45,19 +45,9 @@ body {
 /* =========================
    TYPOGRAPHY
 ========================= */
-h1 {
-  font-size: 28px;
-}
-
-h2 {
-  font-size: 22px;
-  margin-bottom: var(--space-sm);
-}
-
-h3 {
-  font-size: 18px;
-  margin-bottom: var(--space-sm);
-}
+h1 { font-size: 28px; }
+h2 { font-size: 22px; margin-bottom: var(--space-sm); }
+h3 { font-size: 18px; margin-bottom: var(--space-sm); }
 
 h1, h2, h3 {
   color: var(--red);
@@ -103,7 +93,7 @@ nav a:hover {
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-md);
+  gap: var(--space-lg); /* improved spacing */
   margin-top: var(--space-md);
 }
 
@@ -111,13 +101,21 @@ nav a:hover {
    CARD SYSTEM
 ========================= */
 .card {
-  background: var(--panel);
+  background: linear-gradient(135deg, var(--panel), #262626);
   border: 1px solid #444;
   border-radius: var(--radius);
   padding: var(--space-md);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Card text styling */
+/* clickable feel */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
 .card strong {
   font-size: 16px;
 }
@@ -126,8 +124,18 @@ nav a:hover {
   color: var(--muted);
 }
 
+/* spacing inside cards */
+.card h3 {
+  margin-bottom: var(--space-sm);
+}
+
+.card > div,
+.card p {
+  margin-top: var(--space-xs);
+}
+
 /* =========================
-   TODAY SUMMARY (NEW SECTION)
+   TODAY SUMMARY
 ========================= */
 .today-summary {
   background: linear-gradient(135deg, var(--panel), var(--panel2));
@@ -136,10 +144,6 @@ nav a:hover {
   border-radius: var(--radius);
   padding: var(--space-md);
   margin-bottom: var(--space-md);
-}
-
-.today-summary h3 {
-  margin-bottom: var(--space-sm);
 }
 
 .today-summary-item {
@@ -182,10 +186,17 @@ button {
   color: white;
   cursor: pointer;
   transition: 0.2s;
+
+  margin-top: var(--space-sm);
+  margin-right: var(--space-sm);
 }
 
 button:hover {
   opacity: 0.9;
+}
+
+button:last-child {
+  margin-right: 0;
 }
 
 /* =========================
@@ -229,7 +240,7 @@ button:hover {
 }
 
 /* =========================
-   CHAT (unchanged but cleaned)
+   CHAT
 ========================= */
 .chat-layout {
   display: flex;
@@ -245,7 +256,7 @@ button:hover {
 }
 
 /* =========================
-   MESSAGE SYSTEM
+   MESSAGES
 ========================= */
 #messageList {
   flex: 1;

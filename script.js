@@ -1,3 +1,59 @@
+
+/* =====================================================
+   EMAILJS INIT (SAFE)
+===================================================== */
+
+(function () {
+  emailjs.init("HM3mSVepzVht92z0r");
+})();
+
+/* =====================================================
+   GOOGLE CALENDAR INTEGRATION
+===================================================== */
+
+function addToGoogleCalendar(tour) {
+
+  const title = encodeURIComponent(
+    `TourSync Event - ${tour.venue}`
+  );
+
+  const details = encodeURIComponent(
+    `Tour with ${tour.name}`
+  );
+
+  const location = encodeURIComponent(tour.venue);
+
+  const startDate = formatDateTimeForCalendar(
+    tour.date,
+    tour.time
+  );
+
+  const endDate = startDate;
+
+  const url =
+    `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+
+  window.open(url, "_blank");
+}
+
+function formatDateTimeForCalendar(date, time) {
+
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+
+  const utc = new Date(Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute
+  ));
+
+  return utc.toISOString()
+    .replace(/[-:]/g, "")
+    .split(".")[0] + "Z";
+}
+
 /* =====================================================
    AUTH (Firebase kept but isolated)
 ===================================================== */
@@ -21,7 +77,112 @@ function login() {
 }
 
 /* =====================================================
-   CONTACTS (STANDARDIZED)
+   TOURS
+===================================================== */
+
+function getTours() {
+  return JSON.parse(localStorage.getItem("tours")) || [];
+}
+
+function saveTours(data) {
+  localStorage.setItem("tours", JSON.stringify(data));
+}
+
+function scheduleTour() {
+
+  const name =
+    document.getElementById("tourName")?.value.trim();
+
+  const email =
+    document.getElementById("tourEmail")?.value.trim();
+
+  const venue =
+    document.getElementById("tourVenue")?.value.trim();
+
+  const date =
+    document.getElementById("tourDate")?.value;
+
+  const time =
+    document.getElementById("tourTime")?.value;
+
+  if (!name || !email || !venue || !date || !time) {
+    alert("Please complete all tour fields.");
+    return;
+  }
+
+  const templateParams = {
+    name,
+    email,
+    venue,
+    date,
+    time
+  };
+
+  emailjs.send(
+    "service_g3o4rfy",
+    "template_e2asduq",
+    templateParams
+  )
+  .then(() => {
+
+    const tours = getTours();
+
+    tours.push({
+      id: Date.now().toString(),
+      name,
+      email,
+      venue,
+      date,
+      time
+    });
+
+    saveTours(tours);
+
+    alert("Tour scheduled + email sent!");
+
+    renderTours();
+
+    document.getElementById("tourName").value = "";
+    document.getElementById("tourEmail").value = "";
+    document.getElementById("tourVenue").value = "";
+    document.getElementById("tourDate").value = "";
+    document.getElementById("tourTime").value = "";
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Email failed to send.");
+  });
+}
+
+function renderTours() {
+
+  const list = document.getElementById("tourList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  getTours().forEach(tour => {
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <strong>${tour.venue}</strong><br>
+      ${tour.date} at ${tour.time}<br>
+      ${tour.name} (${tour.email})
+      <br><br>
+    `;
+
+    const btn = document.createElement("button");
+    btn.textContent = "Add to Google Calendar";
+    btn.onclick = () => addToGoogleCalendar(tour);
+
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+/* =====================================================
+   CONTACTS
 ===================================================== */
 
 function getContacts() {
@@ -33,10 +194,18 @@ function saveContacts(data) {
 }
 
 function addContact() {
-  const firstName = document.getElementById("firstName")?.value.trim();
-  const lastName = document.getElementById("lastName")?.value.trim();
-  const phone = document.getElementById("phone")?.value.trim();
-  const email = document.getElementById("email")?.value.trim();
+
+  const firstName =
+    document.getElementById("firstName")?.value.trim();
+
+  const lastName =
+    document.getElementById("lastName")?.value.trim();
+
+  const phone =
+    document.getElementById("phone")?.value.trim();
+
+  const contactEmail =
+    document.getElementById("contactEmail")?.value.trim();
 
   if (!firstName || !lastName) return;
 
@@ -47,54 +216,16 @@ function addContact() {
     firstName,
     lastName,
     phone,
-    email
+    email: contactEmail
   });
 
   saveContacts(contacts);
-  renderContacts();
 
-  document.getElementById("firstName").value = "";
-  document.getElementById("lastName").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("email").value = "";
-}
-
-function renderContacts() {
-  const list = document.getElementById("contactList");
-  if (!list) return;
-
-  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
-  const contacts = getContacts();
-
-  list.innerHTML = "";
-
-  contacts
-    .filter(c =>
-      (c.firstName + " " + c.lastName).toLowerCase().includes(search)
-    )
-    .forEach((c, index) => {
-      const li = document.createElement("li");
-
-      li.innerHTML = `
-        <strong>${c.firstName} ${c.lastName}</strong><br>
-        ${c.phone || ""}<br>
-        ${c.email || ""}<br><br>
-        <button onclick="deleteContact(${index})">Delete</button>
-      `;
-
-      list.appendChild(li);
-    });
-}
-
-function deleteContact(index) {
-  const contacts = getContacts();
-  contacts.splice(index, 1);
-  saveContacts(contacts);
   renderContacts();
 }
 
 /* =====================================================
-   TASKS (STANDARDIZED)
+   TASKS
 ===================================================== */
 
 function getTasks() {
@@ -106,7 +237,10 @@ function saveTasks(data) {
 }
 
 function addTask() {
-  const text = document.getElementById("taskInput")?.value.trim();
+
+  const text =
+    document.getElementById("taskInput")?.value.trim();
+
   if (!text) return;
 
   const tasks = getTasks();
@@ -114,60 +248,24 @@ function addTask() {
   tasks.push({
     id: Date.now().toString(),
     text,
-    priority: document.getElementById("taskPriority")?.value || "medium",
-    dueDate: document.getElementById("taskDueDate")?.value || "",
-    assignedTo: document.getElementById("taskAssignee")?.value || "",
+    priority:
+      document.getElementById("taskPriority")?.value
+      || "medium",
+    dueDate:
+      document.getElementById("taskDueDate")?.value
+      || "",
+    assignedTo:
+      document.getElementById("taskAssignee")?.value
+      || "",
     done: false
   });
 
   saveTasks(tasks);
   renderTasks();
-
-  document.getElementById("taskInput").value = "";
-  document.getElementById("taskDueDate").value = "";
-  document.getElementById("taskAssignee").value = "";
-}
-
-function toggleTask(id) {
-  const tasks = getTasks().map(t =>
-    t.id === id ? { ...t, done: !t.done } : t
-  );
-
-  saveTasks(tasks);
-  renderTasks();
-}
-
-function deleteTask(id) {
-  const tasks = getTasks().filter(t => t.id !== id);
-  saveTasks(tasks);
-  renderTasks();
-}
-
-function renderTasks() {
-  const list = document.getElementById("taskList");
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  getTasks().forEach(t => {
-    const li = document.createElement("li");
-
-    li.className = `task ${t.priority} ${t.done ? "done" : ""}`;
-
-    li.innerHTML = `
-      <input type="checkbox" ${t.done ? "checked" : ""} onclick="toggleTask('${t.id}')">
-      <strong>${t.text}</strong><br>
-      ${t.dueDate || "No due date"} | ${t.assignedTo || "Unassigned"}
-      <br><br>
-      <button onclick="deleteTask('${t.id}')">Delete</button>
-    `;
-
-    list.appendChild(li);
-  });
 }
 
 /* =====================================================
-   MESSAGES (SIMPLIFIED FOR OPTION A)
+   MESSAGES
 ===================================================== */
 
 function getMessages() {
@@ -179,6 +277,7 @@ function saveMessages(data) {
 }
 
 function sendMessage() {
+
   const input = document.getElementById("messageInput");
   const text = input?.value.trim();
 
@@ -198,47 +297,15 @@ function sendMessage() {
   input.value = "";
 }
 
-function renderMessages() {
-  const list = document.getElementById("messageList");
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  getMessages().forEach(m => {
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-      <div>${m.text}</div>
-      <small>${m.time}</small>
-    `;
-
-    list.appendChild(li);
-  });
-}
-
-/* =====================================================
-   USERS (FOR SIDEBAR COMPATIBILITY)
-===================================================== */
-
-function renderUsers() {
-  const list = document.getElementById("userList");
-  if (!list) return;
-
-  list.innerHTML = `
-    <li class="chat-preview">
-      <strong>General Chat</strong><br>
-      <small>Click to view messages</small>
-    </li>
-  `;
-}
-
 /* =====================================================
    INIT
 ===================================================== */
 
 window.addEventListener("load", () => {
+
   renderContacts();
   renderTasks();
   renderMessages();
   renderUsers();
+  renderTours();
 });
