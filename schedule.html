@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Schedule</title>
+  <title>Schedule | TourSync</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script defer src="script.js"></script>
 </head>
 
 <body>
 
 <header class="topbar">
   <h1>TourSync</h1>
+
   <nav>
     <a href="index.html">Dashboard</a>
     <a href="schedule.html">Schedule</a>
@@ -17,6 +24,8 @@
     <a href="contacts.html">Contacts</a>
     <a href="messages.html">Messages</a>
   </nav>
+
+  <button onclick="logout()">Logout</button>
 </header>
 
 <main class="container">
@@ -25,98 +34,139 @@
 
   <!-- ADD EVENT FORM -->
   <div class="card">
-    <h3>Add Event</h3>
 
-    <div style="display:flex; flex-direction:column; gap:10px;">
+    <h3>Add Tour Event</h3>
 
-      <input type="date" id="dateInput">
-      <input type="time" id="timeInput">
-      <input type="text" id="locationInput" placeholder="Location (City, Venue)">
-      <input type="text" id="notesInput" placeholder="Notes (optional)">
+    <input type="date" id="tourDate">
+    <input type="time" id="tourTime">
+    <input type="text" id="tourVenue" placeholder="Venue / City">
+    <input type="text" id="tourNotes" placeholder="Notes (optional)">
 
-      <button onclick="addEvent()">Add Event</button>
+    <button onclick="addTourEvent()">Add Event</button>
 
-    </div>
   </div>
 
   <!-- EVENTS LIST -->
-  <div id="scheduleList"></div>
+  <div class="card">
+
+    <h3>Upcoming Tours</h3>
+
+    <div id="scheduleList"></div>
+
+  </div>
 
 </main>
 
 <script>
-const scheduleList = document.getElementById("scheduleList");
+/* =========================
+   GET / SAVE
+========================= */
 
-// LOAD ON START
-function renderEvents() {
-  let events = JSON.parse(localStorage.getItem("events")) || [];
+function getTours() {
+  return JSON.parse(localStorage.getItem("tours")) || [];
+}
 
-  scheduleList.innerHTML = "";
+function saveTours(data) {
+  localStorage.setItem("tours", JSON.stringify(data));
+}
 
-  events.sort((a, b) => new Date(a.date) - new Date(b.date));
+/* =========================
+   ADD TOUR EVENT
+========================= */
 
-  events.forEach((e, index) => {
+function addTourEvent() {
+
+  const date = document.getElementById("tourDate").value;
+  const time = document.getElementById("tourTime").value;
+  const venue = document.getElementById("tourVenue").value.trim();
+  const notes = document.getElementById("tourNotes").value.trim();
+
+  if (!date || !venue) {
+    alert("Please enter at least a date and venue.");
+    return;
+  }
+
+  const tours = getTours();
+
+  tours.push({
+    id: Date.now().toString(),
+    date,
+    time,
+    venue,
+    notes
+  });
+
+  saveTours(tours);
+
+  renderTours();
+
+  // clear
+  document.getElementById("tourDate").value = "";
+  document.getElementById("tourTime").value = "";
+  document.getElementById("tourVenue").value = "";
+  document.getElementById("tourNotes").value = "";
+}
+
+/* =========================
+   DELETE TOUR
+========================= */
+
+function deleteTour(id) {
+
+  let tours = getTours();
+
+  tours = tours.filter(t => t.id !== id);
+
+  saveTours(tours);
+
+  renderTours();
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function renderTours() {
+
+  const list = document.getElementById("scheduleList");
+
+  list.innerHTML = "";
+
+  const tours = getTours();
+
+  tours.sort((a, b) =>
+    new Date(a.date) - new Date(b.date)
+  );
+
+  tours.forEach(t => {
+
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <strong>${e.date}</strong> ${e.time ? "— " + e.time : ""}<br>
-      <div>${e.location}</div>
-      ${e.notes ? `<small>${e.notes}</small>` : ""}
+      <strong>${t.date}</strong>
+      ${t.time ? "— " + t.time : ""}<br>
+
+      <div>${t.venue}</div>
+
+      ${t.notes ? `<small>${t.notes}</small>` : ""}
 
       <br><br>
-      <button onclick="deleteEvent(${index})">Delete</button>
+
+      <button onclick="deleteTour('${t.id}')">
+        Delete
+      </button>
     `;
 
-    scheduleList.appendChild(div);
+    list.appendChild(div);
   });
 }
 
-// ADD EVENT
-function addEvent() {
-  const date = document.getElementById("dateInput").value;
-  const time = document.getElementById("timeInput").value;
-  const location = document.getElementById("locationInput").value;
-  const notes = document.getElementById("notesInput").value;
+/* =========================
+   INIT
+========================= */
 
-  if (!date || !location) {
-    alert("Please enter at least a date and location.");
-    return;
-  }
-
-  let events = JSON.parse(localStorage.getItem("events")) || [];
-
-  events.push({
-    date,
-    time,
-    location,
-    notes
-  });
-
-  localStorage.setItem("events", JSON.stringify(events));
-
-  renderEvents();
-
-  // clear inputs
-  document.getElementById("dateInput").value = "";
-  document.getElementById("timeInput").value = "";
-  document.getElementById("locationInput").value = "";
-  document.getElementById("notesInput").value = "";
-}
-
-// DELETE EVENT
-function deleteEvent(index) {
-  let events = JSON.parse(localStorage.getItem("events")) || [];
-
-  events.splice(index, 1);
-
-  localStorage.setItem("events", JSON.stringify(events));
-
-  renderEvents();
-}
-
-// INIT
-renderEvents();
+renderTours();
 </script>
 
 </body>
