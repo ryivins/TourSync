@@ -1,27 +1,27 @@
 /* =====================================================
-   TOURSYNC MAIN SCRIPT (CLEAN + FIXED)
+   TOURSYNC CLEAN CORE SCRIPT (FIXED + STABLE)
 ===================================================== */
 
 console.log("TourSync script loaded");
 
 /* =====================================================
-   SAFE ID HELPER
+   SAFE HELPERS
 ===================================================== */
+
 function safeId() {
   return crypto?.randomUUID?.() || Date.now().toString();
 }
 
-/* =====================================================
-   EMAILJS INIT
-===================================================== */
-(function () {
-  if (typeof emailjs !== "undefined") {
-    emailjs.init("HM3mSVepzVht92z0r");
-  }
-})();
+function getLS(key) {
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+function setLS(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
 
 /* =====================================================
-   LOGIN SYSTEM
+   LOGIN SYSTEM (FIXED)
 ===================================================== */
 
 function getCurrentUser() {
@@ -32,18 +32,24 @@ function setCurrentUser(user) {
   localStorage.setItem("tourCurrentUser", JSON.stringify(user));
 }
 
+function logout() {
+  localStorage.removeItem("tourCurrentUser");
+  window.location.href = "login.html";
+}
+
 function requireLogin() {
   const user = getCurrentUser();
   if (!user) window.location.href = "login.html";
 }
 
+/* LOGIN */
 function loginUser() {
   const username = document.getElementById("username")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
 
   if (!username || !password) return alert("Enter login info");
 
-  const users = JSON.parse(localStorage.getItem("tourUsers")) || [];
+  const users = getLS("tourUsers");
 
   const found = users.find(
     u => u.username === username && u.password === password
@@ -55,63 +61,35 @@ function loginUser() {
   window.location.href = "index.html";
 }
 
+/* REGISTER */
 function registerUser() {
   const username = document.getElementById("username")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
 
   if (!username || !password) return alert("Enter username + password");
 
-  const users = JSON.parse(localStorage.getItem("tourUsers")) || [];
+  const users = getLS("tourUsers");
 
   if (users.find(u => u.username === username)) {
     return alert("User already exists");
   }
 
   users.push({ username, password });
-  localStorage.setItem("tourUsers", JSON.stringify(users));
+  setLS("tourUsers", users);
 
-  alert("Account created! You can now log in.");
+  alert("Account created!");
 }
 
 /* =====================================================
-   GOOGLE CALENDAR
-===================================================== */
-
-function addToGoogleCalendar(tour) {
-  const title = encodeURIComponent(`TourSync Event - ${tour.venue}`);
-  const details = encodeURIComponent(`Tour with ${tour.name}`);
-  const location = encodeURIComponent(tour.venue);
-
-  const startDate = formatDateTimeForCalendar(tour.date, tour.time);
-  const endDate = startDate;
-
-  const url =
-    `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
-
-  window.open(url, "_blank");
-}
-
-function formatDateTimeForCalendar(date, time) {
-  if (!date || !time) return "";
-
-  const [y, m, d] = date.split("-").map(Number);
-  const [h, min] = time.split(":").map(Number);
-
-  const utc = new Date(Date.UTC(y, m - 1, d, h, min));
-
-  return utc.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-}
-
-/* =====================================================
-   CONTACTS (FIXED + RELIABLE STORAGE)
+   CONTACTS
 ===================================================== */
 
 function getContacts() {
-  return JSON.parse(localStorage.getItem("contacts")) || [];
+  return getLS("contacts");
 }
 
 function saveContacts(data) {
-  localStorage.setItem("contacts", JSON.stringify(data));
+  setLS("contacts", data);
 }
 
 function addContact() {
@@ -135,8 +113,7 @@ function addContact() {
   saveContacts(contacts);
 
   ["firstName","lastName","phone","email"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
+    document.getElementById(id).value = "";
   });
 
   renderContacts();
@@ -149,20 +126,19 @@ function renderContacts() {
 
   const contacts = getContacts();
 
-  list.innerHTML = "";
-
-  if (!contacts.length) {
-    list.innerHTML = "<li>No contacts yet</li>";
-    return;
-  }
+  list.innerHTML = contacts.length
+    ? ""
+    : "<li>No contacts yet</li>";
 
   contacts.forEach(c => {
     const li = document.createElement("li");
+
     li.innerHTML = `
       <strong>${c.firstName} ${c.lastName}</strong><br>
-      ${c.phone}<br>
-      ${c.email}
+      ${c.phone || ""}<br>
+      ${c.email || ""}
     `;
+
     list.appendChild(li);
   });
 }
@@ -174,11 +150,11 @@ function renderContacts() {
 let activeChatPhone = "";
 
 function getMessages() {
-  return JSON.parse(localStorage.getItem("messages")) || [];
+  return getLS("messages");
 }
 
 function saveMessages(data) {
-  localStorage.setItem("messages", JSON.stringify(data));
+  setLS("messages", data);
 }
 
 function getChatMessages(phone) {
@@ -200,7 +176,10 @@ function renderContactPicker() {
   contacts.forEach(c => {
     const li = document.createElement("li");
 
-    li.innerHTML = `<strong>${c.firstName} ${c.lastName}</strong>`;
+    li.innerHTML = `
+      <strong>${c.firstName} ${c.lastName}</strong>
+      <small>${c.phone || ""}</small>
+    `;
 
     li.onclick = () => openChat(c.phone, `${c.firstName} ${c.lastName}`);
 
@@ -211,8 +190,7 @@ function renderContactPicker() {
 function openChat(phone, name) {
   activeChatPhone = phone;
 
-  const title = document.getElementById("chatTitle");
-  if (title) title.textContent = name;
+  document.getElementById("chatTitle").textContent = name;
 
   const messages = getMessages().map(m => {
     if (m.recipientPhone === phone) m.read = true;
@@ -266,6 +244,7 @@ function renderMessages() {
 
   messages.forEach(m => {
     const li = document.createElement("li");
+
     li.className = "msg me";
 
     li.innerHTML = `
@@ -278,15 +257,15 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS (FULL FIXED SYSTEM)
+   TASKS
 ===================================================== */
 
 function getTasks() {
-  return JSON.parse(localStorage.getItem("tasks")) || [];
+  return getLS("tasks");
 }
 
 function saveTasks(tasks) {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  setLS("tasks", tasks);
 }
 
 function addTask() {
@@ -341,12 +320,9 @@ function renderTasks() {
 
   const tasks = getTasks();
 
-  list.innerHTML = "";
-
-  if (!tasks.length) {
-    list.innerHTML = "<li>No tasks yet</li>";
-    return;
-  }
+  list.innerHTML = tasks.length
+    ? ""
+    : "<li>No tasks yet</li>";
 
   tasks.forEach(t => {
     const li = document.createElement("li");
@@ -385,7 +361,7 @@ function updateTaskStats() {
 }
 
 /* =====================================================
-   INIT
+   INIT (SAFE)
 ===================================================== */
 
 window.addEventListener("load", () => {

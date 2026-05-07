@@ -3,18 +3,25 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Contacts</title>
+  <title>Contacts | TourSync</title>
 
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
+
+  <!-- LOGIN GUARD -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("tourCurrentUser"));
+    if (!user) window.location.href = "login.html";
+  </script>
 </head>
 
 <body>
 
 <!-- =========================
-     HEADER (FIXED + CONSISTENT)
+     TOPBAR (MATCH DASHBOARD)
 ========================= -->
 <header class="topbar">
+
   <h1>TourSync</h1>
 
   <nav>
@@ -24,8 +31,10 @@
     <a href="contacts.html">Contacts</a>
     <a href="messages.html">Messages</a>
   </nav>
-</header>
 
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
+</header>
 <main class="container">
 
   <!-- PAGE TITLE -->
@@ -48,12 +57,12 @@
 
   </div>
 
-  <!-- SEARCH -->
+  <!-- SEARCH (FIXED ID MATCH) -->
   <div class="card">
     <input
-      id="searchInput"
+      id="contactSearch"
       type="text"
-      oninput="renderContacts()"
+      oninput="renderContactPicker()"
       placeholder="Search contacts..."
     >
   </div>

@@ -66,50 +66,61 @@ h1, h2, h3 {
 }
 
 /* =========================
-   TOP BAR
+   TOPBAR (UNIFIED STYLE)
 ========================= */
+
 .topbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: var(--space-md) var(--space-lg);
+  justify-content: space-between;
+
+  padding: 14px 24px;
   background: var(--panel);
   border-bottom: 1px solid #444;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
-/* nav links */
-nav a {
-  margin-left: var(--space-md);
+/* LEFT BRAND */
+.topbar h1 {
+  color: var(--red);
+  font-size: 22px;
+}
+
+/* CENTER NAV */
+.topbar nav {
+  display: flex;
+  gap: 18px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* LINKS */
+.topbar nav a {
   text-decoration: none;
   color: var(--text);
   opacity: 0.8;
+  font-size: 14px;
   transition: 0.2s;
 }
 
-nav a:hover {
+.topbar nav a:hover {
   color: var(--red);
   opacity: 1;
 }
 
-/* =========================
-   CARD SYSTEM (IMPORTANT FIX)
-========================= */
-.card {
-  background: linear-gradient(135deg, var(--panel), #262626);
-  border: 1px solid #444;
-  border-radius: var(--radius);
-  padding: var(--space-md);
-  margin-bottom: 0;
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+/* LOGOUT BUTTON (RIGHT SIDE) */
+.logout-btn {
+  background: var(--red);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+.logout-btn:hover {
+  opacity: 0.9;
 }
 
 /* =========================
