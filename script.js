@@ -1,10 +1,10 @@
 /* =====================================================
-   DEBUG CHECK
+   DEBUG
 ===================================================== */
 console.log("TourSync script loaded");
 
 /* =====================================================
-   EMAILJS INIT (SAFE)
+   EMAILJS INIT
 ===================================================== */
 (function () {
   if (typeof emailjs !== "undefined") {
@@ -13,9 +13,15 @@ console.log("TourSync script loaded");
 })();
 
 /* =====================================================
+   SAFE ID HELPER
+===================================================== */
+function safeId() {
+  return (crypto?.randomUUID?.() || Date.now().toString());
+}
+
+/* =====================================================
    GOOGLE CALENDAR
 ===================================================== */
-
 function addToGoogleCalendar(tour) {
   const title = encodeURIComponent(`TourSync Event - ${tour.venue}`);
   const details = encodeURIComponent(`Tour with ${tour.name}`);
@@ -42,9 +48,8 @@ function formatDateTimeForCalendar(date, time) {
 }
 
 /* =====================================================
-   CONTACTS
+   CONTACTS (FIXED STORAGE)
 ===================================================== */
-
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
 }
@@ -53,13 +58,40 @@ function saveContacts(data) {
   localStorage.setItem("contacts", JSON.stringify(data));
 }
 
-/* =====================================================
-   MESSAGES (THREAD SYSTEM)
-===================================================== */
+function addContact() {
+  const firstName = document.getElementById("firstName")?.value.trim();
+  const lastName = document.getElementById("lastName")?.value.trim();
+  const phone = document.getElementById("phone")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
 
+  if (!firstName || !lastName) return alert("Enter first + last name");
+
+  const contacts = getContacts();
+
+  contacts.push({
+    id: safeId(),
+    firstName,
+    lastName,
+    phone: phone || "",
+    email: email || ""
+  });
+
+  saveContacts(contacts);
+
+  ["firstName","lastName","phone","email"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+
+  renderContacts?.();
+  renderContactPicker?.();
+}
+
+/* =====================================================
+   MESSAGES
+===================================================== */
 let activeChatPhone = "";
 
-/* STORAGE */
 function getMessages() {
   return JSON.parse(localStorage.getItem("messages")) || [];
 }
@@ -68,15 +100,11 @@ function saveMessages(data) {
   localStorage.setItem("messages", JSON.stringify(data));
 }
 
-/* FILTER CHAT */
 function getChatMessages(phone) {
   return getMessages().filter(m => m.recipientPhone === phone);
 }
 
-/* =====================================================
-   CONTACT SEARCH -> OPEN CHAT
-===================================================== */
-
+/* CONTACT PICKER */
 function renderContactPicker() {
   const input = document.getElementById("contactSearch");
   const list = document.getElementById("contactPicker");
@@ -93,24 +121,18 @@ function renderContactPicker() {
   contacts.forEach(c => {
     const li = document.createElement("li");
 
-    const unreadCount = getChatMessages(c.phone).filter(m => !m.read).length;
-
     li.innerHTML = `
       <strong>${c.firstName} ${c.lastName}</strong><br>
       <small>${c.phone || ""}</small>
-      ${unreadCount ? `<span class="unread">${unreadCount}</span>` : ""}
     `;
 
-    li.onclick = () => openChat(c.phone, c.firstName + " " + c.lastName);
+    li.onclick = () => openChat(c.phone, `${c.firstName} ${c.lastName}`);
 
     list.appendChild(li);
   });
 }
 
-/* =====================================================
-   OPEN CHAT
-===================================================== */
-
+/* OPEN CHAT */
 function openChat(phone, name) {
   activeChatPhone = phone;
 
@@ -118,9 +140,7 @@ function openChat(phone, name) {
   if (title) title.textContent = name;
 
   const messages = getMessages().map(m => {
-    if (m.recipientPhone === phone) {
-      m.read = true;
-    }
+    if (m.recipientPhone === phone) m.read = true;
     return m;
   });
 
@@ -130,25 +150,17 @@ function openChat(phone, name) {
   renderContactPicker();
 }
 
-/* =====================================================
-   SEND MESSAGE
-===================================================== */
-
+/* SEND MESSAGE */
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input?.value.trim();
 
-  if (!text) return;
-
-  if (!activeChatPhone) {
-    alert("Select a contact first");
-    return;
-  }
+  if (!text || !activeChatPhone) return;
 
   const messages = getMessages();
 
   messages.push({
-    id: Date.now().toString(),
+    id: safeId(),
     text,
     recipientPhone: activeChatPhone,
     time: new Date().toLocaleTimeString(),
@@ -159,13 +171,9 @@ function sendMessage() {
 
   input.value = "";
   renderMessages();
-  renderContactPicker();
 }
 
-/* =====================================================
-   RENDER CHAT MESSAGES
-===================================================== */
-
+/* RENDER CHAT */
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
@@ -173,13 +181,13 @@ function renderMessages() {
   list.innerHTML = "";
 
   if (!activeChatPhone) {
-    list.innerHTML = "<li class='system-msg'>Select a contact to start chatting</li>";
+    list.innerHTML = "<li class='system-msg'>Select a contact</li>";
     return;
   }
 
   const messages = getChatMessages(activeChatPhone);
 
-  if (messages.length === 0) {
+  if (!messages.length) {
     list.innerHTML = "<li class='system-msg'>No messages yet</li>";
     return;
   }
@@ -187,7 +195,9 @@ function renderMessages() {
   messages.forEach(m => {
     const li = document.createElement("li");
 
-    li.className = "msg me";
+    const isMe = true; // (you can upgrade later for incoming messages)
+
+    li.className = isMe ? "msg me" : "msg them";
 
     li.innerHTML = `
       <div>${m.text}</div>
@@ -199,9 +209,8 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS SYSTEM (FULL FIXED VERSION)
+   TASKS (FIXED + STATS READY)
 ===================================================== */
-
 function getTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
 }
@@ -210,7 +219,6 @@ function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-/* ADD TASK */
 function addTask() {
   const text = document.getElementById("taskInput")?.value.trim();
   const priority = document.getElementById("taskPriority")?.value;
@@ -222,7 +230,7 @@ function addTask() {
   const tasks = getTasks();
 
   tasks.push({
-    id: Date.now().toString(),
+    id: safeId(),
     text,
     priority,
     dueDate,
@@ -233,10 +241,11 @@ function addTask() {
   saveTasks(tasks);
 
   document.getElementById("taskInput").value = "";
+
   renderTasks();
+  updateTaskStats();
 }
 
-/* TOGGLE DONE */
 function toggleTask(id) {
   const tasks = getTasks().map(t => {
     if (t.id === id) t.done = !t.done;
@@ -245,16 +254,16 @@ function toggleTask(id) {
 
   saveTasks(tasks);
   renderTasks();
+  updateTaskStats();
 }
 
-/* DELETE TASK */
 function deleteTask(id) {
   const tasks = getTasks().filter(t => t.id !== id);
   saveTasks(tasks);
   renderTasks();
+  updateTaskStats();
 }
 
-/* RENDER TASKS */
 function renderTasks() {
   const list = document.getElementById("taskList");
   if (!list) return;
@@ -263,7 +272,7 @@ function renderTasks() {
 
   list.innerHTML = "";
 
-  if (tasks.length === 0) {
+  if (!tasks.length) {
     list.innerHTML = "<li>No tasks yet</li>";
     return;
   }
@@ -279,27 +288,39 @@ function renderTasks() {
       </div>
 
       <small>
-        Priority: ${t.priority || "none"} |
-        Due: ${t.dueDate || "none"} |
-        Assigned: ${t.assignee || "none"}
+        ${t.priority || "none"} |
+        ${t.dueDate || "no date"} |
+        ${t.assignee || "unassigned"}
       </small>
 
-      <button onclick="deleteTask('${t.id}')"
-        style="margin-left:10px;background:red;color:white;">
-        Delete
-      </button>
+      <button onclick="deleteTask('${t.id}')">Delete</button>
     `;
 
     list.appendChild(li);
   });
 }
 
-/* =====================================================
-   INIT (ONLY ONCE)
-===================================================== */
+/* TASK STATS (FIXED MISSING FUNCTION) */
+function updateTaskStats() {
+  const tasks = getTasks();
 
+  const high = tasks.filter(t => t.priority === "high").length;
+  const medium = tasks.filter(t => t.priority === "medium").length;
+  const low = tasks.filter(t => t.priority === "low").length;
+
+  const el = (id) => document.getElementById(id);
+
+  if (el("statHigh")) el("statHigh").textContent = high;
+  if (el("statMedium")) el("statMedium").textContent = medium;
+  if (el("statLow")) el("statLow").textContent = low;
+}
+
+/* =====================================================
+   INIT
+===================================================== */
 window.addEventListener("load", () => {
   renderTasks();
   renderContactPicker();
   renderMessages();
+  updateTaskStats();
 });
