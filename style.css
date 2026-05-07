@@ -192,13 +192,15 @@ button:hover {
 }
 
 /* =========================
-   CHAT LAYOUT (FIXED SPACING)
+   CHAT LAYOUT (IMPROVED)
 ========================= */
+
 .chat-layout {
   display: flex;
   height: calc(100vh - 80px);
 }
 
+/* sidebar */
 .chat-sidebar {
   width: 280px;
   background: var(--panel);
@@ -207,64 +209,127 @@ button:hover {
   flex-direction: column;
   padding: var(--space-md);
   gap: var(--space-sm);
+  overflow-y: auto;
 }
 
+/* main chat */
 .chat-window {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: var(--space-md);
+  overflow: hidden;
 }
 
 /* =========================
-   MESSAGES (FIXED LOOK)
+   CONTACT PICKER LIST
 ========================= */
+
+#contactPicker {
+  list-style: none;
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#contactPicker li {
+  padding: 8px;
+  background: var(--panel2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#contactPicker li:hover {
+  background: var(--red);
+}
+
+/* =========================
+   CHAT HEADER
+========================= */
+
+#chatTitle {
+  margin-bottom: 4px;
+}
+
+#chatStatus {
+  margin-bottom: var(--space-sm);
+  color: var(--muted);
+}
+
+/* =========================
+   MESSAGE LIST (BUBBLES FIXED)
+========================= */
+
 #messageList {
   flex: 1;
   list-style: none;
-  padding: var(--space-md);
+  padding: var(--space-sm);
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   overflow-y: auto;
 }
 
-/* actual message bubbles */
-#messageList li {
+/* base bubble */
+.msg {
   max-width: 70%;
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius);
-  background: var(--panel2);
+  padding: 10px 12px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  position: relative;
+  font-size: 14px;
 }
 
-#messageList li.me {
+/* sent by you */
+.msg.me {
   background: var(--red);
   color: white;
   align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
 
-#messageList li.them {
+/* received */
+.msg.them {
   background: var(--panel2);
+  color: var(--text);
   align-self: flex-start;
+  border-bottom-left-radius: 4px;
 }
 
-/* message input bar */
+/* timestamp */
+.msg small {
+  display: block;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* delete button inside bubble */
+.msg button {
+  margin-top: 6px;
+  font-size: 10px;
+  padding: 3px 6px;
+  border: none;
+  border-radius: 6px;
+  background: #111;
+  color: white;
+  cursor: pointer;
+}
+
+/* =========================
+   MESSAGE INPUT BAR
+========================= */
+
 .message-box {
   display: flex;
   gap: var(--space-sm);
   padding-top: var(--space-sm);
+  border-top: 1px solid #444;
 }
 
 .message-box input {
   flex: 1;
-}
-
-/* =========================
-   FOOTER
-========================= */
-footer {
-  text-align: center;
-  padding: var(--space-lg);
-  color: var(--muted);
-  border-top: 1px solid #444;
+  margin-bottom: 0;
 }
