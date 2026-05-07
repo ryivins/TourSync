@@ -1,11 +1,11 @@
 /* =====================================================
-   TOURSYNC CLEAN CORE SCRIPT (FIXED + STABLE)
+   TOURSYNC CORE SCRIPT (CLEAN REWRITE)
 ===================================================== */
 
 console.log("TourSync script loaded");
 
 /* =====================================================
-   SAFE HELPERS
+   SAFE STORAGE HELPERS
 ===================================================== */
 
 function safeId() {
@@ -21,7 +21,7 @@ function setLS(key, value) {
 }
 
 /* =====================================================
-   LOGIN SYSTEM (FIXED)
+   AUTH
 ===================================================== */
 
 function getCurrentUser() {
@@ -37,12 +37,10 @@ function logout() {
   window.location.href = "login.html";
 }
 
-function requireLogin() {
-  const user = getCurrentUser();
-  if (!user) window.location.href = "login.html";
-}
+/* =====================================================
+   LOGIN / REGISTER
+===================================================== */
 
-/* LOGIN */
 function loginUser() {
   const username = document.getElementById("username")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
@@ -61,7 +59,6 @@ function loginUser() {
   window.location.href = "index.html";
 }
 
-/* REGISTER */
 function registerUser() {
   const username = document.getElementById("username")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
@@ -81,8 +78,10 @@ function registerUser() {
 }
 
 /* =====================================================
-   CONTACTS
+   CONTACTS (UPDATED: EDIT + DELETE)
 ===================================================== */
+
+let editingContactId = null;
 
 function getContacts() {
   return getLS("contacts");
@@ -102,20 +101,33 @@ function addContact() {
 
   const contacts = getContacts();
 
-  contacts.push({
-    id: safeId(),
-    firstName,
-    lastName,
-    phone: phone || "",
-    email: email || ""
-  });
+  if (editingContactId) {
+    const index = contacts.findIndex(c => c.id === editingContactId);
+
+    if (index !== -1) {
+      contacts[index] = {
+        ...contacts[index],
+        firstName,
+        lastName,
+        phone: phone || "",
+        email: email || ""
+      };
+    }
+
+    editingContactId = null;
+  } else {
+    contacts.push({
+      id: safeId(),
+      firstName,
+      lastName,
+      phone: phone || "",
+      email: email || ""
+    });
+  }
 
   saveContacts(contacts);
 
-  ["firstName","lastName","phone","email"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-
+  clearContactForm();
   renderContacts();
   renderContactPicker();
 }
@@ -126,40 +138,66 @@ function renderContacts() {
 
   const contacts = getContacts();
 
-  list.innerHTML = contacts.length
-    ? ""
-    : "<li>No contacts yet</li>";
+  list.innerHTML = contacts.length ? "" : "<li>No contacts yet</li>";
 
   contacts.forEach(c => {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      <strong>${c.firstName} ${c.lastName}</strong><br>
-      ${c.phone || ""}<br>
-      ${c.email || ""}
+      <div>
+        <strong>${c.firstName} ${c.lastName}</strong><br>
+        ${c.phone || ""}<br>
+        ${c.email || ""}
+      </div>
+
+      <div style="margin-top:10px;">
+        <button onclick="editContact('${c.id}')">Edit</button>
+        <button onclick="deleteContact('${c.id}')" style="background:red;color:white;">
+          Delete
+        </button>
+      </div>
     `;
 
     list.appendChild(li);
   });
 }
 
+function editContact(id) {
+  const contact = getContacts().find(c => c.id === id);
+  if (!contact) return;
+
+  document.getElementById("firstName").value = contact.firstName;
+  document.getElementById("lastName").value = contact.lastName;
+  document.getElementById("phone").value = contact.phone;
+  document.getElementById("email").value = contact.email;
+
+  editingContactId = id;
+}
+
+function deleteContact(id) {
+  if (!confirm("Delete this contact?")) return;
+
+  let contacts = getContacts().filter(c => c.id !== id);
+  saveContacts(contacts);
+
+  if (editingContactId === id) {
+    editingContactId = null;
+    clearContactForm();
+  }
+
+  renderContacts();
+  renderContactPicker();
+}
+
+function clearContactForm() {
+  ["firstName", "lastName", "phone", "email"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+}
+
 /* =====================================================
-   MESSAGES
+   CONTACT PICKER (MESSAGES)
 ===================================================== */
-
-let activeChatPhone = "";
-
-function getMessages() {
-  return getLS("messages");
-}
-
-function saveMessages(data) {
-  setLS("messages", data);
-}
-
-function getChatMessages(phone) {
-  return getMessages().filter(m => m.recipientPhone === phone);
-}
 
 function renderContactPicker() {
   const input = document.getElementById("contactSearch");
@@ -167,6 +205,7 @@ function renderContactPicker() {
   if (!input || !list) return;
 
   const search = input.value.toLowerCase();
+
   const contacts = getContacts().filter(c =>
     (c.firstName + " " + c.lastName).toLowerCase().includes(search)
   );
@@ -187,10 +226,25 @@ function renderContactPicker() {
   });
 }
 
+/* =====================================================
+   MESSAGES
+===================================================== */
+
+let activeChatPhone = "";
+
+function getMessages() {
+  return getLS("messages");
+}
+
+function saveMessages(data) {
+  setLS("messages", data);
+}
+
 function openChat(phone, name) {
   activeChatPhone = phone;
 
-  document.getElementById("chatTitle").textContent = name;
+  const title = document.getElementById("chatTitle");
+  if (title) title.textContent = name;
 
   const messages = getMessages().map(m => {
     if (m.recipientPhone === phone) m.read = true;
@@ -235,7 +289,9 @@ function renderMessages() {
     return;
   }
 
-  const messages = getChatMessages(activeChatPhone);
+  const messages = getMessages().filter(
+    m => m.recipientPhone === activeChatPhone
+  );
 
   if (!messages.length) {
     list.innerHTML = "<li>No messages yet</li>";
@@ -257,7 +313,7 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS
+   TASKS (UNCHANGED BUT CLEAN)
 ===================================================== */
 
 function getTasks() {
@@ -320,9 +376,7 @@ function renderTasks() {
 
   const tasks = getTasks();
 
-  list.innerHTML = tasks.length
-    ? ""
-    : "<li>No tasks yet</li>";
+  list.innerHTML = tasks.length ? "" : "<li>No tasks yet</li>";
 
   tasks.forEach(t => {
     const li = document.createElement("li");
@@ -361,7 +415,7 @@ function updateTaskStats() {
 }
 
 /* =====================================================
-   INIT (SAFE)
+   INIT
 ===================================================== */
 
 window.addEventListener("load", () => {
