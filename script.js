@@ -1,7 +1,11 @@
 /* =====================================================
+   DEBUG CHECK
+===================================================== */
+console.log("TourSync script loaded");
+
+/* =====================================================
    EMAILJS INIT (SAFE)
 ===================================================== */
-
 (function () {
   if (typeof emailjs !== "undefined") {
     emailjs.init("HM3mSVepzVht92z0r");
@@ -13,7 +17,6 @@
 ===================================================== */
 
 function addToGoogleCalendar(tour) {
-
   const title = encodeURIComponent(`TourSync Event - ${tour.venue}`);
   const details = encodeURIComponent(`Tour with ${tour.name}`);
   const location = encodeURIComponent(tour.venue);
@@ -30,10 +33,10 @@ function addToGoogleCalendar(tour) {
 function formatDateTimeForCalendar(date, time) {
   if (!date || !time) return "";
 
-  const [year, month, day] = date.split("-").map(Number);
-  const [hour, minute] = time.split(":").map(Number);
+  const [y, m, d] = date.split("-").map(Number);
+  const [h, min] = time.split(":").map(Number);
 
-  const utc = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  const utc = new Date(Date.UTC(y, m - 1, d, h, min));
 
   return utc.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
@@ -50,63 +53,13 @@ function saveTours(data) {
   localStorage.setItem("tours", JSON.stringify(data));
 }
 
-function scheduleTour() {
-
-  const name = document.getElementById("tourName")?.value.trim();
-  const email = document.getElementById("tourEmail")?.value.trim();
-  const venue = document.getElementById("tourVenue")?.value.trim();
-  const date = document.getElementById("tourDate")?.value;
-  const time = document.getElementById("tourTime")?.value;
-
-  if (!name || !email || !venue || !date || !time) {
-    alert("Please complete all tour fields.");
-    return;
-  }
-
-  const templateParams = { name, email, venue, date, time };
-
-  emailjs.send("service_g3o4rfy", "template_e2asduq", templateParams)
-    .then(() => {
-
-      const tours = getTours();
-
-      tours.push({
-        id: Date.now().toString(),
-        name,
-        email,
-        venue,
-        date,
-        time
-      });
-
-      saveTours(tours);
-
-      alert("Tour scheduled + email sent!");
-
-      renderTours();
-
-      document.getElementById("tourName").value = "";
-      document.getElementById("tourEmail").value = "";
-      document.getElementById("tourVenue").value = "";
-      document.getElementById("tourDate").value = "";
-      document.getElementById("tourTime").value = "";
-
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Email failed to send.");
-    });
-}
-
 function renderTours() {
-
   const list = document.getElementById("tourList");
   if (!list) return;
 
   list.innerHTML = "";
 
   getTours().forEach(tour => {
-
     const li = document.createElement("li");
 
     li.innerHTML = `
@@ -125,7 +78,7 @@ function renderTours() {
 }
 
 /* =====================================================
-   CONTACTS
+   CONTACTS (FIXED CORE)
 ===================================================== */
 
 function getContacts() {
@@ -141,12 +94,10 @@ function addContact() {
   const firstName = document.getElementById("firstName")?.value.trim();
   const lastName = document.getElementById("lastName")?.value.trim();
   const phone = document.getElementById("phone")?.value.trim();
-  const email =
-    document.getElementById("contactEmail")?.value.trim() ||
-    document.getElementById("email")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
 
   if (!firstName || !lastName) {
-    alert("Please enter first and last name");
+    alert("Enter first and last name");
     return;
   }
 
@@ -162,39 +113,42 @@ function addContact() {
 
   saveContacts(contacts);
 
+  console.log("Saved contacts:", contacts);
+
   renderContacts();
   loadRecipients();
 
   document.getElementById("firstName").value = "";
   document.getElementById("lastName").value = "";
   document.getElementById("phone").value = "";
-
-  if (document.getElementById("contactEmail")) {
-    document.getElementById("contactEmail").value = "";
-  }
-  if (document.getElementById("email")) {
-    document.getElementById("email").value = "";
-  }
+  document.getElementById("email").value = "";
 }
 
 function renderContacts() {
-
   const list = document.getElementById("contactList");
-  if (!list) return;
+  if (!list) {
+    console.error("contactList not found in HTML");
+    return;
+  }
 
-  const search =
-    document.getElementById("searchInput")?.value.toLowerCase() || "";
+  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
 
   list.innerHTML = "";
 
-  getContacts()
+  const contacts = getContacts();
+
+  if (contacts.length === 0) {
+    list.innerHTML = "<li>No contacts yet</li>";
+    return;
+  }
+
+  contacts
     .filter(c =>
       (c.firstName + " " + c.lastName)
         .toLowerCase()
         .includes(search)
     )
     .forEach(c => {
-
       const li = document.createElement("li");
 
       li.innerHTML = `
@@ -219,9 +173,7 @@ function saveMessages(data) {
   localStorage.setItem("messages", JSON.stringify(data));
 }
 
-/* LOAD CONTACTS INTO DROPDOWN */
 function loadRecipients() {
-
   const select = document.getElementById("messageRecipient");
   if (!select) return;
 
@@ -230,28 +182,24 @@ function loadRecipients() {
   select.innerHTML = `<option value="">Select contact</option>`;
 
   contacts.forEach(c => {
-
     if (!c.email) return;
 
     const option = document.createElement("option");
     option.value = c.email;
     option.textContent = `${c.firstName} ${c.lastName}`;
-
     select.appendChild(option);
   });
 }
 
 function sendMessage() {
 
-  const input = document.getElementById("messageInput");
-  const text = input?.value.trim();
-
+  const text = document.getElementById("messageInput")?.value.trim();
   const recipient = document.getElementById("messageRecipient")?.value;
 
   if (!text) return;
 
   if (!recipient) {
-    alert("Please select a contact first");
+    alert("Select a contact first");
     return;
   }
 
@@ -268,18 +216,16 @@ function sendMessage() {
 
   renderMessages();
 
-  input.value = "";
+  document.getElementById("messageInput").value = "";
 }
 
 function renderMessages() {
-
   const list = document.getElementById("messageList");
   if (!list) return;
 
   list.innerHTML = "";
 
   getMessages().forEach(m => {
-
     const li = document.createElement("li");
 
     li.innerHTML = `
@@ -293,7 +239,7 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS (SAFE PLACEHOLDER)
+   TASKS (SAFE STUB)
 ===================================================== */
 
 function getTasks() {
@@ -304,35 +250,17 @@ function saveTasks(data) {
   localStorage.setItem("tasks", JSON.stringify(data));
 }
 
-function addTask() {
-
-  const text = document.getElementById("taskInput")?.value.trim();
-  if (!text) return;
-
-  const tasks = getTasks();
-
-  tasks.push({
-    id: Date.now().toString(),
-    text,
-    priority: document.getElementById("taskPriority")?.value || "medium",
-    dueDate: document.getElementById("taskDueDate")?.value || "",
-    assignedTo: document.getElementById("taskAssignee")?.value || "",
-    done: false
-  });
-
-  saveTasks(tasks);
-  renderTasks();
-}
-
 /* =====================================================
    INIT
 ===================================================== */
 
 window.addEventListener("load", () => {
 
+  console.log("INIT running");
+
   renderContacts();
   renderMessages();
   loadRecipients();
-  renderTasks();
-  renderTours();
+  renderTasks?.();
+  renderTours?.();
 });
