@@ -7,16 +7,14 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-  <!-- Your main JS (optional if you use shared logic elsewhere) -->
   <script defer src="script.js"></script>
 
-  <!-- INIT EMAILJS -->
   <script>
     window.addEventListener("load", () => {
-      emailjs.init("HM3mSVepzVht92z0r");
+      if (typeof emailjs !== "undefined") {
+        emailjs.init("HM3mSVepzVht92z0r");
+      }
     });
   </script>
 </head>
@@ -33,15 +31,17 @@
     <a href="contacts.html">Contacts</a>
     <a href="messages.html">Messages</a>
   </nav>
-
-  <button onclick="logout()">Logout</button>
 </header>
 
 <main class="container">
 
-  <h2>Tour Schedule</h2>
+  <!-- PAGE TITLE -->
+  <div class="page-title card">
+    <h2>Schedule</h2>
+    <p>Manage your tour events and send updates</p>
+  </div>
 
-  <!-- ADD EVENT FORM -->
+  <!-- ADD EVENT -->
   <div class="card">
 
     <h3>Add Tour Event</h3>
@@ -67,135 +67,6 @@
   </div>
 
 </main>
-
-<script>
-
-function getTours() {
-  return JSON.parse(localStorage.getItem("tours")) || [];
-}
-
-function saveTours(data) {
-  localStorage.setItem("tours", JSON.stringify(data));
-}
-
-/* =========================
-   ADD TOUR EVENT + EMAIL
-========================= */
-
-function addTourEvent() {
-
-  const date = document.getElementById("tourDate").value;
-  const time = document.getElementById("tourTime").value;
-  const venue = document.getElementById("tourVenue").value.trim();
-  const notes = document.getElementById("tourNotes").value.trim();
-  const email = document.getElementById("tourEmail").value.trim();
-
-  if (!date || !venue || !email) {
-    alert("Please enter date, venue, and email.");
-    return;
-  }
-
-  const templateParams = {
-    date,
-    time,
-    venue,
-    notes,
-    email
-  };
-
-  emailjs.send(
-    "service_g3o4rfy",
-    "template_e2asduq",
-    templateParams
-  )
-  .then(() => {
-
-    let tours = getTours();
-
-    tours.push({
-      id: Date.now().toString(),
-      date,
-      time,
-      venue,
-      notes
-    });
-
-    saveTours(tours);
-
-    renderTours();
-
-    alert("Event saved + email sent!");
-
-    // clear inputs
-    document.getElementById("tourDate").value = "";
-    document.getElementById("tourTime").value = "";
-    document.getElementById("tourVenue").value = "";
-    document.getElementById("tourNotes").value = "";
-    document.getElementById("tourEmail").value = "";
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Email failed to send.");
-  });
-}
-
-/* =========================
-   DELETE TOUR
-========================= */
-
-function deleteTour(id) {
-  let tours = getTours();
-  tours = tours.filter(t => t.id !== id);
-  saveTours(tours);
-  renderTours();
-}
-
-/* =========================
-   RENDER TOURS
-========================= */
-
-function renderTours() {
-
-  const list = document.getElementById("scheduleList");
-  list.innerHTML = "";
-
-  const tours = getTours();
-
-  tours.sort((a, b) =>
-    new Date(a.date) - new Date(b.date)
-  );
-
-  tours.forEach(t => {
-
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <strong>${t.date}</strong>
-      ${t.time ? "— " + t.time : ""}<br>
-
-      <div>${t.venue}</div>
-
-      ${t.notes ? `<small>${t.notes}</small>` : ""}
-
-      <br><br>
-
-      <button onclick="deleteTour('${t.id}')">
-        Delete
-      </button>
-    `;
-
-    list.appendChild(div);
-  });
-}
-
-/* =========================
-   INIT
-========================= */
-
-renderTours();
-
-</script>
 
 </body>
 </html>

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Tasks</title>
+  <title>Tasks | TourSync</title>
+
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -23,7 +25,8 @@
 
 <main class="container">
 
-  <div class="page-title">
+  <!-- PAGE TITLE (now consistent with all pages) -->
+  <div class="page-title card">
     <h2>Tasks</h2>
     <p>Manage tour responsibilities in real time</p>
   </div>
@@ -37,7 +40,8 @@
   </div>
 
   <!-- TASK INPUT -->
-  <div class="task-card card">
+  <div class="card">
+
     <div class="task-input">
 
       <input id="taskInput" type="text" placeholder="Task name">
@@ -49,12 +53,12 @@
       </select>
 
       <input id="taskDueDate" type="date">
-
       <input id="taskAssignee" type="text" placeholder="Assign to">
 
       <button onclick="addTask()">+ Add Task</button>
 
     </div>
+
   </div>
 
   <!-- TASK LIST -->

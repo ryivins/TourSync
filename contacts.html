@@ -6,13 +6,14 @@
   <title>Contacts</title>
 
   <link rel="stylesheet" href="style.css">
-
-  <!-- IMPORTANT: loads all JS functions -->
   <script defer src="script.js"></script>
 </head>
 
 <body>
 
+<!-- =========================
+     HEADER (FIXED + CONSISTENT)
+========================= -->
 <header class="topbar">
   <h1>TourSync</h1>
 
@@ -27,11 +28,13 @@
 
 <main class="container">
 
-  <h2>Contacts</h2>
+  <!-- PAGE TITLE -->
+  <div class="page-title card">
+    <h2>Contacts</h2>
+    <p>Manage your tour team contacts</p>
+  </div>
 
-  <!-- =========================
-       CONTACT FORM (ADD + EDIT)
-  ========================== -->
+  <!-- CONTACT FORM -->
   <div class="card contact-form">
 
     <input id="firstName" type="text" placeholder="First Name">
@@ -39,27 +42,26 @@
     <input id="phone" type="text" placeholder="Phone Number">
     <input id="email" type="email" placeholder="Email">
 
-    <!-- Hidden field to track editing -->
     <input type="hidden" id="editId">
 
     <button onclick="addContact()">Save Contact</button>
 
   </div>
 
-  <!-- =========================
-       SEARCH
-  ========================== -->
-  <input
-    id="searchInput"
-    type="text"
-    oninput="renderContacts()"
-    placeholder="Search contacts..."
-  >
+  <!-- SEARCH -->
+  <div class="card">
+    <input
+      id="searchInput"
+      type="text"
+      oninput="renderContacts()"
+      placeholder="Search contacts..."
+    >
+  </div>
 
-  <!-- =========================
-       CONTACT LIST
-  ========================== -->
-  <ul id="contactList"></ul>
+  <!-- CONTACT LIST -->
+  <div class="card">
+    <ul id="contactList"></ul>
+  </div>
 
 </main>
 

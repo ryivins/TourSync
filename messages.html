@@ -25,12 +25,14 @@
 
 <main class="container">
 
-  <h2>Messages</h2>
+  <!-- PAGE TITLE -->
+  <div class="page-title card">
+    <h2>Messages</h2>
+    <p>Chat with your tour contacts in real time</p>
+  </div>
 
-  <!-- =========================
-       CONTACT SEARCH
-  ========================== -->
-  <div class="card" style="margin-bottom:15px; padding:12px;">
+  <!-- CONTACT SEARCH -->
+  <div class="card">
 
     <h3>Select Contact</h3>
 
@@ -45,28 +47,24 @@
 
   </div>
 
-  <!-- =========================
-       CHAT WINDOW
-  ========================== -->
-  <div class="card" style="padding:12px;">
+  <!-- CHAT WINDOW -->
+  <div class="card chat-window">
 
     <!-- CHAT HEADER -->
     <h3 id="chatTitle">No contact selected</h3>
 
-    <!-- UNREAD STATUS -->
-    <div id="chatStatus" style="font-size:12px; opacity:0.7; margin-bottom:8px;"></div>
+    <div id="chatStatus"></div>
 
-    <!-- MESSAGE LIST (BUBBLES) -->
-    <ul id="messageList" class="chat-messages"></ul>
+    <!-- MESSAGE LIST -->
+    <ul id="messageList"></ul>
 
     <!-- INPUT -->
-    <div class="message-box" style="margin-top:10px; display:flex; gap:8px;">
+    <div class="message-box">
 
       <input
         id="messageInput"
         type="text"
         placeholder="Type your message..."
-        style="flex:1;"
       >
 
       <button onclick="sendMessage()">
