@@ -23,55 +23,36 @@
   </nav>
 </header>
 
-<main class="chat-layout">
+<main class="container">
+
+  <h2>Messages</h2>
 
   <!-- =========================
-       SIDEBAR
+       CONTACT SEARCH (NEW SYSTEM)
   ========================== -->
-  <aside class="chat-sidebar">
+  <div class="card" style="margin-bottom:15px; padding:10px;">
 
-    <h3>Chats</h3>
+    <h3>Select Contact</h3>
 
     <input
-      id="userSearch"
+      id="contactSearch"
       placeholder="Search contacts..."
-      onkeyup="renderUsers(this.value)"
+      oninput="renderContactPicker()"
     >
 
-    <div class="group-create">
-      <input id="groupName" placeholder="Group name...">
-      <button onclick="createGroupChat()">+ Group Chat</button>
-    </div>
+    <ul id="contactPicker"></ul>
 
-    <ul id="userList"></ul>
-
-  </aside>
+  </div>
 
   <!-- =========================
-       CHAT WINDOW
+       CHAT MESSAGES
   ========================== -->
-  <section class="chat-window">
 
-    <div class="chat-header">
-      <h3 id="chatTitle">Select a contact</h3>
-    </div>
+  <div class="card" style="padding:10px;">
 
-    <!-- CONTACT SELECTOR (PHONE BASED) -->
-    <div class="card" style="margin:10px; padding:10px;">
-
-      <label><strong>Send To:</strong></label>
-
-      <select id="messageRecipient">
-        <option value="">Select contact</option>
-      </select>
-
-    </div>
-
-    <!-- MESSAGES -->
     <ul id="messageList"></ul>
 
-    <!-- INPUT -->
-    <div class="message-box">
+    <div class="message-box" style="margin-top:10px;">
 
       <input
         id="messageInput"
@@ -84,7 +65,7 @@
 
     </div>
 
-  </section>
+  </div>
 
 </main>
 
