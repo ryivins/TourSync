@@ -1,7 +1,15 @@
 /* =====================================================
-   DEBUG
+   TOURSYNC MAIN SCRIPT (CLEAN + FIXED)
 ===================================================== */
+
 console.log("TourSync script loaded");
+
+/* =====================================================
+   SAFE ID HELPER
+===================================================== */
+function safeId() {
+  return crypto?.randomUUID?.() || Date.now().toString();
+}
 
 /* =====================================================
    EMAILJS INIT
@@ -13,15 +21,62 @@ console.log("TourSync script loaded");
 })();
 
 /* =====================================================
-   SAFE ID HELPER
+   LOGIN SYSTEM
 ===================================================== */
-function safeId() {
-  return (crypto?.randomUUID?.() || Date.now().toString());
+
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("tourCurrentUser"));
+}
+
+function setCurrentUser(user) {
+  localStorage.setItem("tourCurrentUser", JSON.stringify(user));
+}
+
+function requireLogin() {
+  const user = getCurrentUser();
+  if (!user) window.location.href = "login.html";
+}
+
+function loginUser() {
+  const username = document.getElementById("username")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+
+  if (!username || !password) return alert("Enter login info");
+
+  const users = JSON.parse(localStorage.getItem("tourUsers")) || [];
+
+  const found = users.find(
+    u => u.username === username && u.password === password
+  );
+
+  if (!found) return alert("Invalid login");
+
+  setCurrentUser(found);
+  window.location.href = "index.html";
+}
+
+function registerUser() {
+  const username = document.getElementById("username")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+
+  if (!username || !password) return alert("Enter username + password");
+
+  const users = JSON.parse(localStorage.getItem("tourUsers")) || [];
+
+  if (users.find(u => u.username === username)) {
+    return alert("User already exists");
+  }
+
+  users.push({ username, password });
+  localStorage.setItem("tourUsers", JSON.stringify(users));
+
+  alert("Account created! You can now log in.");
 }
 
 /* =====================================================
    GOOGLE CALENDAR
 ===================================================== */
+
 function addToGoogleCalendar(tour) {
   const title = encodeURIComponent(`TourSync Event - ${tour.venue}`);
   const details = encodeURIComponent(`Tour with ${tour.name}`);
@@ -48,8 +103,9 @@ function formatDateTimeForCalendar(date, time) {
 }
 
 /* =====================================================
-   CONTACTS (FIXED STORAGE)
+   CONTACTS (FIXED + RELIABLE STORAGE)
 ===================================================== */
+
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
 }
@@ -64,7 +120,7 @@ function addContact() {
   const phone = document.getElementById("phone")?.value.trim();
   const email = document.getElementById("email")?.value.trim();
 
-  if (!firstName || !lastName) return alert("Enter first + last name");
+  if (!firstName || !lastName) return alert("Enter name");
 
   const contacts = getContacts();
 
@@ -83,13 +139,38 @@ function addContact() {
     if (el) el.value = "";
   });
 
-  renderContacts?.();
-  renderContactPicker?.();
+  renderContacts();
+  renderContactPicker();
+}
+
+function renderContacts() {
+  const list = document.getElementById("contactList");
+  if (!list) return;
+
+  const contacts = getContacts();
+
+  list.innerHTML = "";
+
+  if (!contacts.length) {
+    list.innerHTML = "<li>No contacts yet</li>";
+    return;
+  }
+
+  contacts.forEach(c => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${c.firstName} ${c.lastName}</strong><br>
+      ${c.phone}<br>
+      ${c.email}
+    `;
+    list.appendChild(li);
+  });
 }
 
 /* =====================================================
    MESSAGES
 ===================================================== */
+
 let activeChatPhone = "";
 
 function getMessages() {
@@ -104,14 +185,12 @@ function getChatMessages(phone) {
   return getMessages().filter(m => m.recipientPhone === phone);
 }
 
-/* CONTACT PICKER */
 function renderContactPicker() {
   const input = document.getElementById("contactSearch");
   const list = document.getElementById("contactPicker");
   if (!input || !list) return;
 
   const search = input.value.toLowerCase();
-
   const contacts = getContacts().filter(c =>
     (c.firstName + " " + c.lastName).toLowerCase().includes(search)
   );
@@ -121,10 +200,7 @@ function renderContactPicker() {
   contacts.forEach(c => {
     const li = document.createElement("li");
 
-    li.innerHTML = `
-      <strong>${c.firstName} ${c.lastName}</strong><br>
-      <small>${c.phone || ""}</small>
-    `;
+    li.innerHTML = `<strong>${c.firstName} ${c.lastName}</strong>`;
 
     li.onclick = () => openChat(c.phone, `${c.firstName} ${c.lastName}`);
 
@@ -132,7 +208,6 @@ function renderContactPicker() {
   });
 }
 
-/* OPEN CHAT */
 function openChat(phone, name) {
   activeChatPhone = phone;
 
@@ -147,10 +222,8 @@ function openChat(phone, name) {
   saveMessages(messages);
 
   renderMessages();
-  renderContactPicker();
 }
 
-/* SEND MESSAGE */
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input?.value.trim();
@@ -173,7 +246,6 @@ function sendMessage() {
   renderMessages();
 }
 
-/* RENDER CHAT */
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
@@ -181,23 +253,20 @@ function renderMessages() {
   list.innerHTML = "";
 
   if (!activeChatPhone) {
-    list.innerHTML = "<li class='system-msg'>Select a contact</li>";
+    list.innerHTML = "<li>Select a contact</li>";
     return;
   }
 
   const messages = getChatMessages(activeChatPhone);
 
   if (!messages.length) {
-    list.innerHTML = "<li class='system-msg'>No messages yet</li>";
+    list.innerHTML = "<li>No messages yet</li>";
     return;
   }
 
   messages.forEach(m => {
     const li = document.createElement("li");
-
-    const isMe = true; // (you can upgrade later for incoming messages)
-
-    li.className = isMe ? "msg me" : "msg them";
+    li.className = "msg me";
 
     li.innerHTML = `
       <div>${m.text}</div>
@@ -209,8 +278,9 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS (FIXED + STATS READY)
+   TASKS (FULL FIXED SYSTEM)
 ===================================================== */
+
 function getTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
 }
@@ -260,6 +330,7 @@ function toggleTask(id) {
 function deleteTask(id) {
   const tasks = getTasks().filter(t => t.id !== id);
   saveTasks(tasks);
+
   renderTasks();
   updateTaskStats();
 }
@@ -280,7 +351,7 @@ function renderTasks() {
   tasks.forEach(t => {
     const li = document.createElement("li");
 
-    li.className = `task ${t.priority || ""}`;
+    li.className = "task";
 
     li.innerHTML = `
       <div onclick="toggleTask('${t.id}')" style="cursor:pointer;">
@@ -288,9 +359,9 @@ function renderTasks() {
       </div>
 
       <small>
-        ${t.priority || "none"} |
-        ${t.dueDate || "no date"} |
-        ${t.assignee || "unassigned"}
+        ${t.priority || ""} |
+        ${t.dueDate || ""} |
+        ${t.assignee || ""}
       </small>
 
       <button onclick="deleteTask('${t.id}')">Delete</button>
@@ -300,27 +371,27 @@ function renderTasks() {
   });
 }
 
-/* TASK STATS (FIXED MISSING FUNCTION) */
 function updateTaskStats() {
   const tasks = getTasks();
 
-  const high = tasks.filter(t => t.priority === "high").length;
-  const medium = tasks.filter(t => t.priority === "medium").length;
-  const low = tasks.filter(t => t.priority === "low").length;
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
 
-  const el = (id) => document.getElementById(id);
-
-  if (el("statHigh")) el("statHigh").textContent = high;
-  if (el("statMedium")) el("statMedium").textContent = medium;
-  if (el("statLow")) el("statLow").textContent = low;
+  set("statHigh", tasks.filter(t => t.priority === "high").length);
+  set("statMedium", tasks.filter(t => t.priority === "medium").length);
+  set("statLow", tasks.filter(t => t.priority === "low").length);
 }
 
 /* =====================================================
    INIT
 ===================================================== */
+
 window.addEventListener("load", () => {
-  renderTasks();
+  renderContacts();
   renderContactPicker();
   renderMessages();
+  renderTasks();
   updateTaskStats();
 });
