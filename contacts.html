@@ -7,7 +7,7 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- IMPORTANT: loads all functions -->
+  <!-- IMPORTANT: loads all JS functions -->
   <script defer src="script.js"></script>
 </head>
 
@@ -29,21 +29,26 @@
 
   <h2>Contacts</h2>
 
-  <!-- CONTACT FORM -->
+  <!-- =========================
+       CONTACT FORM (ADD + EDIT)
+  ========================== -->
   <div class="card contact-form">
 
     <input id="firstName" type="text" placeholder="First Name">
     <input id="lastName" type="text" placeholder="Last Name">
     <input id="phone" type="text" placeholder="Phone Number">
-
-    <!-- FIXED: matches your JS -->
     <input id="email" type="email" placeholder="Email">
 
-    <button onclick="addContact()">Add Contact</button>
+    <!-- Hidden field to track editing -->
+    <input type="hidden" id="editId">
+
+    <button onclick="addContact()">Save Contact</button>
 
   </div>
 
-  <!-- SEARCH -->
+  <!-- =========================
+       SEARCH
+  ========================== -->
   <input
     id="searchInput"
     type="text"
@@ -51,7 +56,9 @@
     placeholder="Search contacts..."
   >
 
-  <!-- CONTACT LIST -->
+  <!-- =========================
+       CONTACT LIST
+  ========================== -->
   <ul id="contactList"></ul>
 
 </main>

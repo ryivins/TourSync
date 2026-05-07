@@ -30,14 +30,11 @@
   ========================== -->
   <aside class="chat-sidebar">
 
-    <div class="sidebar-top">
-      <button class="hamburger">☰</button>
-      <h3>Chats</h3>
-    </div>
+    <h3>Chats</h3>
 
     <input
       id="userSearch"
-      placeholder="Search people..."
+      placeholder="Search contacts..."
       onkeyup="renderUsers(this.value)"
     >
 
@@ -59,13 +56,15 @@
       <h3 id="chatTitle">Select a contact</h3>
     </div>
 
-    <!-- CONTACT SELECTOR (CONNECTED TO CONTACTS SYSTEM) -->
-    <div class="card" style="margin:10px;">
+    <!-- CONTACT SELECTOR (PHONE BASED) -->
+    <div class="card" style="margin:10px; padding:10px;">
+
       <label><strong>Send To:</strong></label>
 
       <select id="messageRecipient">
-        <option value="">Loading contacts...</option>
+        <option value="">Select contact</option>
       </select>
+
     </div>
 
     <!-- MESSAGES -->
@@ -88,18 +87,6 @@
   </section>
 
 </main>
-
-<!-- ✅ IMPORTANT: ensures dropdown loads immediately -->
-<script>
-  window.addEventListener("load", () => {
-    if (typeof loadRecipients === "function") {
-      loadRecipients();
-    }
-    if (typeof renderMessages === "function") {
-      renderMessages();
-    }
-  });
-</script>
 
 </body>
 </html>

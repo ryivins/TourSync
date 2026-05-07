@@ -1,4 +1,3 @@
-
 /* =========================
    RESET
 ========================= */
@@ -46,7 +45,7 @@ body {
    TYPOGRAPHY
 ========================= */
 h1 { font-size: 28px; }
-h2 { font-size: 22px; margin-bottom: var(--space-sm); }
+h2 { font-size: 22px; margin-bottom: var(--space-md); }
 h3 { font-size: 18px; margin-bottom: var(--space-sm); }
 
 h1, h2, h3 {
@@ -93,7 +92,7 @@ nav a:hover {
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-lg); /* improved spacing */
+  gap: var(--space-lg);
   margin-top: var(--space-md);
 }
 
@@ -105,60 +104,19 @@ nav a:hover {
   border: 1px solid #444;
   border-radius: var(--radius);
   padding: var(--space-md);
+  margin-bottom: var(--space-md);
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* clickable feel */
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.25);
   cursor: pointer;
 }
 
-.card strong {
-  font-size: 16px;
-}
-
-.card small {
-  color: var(--muted);
-}
-
-/* spacing inside cards */
-.card h3 {
-  margin-bottom: var(--space-sm);
-}
-
-.card > div,
-.card p {
-  margin-top: var(--space-xs);
-}
-
 /* =========================
-   TODAY SUMMARY
-========================= */
-.today-summary {
-  background: linear-gradient(135deg, var(--panel), var(--panel2));
-  border: 1px solid #444;
-  border-left: 5px solid var(--red);
-  border-radius: var(--radius);
-  padding: var(--space-md);
-  margin-bottom: var(--space-md);
-}
-
-.today-summary-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid #444;
-}
-
-.today-summary-item:last-child {
-  border-bottom: none;
-}
-
-/* =========================
-   FORM ELEMENTS
+   FORMS (FIXED SPACING)
 ========================= */
 input {
   padding: 10px;
@@ -175,8 +133,17 @@ input:focus {
   border-color: var(--red);
 }
 
+/* group form spacing */
+.contact-form,
+.group-create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
 /* =========================
-   BUTTONS
+   BUTTONS (FIXED SPACING)
 ========================= */
 button {
   padding: 10px 14px;
@@ -187,60 +154,45 @@ button {
   cursor: pointer;
   transition: 0.2s;
 
-  margin-top: var(--space-sm);
-  margin-right: var(--space-sm);
+  margin-top: var(--space-xs);
 }
 
 button:hover {
   opacity: 0.9;
 }
 
-button:last-child {
-  margin-right: 0;
-}
-
-/* =========================
-   TASKS
-========================= */
-.task {
-  background: var(--panel);
-  padding: var(--space-md);
-  border-radius: var(--radius);
-  border: 1px solid #444;
-  margin-bottom: var(--space-sm);
-}
-
-.task.high { border-left: 5px solid var(--red); }
-.task.medium { border-left: 5px solid var(--gold); }
-.task.low { border-left: 5px solid var(--green); }
-
-.task.done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
 /* =========================
    CONTACTS
 ========================= */
+#contactList {
+  list-style: none;
+}
+
 #contactList li {
   background: var(--panel);
   padding: var(--space-md);
   border-radius: var(--radius);
   border: 1px solid #444;
   margin-bottom: var(--space-sm);
-}
 
-/* =========================
-   SCHEDULE
-========================= */
-#scheduleList {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* delete button in contacts */
+.delete-btn {
+  background: #555;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background: var(--red);
 }
 
 /* =========================
-   CHAT
+   CHAT LAYOUT (FIXED SPACING)
 ========================= */
 .chat-layout {
   display: flex;
@@ -253,10 +205,19 @@ button:last-child {
   border-right: 1px solid #444;
   display: flex;
   flex-direction: column;
+  padding: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md);
 }
 
 /* =========================
-   MESSAGES
+   MESSAGES (FIXED LOOK)
 ========================= */
 #messageList {
   flex: 1;
@@ -265,23 +226,37 @@ button:last-child {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  overflow-y: auto;
 }
 
-.msg {
-  max-width: 65%;
+/* actual message bubbles */
+#messageList li {
+  max-width: 70%;
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius);
+  background: var(--panel2);
 }
 
-.msg.me {
+#messageList li.me {
   background: var(--red);
   color: white;
   align-self: flex-end;
 }
 
-.msg.them {
+#messageList li.them {
   background: var(--panel2);
   align-self: flex-start;
+}
+
+/* message input bar */
+.message-box {
+  display: flex;
+  gap: var(--space-sm);
+  padding-top: var(--space-sm);
+}
+
+.message-box input {
+  flex: 1;
 }
 
 /* =========================

@@ -17,6 +17,7 @@ console.log("TourSync script loaded");
 ===================================================== */
 
 function addToGoogleCalendar(tour) {
+
   const title = encodeURIComponent(`TourSync Event - ${tour.venue}`);
   const details = encodeURIComponent(`Tour with ${tour.name}`);
   const location = encodeURIComponent(tour.venue);
@@ -60,6 +61,7 @@ function renderTours() {
   list.innerHTML = "";
 
   getTours().forEach(tour => {
+
     const li = document.createElement("li");
 
     li.innerHTML = `
@@ -78,7 +80,7 @@ function renderTours() {
 }
 
 /* =====================================================
-   CONTACTS (FIXED CORE)
+   CONTACTS (FULL CRUD: ADD / SEARCH / DELETE / EDIT)
 ===================================================== */
 
 function getContacts() {
@@ -89,31 +91,41 @@ function saveContacts(data) {
   localStorage.setItem("contacts", JSON.stringify(data));
 }
 
+/* ADD OR UPDATE CONTACT */
 function addContact() {
 
   const firstName = document.getElementById("firstName")?.value.trim();
   const lastName = document.getElementById("lastName")?.value.trim();
   const phone = document.getElementById("phone")?.value.trim();
   const email = document.getElementById("email")?.value.trim();
+  const editId = document.getElementById("editId")?.value;
 
   if (!firstName || !lastName) {
     alert("Enter first and last name");
     return;
   }
 
-  const contacts = getContacts();
+  let contacts = getContacts();
 
-  contacts.push({
-    id: Date.now().toString(),
-    firstName,
-    lastName,
-    phone: phone || "",
-    email: email || ""
-  });
+  if (editId) {
+    contacts = contacts.map(c =>
+      c.id === editId
+        ? { ...c, firstName, lastName, phone, email }
+        : c
+    );
+
+    document.getElementById("editId").value = "";
+  } else {
+    contacts.push({
+      id: Date.now().toString(),
+      firstName,
+      lastName,
+      phone: phone || "",
+      email: email || ""
+    });
+  }
 
   saveContacts(contacts);
-
-  console.log("Saved contacts:", contacts);
 
   renderContacts();
   loadRecipients();
@@ -124,45 +136,76 @@ function addContact() {
   document.getElementById("email").value = "";
 }
 
+/* EDIT CONTACT */
+function editContact(id) {
+
+  const contact = getContacts().find(c => c.id === id);
+  if (!contact) return;
+
+  document.getElementById("firstName").value = contact.firstName;
+  document.getElementById("lastName").value = contact.lastName;
+  document.getElementById("phone").value = contact.phone;
+  document.getElementById("email").value = contact.email;
+
+  document.getElementById("editId").value = contact.id;
+}
+
+/* DELETE CONTACT */
+function deleteContact(id) {
+
+  let contacts = getContacts().filter(c => c.id !== id);
+
+  saveContacts(contacts);
+
+  renderContacts();
+  loadRecipients();
+}
+
+/* RENDER + SEARCH */
 function renderContacts() {
+
   const list = document.getElementById("contactList");
-  if (!list) {
-    console.error("contactList not found in HTML");
-    return;
-  }
+  if (!list) return;
 
   const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
 
-  list.innerHTML = "";
-
   const contacts = getContacts();
 
-  if (contacts.length === 0) {
-    list.innerHTML = "<li>No contacts yet</li>";
+  list.innerHTML = "";
+
+  const filtered = contacts.filter(c =>
+    (c.firstName + " " + c.lastName)
+      .toLowerCase()
+      .includes(search)
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML = "<li>No contacts found</li>";
     return;
   }
 
-  contacts
-    .filter(c =>
-      (c.firstName + " " + c.lastName)
-        .toLowerCase()
-        .includes(search)
-    )
-    .forEach(c => {
-      const li = document.createElement("li");
+  filtered.forEach(c => {
 
-      li.innerHTML = `
-        <strong>${c.firstName} ${c.lastName}</strong><br>
-        ${c.phone || ""}<br>
-        ${c.email || ""}
-      `;
+    const li = document.createElement("li");
 
-      list.appendChild(li);
-    });
+    li.innerHTML = `
+      <strong>${c.firstName} ${c.lastName}</strong><br>
+      ${c.phone || ""}<br>
+      ${c.email || ""}<br><br>
+
+      <button onclick="editContact('${c.id}')">Edit</button>
+      <button onclick="deleteContact('${c.id}')"
+        style="background:red;color:white;border:none;padding:5px;margin-left:5px;">
+        Delete
+      </button>
+    `;
+
+    list.appendChild(li);
+  });
 }
 
 /* =====================================================
-   MESSAGES
+   MESSAGES (PHONE-BASED SYSTEM)
 ===================================================== */
 
 function getMessages() {
@@ -173,7 +216,9 @@ function saveMessages(data) {
   localStorage.setItem("messages", JSON.stringify(data));
 }
 
+/* LOAD CONTACTS INTO PHONE DROPDOWN */
 function loadRecipients() {
+
   const select = document.getElementById("messageRecipient");
   if (!select) return;
 
@@ -182,23 +227,26 @@ function loadRecipients() {
   select.innerHTML = `<option value="">Select contact</option>`;
 
   contacts.forEach(c => {
-    if (!c.email) return;
+
+    if (!c.phone) return;
 
     const option = document.createElement("option");
-    option.value = c.email;
-    option.textContent = `${c.firstName} ${c.lastName}`;
+    option.value = c.phone;
+    option.textContent = `${c.firstName} ${c.lastName} (${c.phone})`;
+
     select.appendChild(option);
   });
 }
 
+/* SEND MESSAGE */
 function sendMessage() {
 
   const text = document.getElementById("messageInput")?.value.trim();
-  const recipient = document.getElementById("messageRecipient")?.value;
+  const recipientPhone = document.getElementById("messageRecipient")?.value;
 
   if (!text) return;
 
-  if (!recipient) {
+  if (!recipientPhone) {
     alert("Select a contact first");
     return;
   }
@@ -208,7 +256,7 @@ function sendMessage() {
   messages.push({
     id: Date.now().toString(),
     text,
-    recipient,
+    recipientPhone,
     time: new Date().toLocaleTimeString()
   });
 
@@ -219,18 +267,21 @@ function sendMessage() {
   document.getElementById("messageInput").value = "";
 }
 
+/* RENDER MESSAGES */
 function renderMessages() {
+
   const list = document.getElementById("messageList");
   if (!list) return;
 
   list.innerHTML = "";
 
   getMessages().forEach(m => {
+
     const li = document.createElement("li");
 
     li.innerHTML = `
       <div>${m.text}</div>
-      <small>To: ${m.recipient}</small><br>
+      <small>To: ${m.recipientPhone}</small><br>
       <small>${m.time}</small>
     `;
 
