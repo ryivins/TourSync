@@ -28,14 +28,15 @@
   <h2>Messages</h2>
 
   <!-- =========================
-       CONTACT SEARCH (NEW SYSTEM)
+       CONTACT SEARCH
   ========================== -->
-  <div class="card" style="margin-bottom:15px; padding:10px;">
+  <div class="card" style="margin-bottom:15px; padding:12px;">
 
     <h3>Select Contact</h3>
 
     <input
       id="contactSearch"
+      type="text"
       placeholder="Search contacts..."
       oninput="renderContactPicker()"
     >
@@ -45,18 +46,24 @@
   </div>
 
   <!-- =========================
-       CHAT MESSAGES
+       CHAT WINDOW
   ========================== -->
+  <div class="card" style="padding:12px;">
 
-  <div class="card" style="padding:10px;">
+    <!-- CHAT HEADER (IMPORTANT) -->
+    <h3 id="chatTitle">No contact selected</h3>
 
+    <!-- MESSAGE LIST -->
     <ul id="messageList"></ul>
 
-    <div class="message-box" style="margin-top:10px;">
+    <!-- INPUT -->
+    <div class="message-box" style="margin-top:10px; display:flex; gap:8px;">
 
       <input
         id="messageInput"
+        type="text"
         placeholder="Type your message..."
+        style="flex:1;"
       >
 
       <button onclick="sendMessage()">

@@ -213,12 +213,32 @@ function renderContacts() {
 /* =====================================================
    MESSAGES (SEARCH + CLICK SELECT SYSTEM)
 ===================================================== */
+/* =====================================================
+   MESSAGES (THREAD-BASED SYSTEM)
+===================================================== */
 
-let selectedPhone = "";
+/* CURRENT ACTIVE CHAT */
+let activeChatPhone = "";
 
-/* CONTACT SEARCH FOR MESSAGES */
+/* GET MESSAGES */
+function getMessages() {
+  return JSON.parse(localStorage.getItem("messages")) || [];
+}
+
+function saveMessages(data) {
+  localStorage.setItem("messages", JSON.stringify(data));
+}
+
+/* FILTER MESSAGES FOR ACTIVE CHAT */
+function getChatMessages(phone) {
+  return getMessages().filter(m => m.recipientPhone === phone);
+}
+
+/* =====================================================
+   CONTACT SEARCH (CLICK TO OPEN CHAT)
+===================================================== */
+
 function renderContactPicker() {
-
   const input = document.getElementById("contactSearch");
   const list = document.getElementById("contactPicker");
   if (!input || !list) return;
@@ -232,38 +252,45 @@ function renderContactPicker() {
   list.innerHTML = "";
 
   contacts.forEach(c => {
-
     const li = document.createElement("li");
-    li.textContent = `${c.firstName} ${c.lastName} (${c.phone})`;
 
-    li.style.cursor = "pointer";
-    li.onclick = () => {
-      selectedPhone = c.phone;
-      alert(`Selected: ${c.firstName} ${c.lastName}`);
-    };
+    li.innerHTML = `
+      <strong>${c.firstName} ${c.lastName}</strong><br>
+      ${c.phone || ""}
+    `;
+
+    li.onclick = () => openChat(c.phone, c.firstName + " " + c.lastName);
 
     list.appendChild(li);
   });
 }
 
-/* MESSAGES STORAGE */
-function getMessages() {
-  return JSON.parse(localStorage.getItem("messages")) || [];
+/* =====================================================
+   OPEN CHAT (CREATES MESSAGE BOARD)
+===================================================== */
+
+function openChat(phone, name) {
+  activeChatPhone = phone;
+
+  const title = document.getElementById("chatTitle");
+  if (title) title.textContent = name;
+
+  renderMessages();
 }
 
-function saveMessages(data) {
-  localStorage.setItem("messages", JSON.stringify(data));
-}
+/* =====================================================
+   SEND MESSAGE (TO ACTIVE CHAT)
+===================================================== */
 
-/* SEND MESSAGE */
 function sendMessage() {
 
-  const text = document.getElementById("messageInput")?.value.trim();
+  const input = document.getElementById("messageInput");
+  const text = input?.value.trim();
 
   if (!text) return;
 
-  if (!selectedPhone) {
-    alert("Select a contact from search first");
+  if (!activeChatPhone) {
+    alert("Search and select a contact first");
     return;
   }
 
@@ -272,31 +299,43 @@ function sendMessage() {
   messages.push({
     id: Date.now().toString(),
     text,
-    recipientPhone: selectedPhone,
+    recipientPhone: activeChatPhone,
     time: new Date().toLocaleTimeString()
   });
 
   saveMessages(messages);
-  renderMessages();
 
-  document.getElementById("messageInput").value = "";
+  input.value = "";
+  renderMessages();
 }
 
-/* RENDER MESSAGES */
-function renderMessages() {
+/* =====================================================
+   RENDER CHAT THREAD
+===================================================== */
 
+function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;
 
   list.innerHTML = "";
 
-  getMessages().forEach(m => {
+  if (!activeChatPhone) {
+    list.innerHTML = "<li>Select a contact to start chatting</li>";
+    return;
+  }
 
+  const messages = getChatMessages(activeChatPhone);
+
+  if (messages.length === 0) {
+    list.innerHTML = "<li>No messages yet</li>";
+    return;
+  }
+
+  messages.forEach(m => {
     const li = document.createElement("li");
 
     li.innerHTML = `
       <div>${m.text}</div>
-      <small>To: ${m.recipientPhone}</small><br>
       <small>${m.time}</small>
     `;
 
@@ -305,15 +344,11 @@ function renderMessages() {
 }
 
 /* =====================================================
-   INIT
+   INIT UPDATE
 ===================================================== */
 
 window.addEventListener("load", () => {
-
   renderContacts();
-  renderMessages();
   renderContactPicker();
-  renderTours();
-
-  if (typeof renderTasks === "function") renderTasks();
+  renderMessages();
 });
