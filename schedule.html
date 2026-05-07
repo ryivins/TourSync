@@ -7,9 +7,18 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+  <!-- Your main JS (optional if you use shared logic elsewhere) -->
   <script defer src="script.js"></script>
+
+  <!-- INIT EMAILJS -->
+  <script>
+    window.addEventListener("load", () => {
+      emailjs.init("HM3mSVepzVht92z0r");
+    });
+  </script>
 </head>
 
 <body>
@@ -39,10 +48,12 @@
 
     <input type="date" id="tourDate">
     <input type="time" id="tourTime">
+
     <input type="text" id="tourVenue" placeholder="Venue / City">
     <input type="text" id="tourNotes" placeholder="Notes (optional)">
+    <input type="email" id="tourEmail" placeholder="Recipient Email">
 
-    <button onclick="addTourEvent()">Add Event</button>
+    <button onclick="addTourEvent()">Send + Save Event</button>
 
   </div>
 
@@ -58,9 +69,6 @@
 </main>
 
 <script>
-/* =========================
-   GET / SAVE
-========================= */
 
 function getTours() {
   return JSON.parse(localStorage.getItem("tours")) || [];
@@ -71,7 +79,7 @@ function saveTours(data) {
 }
 
 /* =========================
-   ADD TOUR EVENT
+   ADD TOUR EVENT + EMAIL
 ========================= */
 
 function addTourEvent() {
@@ -80,31 +88,55 @@ function addTourEvent() {
   const time = document.getElementById("tourTime").value;
   const venue = document.getElementById("tourVenue").value.trim();
   const notes = document.getElementById("tourNotes").value.trim();
+  const email = document.getElementById("tourEmail").value.trim();
 
-  if (!date || !venue) {
-    alert("Please enter at least a date and venue.");
+  if (!date || !venue || !email) {
+    alert("Please enter date, venue, and email.");
     return;
   }
 
-  const tours = getTours();
-
-  tours.push({
-    id: Date.now().toString(),
+  const templateParams = {
     date,
     time,
     venue,
-    notes
+    notes,
+    email
+  };
+
+  emailjs.send(
+    "service_g3o4rfy",
+    "template_e2asduq",
+    templateParams
+  )
+  .then(() => {
+
+    let tours = getTours();
+
+    tours.push({
+      id: Date.now().toString(),
+      date,
+      time,
+      venue,
+      notes
+    });
+
+    saveTours(tours);
+
+    renderTours();
+
+    alert("Event saved + email sent!");
+
+    // clear inputs
+    document.getElementById("tourDate").value = "";
+    document.getElementById("tourTime").value = "";
+    document.getElementById("tourVenue").value = "";
+    document.getElementById("tourNotes").value = "";
+    document.getElementById("tourEmail").value = "";
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Email failed to send.");
   });
-
-  saveTours(tours);
-
-  renderTours();
-
-  // clear
-  document.getElementById("tourDate").value = "";
-  document.getElementById("tourTime").value = "";
-  document.getElementById("tourVenue").value = "";
-  document.getElementById("tourNotes").value = "";
 }
 
 /* =========================
@@ -112,24 +144,19 @@ function addTourEvent() {
 ========================= */
 
 function deleteTour(id) {
-
   let tours = getTours();
-
   tours = tours.filter(t => t.id !== id);
-
   saveTours(tours);
-
   renderTours();
 }
 
 /* =========================
-   RENDER
+   RENDER TOURS
 ========================= */
 
 function renderTours() {
 
   const list = document.getElementById("scheduleList");
-
   list.innerHTML = "";
 
   const tours = getTours();
@@ -167,6 +194,7 @@ function renderTours() {
 ========================= */
 
 renderTours();
+
 </script>
 
 </body>
