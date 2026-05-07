@@ -53,7 +53,7 @@ h1, h2, h3 {
 }
 
 /* =========================
-   LAYOUT
+   CONTAINER
 ========================= */
 .container {
   padding: var(--space-lg);
@@ -78,7 +78,6 @@ nav a {
   text-decoration: none;
   color: var(--text);
   opacity: 0.8;
-  transition: 0.2s;
 }
 
 nav a:hover {
@@ -87,17 +86,7 @@ nav a:hover {
 }
 
 /* =========================
-   GRID SYSTEM
-========================= */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
-}
-
-/* =========================
-   CARD SYSTEM
+   CARD
 ========================= */
 .card {
   background: linear-gradient(135deg, var(--panel), #262626);
@@ -105,20 +94,12 @@ nav a:hover {
   border-radius: var(--radius);
   padding: var(--space-md);
   margin-bottom: var(--space-md);
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-  cursor: pointer;
 }
 
 /* =========================
-   FORMS (FIXED SPACING)
+   INPUTS
 ========================= */
-input {
+input, select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #444;
@@ -128,22 +109,13 @@ input {
   margin-bottom: var(--space-sm);
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: var(--red);
 }
 
-/* group form spacing */
-.contact-form,
-.group-create {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
-}
-
 /* =========================
-   BUTTONS (FIXED SPACING)
+   BUTTONS
 ========================= */
 button {
   padding: 10px 14px;
@@ -152,9 +124,6 @@ button {
   background: var(--red);
   color: white;
   cursor: pointer;
-  transition: 0.2s;
-
-  margin-top: var(--space-xs);
 }
 
 button:hover {
@@ -162,39 +131,8 @@ button:hover {
 }
 
 /* =========================
-   CONTACTS
+   CHAT LAYOUT
 ========================= */
-#contactList {
-  list-style: none;
-}
-
-#contactList li {
-  background: var(--panel);
-  padding: var(--space-md);
-  border-radius: var(--radius);
-  border: 1px solid #444;
-  margin-bottom: var(--space-sm);
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* delete button in contacts */
-.delete-btn {
-  background: #555;
-  padding: 6px 10px;
-  font-size: 12px;
-}
-
-.delete-btn:hover {
-  background: var(--red);
-}
-
-/* =========================
-   CHAT LAYOUT (IMPROVED)
-========================= */
-
 .chat-layout {
   display: flex;
   height: calc(100vh - 80px);
@@ -205,10 +143,7 @@ button:hover {
   width: 280px;
   background: var(--panel);
   border-right: 1px solid #444;
-  display: flex;
-  flex-direction: column;
   padding: var(--space-md);
-  gap: var(--space-sm);
   overflow-y: auto;
 }
 
@@ -222,67 +157,71 @@ button:hover {
 }
 
 /* =========================
-   CONTACT PICKER LIST
+   CONTACT PICKER
 ========================= */
-
 #contactPicker {
   list-style: none;
   margin-top: var(--space-sm);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 #contactPicker li {
-  padding: 8px;
+  padding: 10px;
   background: var(--panel2);
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  position: relative;
 }
 
 #contactPicker li:hover {
   background: var(--red);
 }
 
-/* =========================
-   CHAT HEADER
-========================= */
-
-#chatTitle {
-  margin-bottom: 4px;
+/* unread badge */
+.unread {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: var(--gold);
+  color: black;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
 }
 
-#chatStatus {
-  margin-bottom: var(--space-sm);
-  color: var(--muted);
-}
-
 /* =========================
-   MESSAGE LIST (BUBBLES FIXED)
+   CHAT
 ========================= */
-
 #messageList {
   flex: 1;
   list-style: none;
-  padding: var(--space-sm);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  overflow-y: auto;
+  padding: var(--space-sm);
 }
 
-/* base bubble */
+/* system message */
+.system-msg {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* bubble base */
 .msg {
   max-width: 70%;
   padding: 10px 12px;
   border-radius: 16px;
-  word-wrap: break-word;
-  position: relative;
   font-size: 14px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* sent by you */
+/* sent */
 .msg.me {
   background: var(--red);
   color: white;
@@ -293,7 +232,6 @@ button:hover {
 /* received */
 .msg.them {
   background: var(--panel2);
-  color: var(--text);
   align-self: flex-start;
   border-bottom-left-radius: 4px;
 }
@@ -306,30 +244,32 @@ button:hover {
   margin-top: 4px;
 }
 
-/* delete button inside bubble */
-.msg button {
-  margin-top: 6px;
-  font-size: 10px;
-  padding: 3px 6px;
-  border: none;
-  border-radius: 6px;
-  background: #111;
-  color: white;
-  cursor: pointer;
-}
-
 /* =========================
-   MESSAGE INPUT BAR
+   MESSAGE INPUT
 ========================= */
-
 .message-box {
   display: flex;
   gap: var(--space-sm);
-  padding-top: var(--space-sm);
   border-top: 1px solid #444;
+  padding-top: var(--space-sm);
 }
 
 .message-box input {
   flex: 1;
   margin-bottom: 0;
+}
+
+/* =========================
+   TASK PRIORITY COLORS
+========================= */
+.task.high {
+  border-left: 4px solid var(--red);
+}
+
+.task.medium {
+  border-left: 4px solid var(--gold);
+}
+
+.task.low {
+  border-left: 4px solid var(--green);
 }

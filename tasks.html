@@ -11,13 +11,14 @@
 
 <header class="topbar">
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
 </header>
 
 <main class="container">
@@ -27,29 +28,33 @@
     <p>Manage tour responsibilities in real time</p>
   </div>
 
-  <!-- STATS -->
-  <div class="task-stats">
-    <div id="statHigh"></div>
-    <div id="statMedium"></div>
-    <div id="statLow"></div>
-    <div id="statOverdue"></div>
+  <!-- TASK STATS -->
+  <div class="task-stats card">
+    <div>🔥 High: <span id="statHigh">0</span></div>
+    <div>🟡 Medium: <span id="statMedium">0</span></div>
+    <div>🟢 Low: <span id="statLow">0</span></div>
+    <div>⏰ Overdue: <span id="statOverdue">0</span></div>
   </div>
 
-  <!-- INPUT CARD -->
-  <div class="task-card">
-
+  <!-- TASK INPUT -->
+  <div class="task-card card">
     <div class="task-input">
+
       <input id="taskInput" type="text" placeholder="Task name">
+
       <select id="taskPriority">
         <option value="high">High Priority</option>
         <option value="medium">Medium Priority</option>
         <option value="low">Low Priority</option>
       </select>
-      <input id="taskDueDate" type="date">
-      <input id="taskAssignee" type="text" placeholder="Assign to">
-      <button onclick="addTask()">+ Add Task</button>
-    </div>
 
+      <input id="taskDueDate" type="date">
+
+      <input id="taskAssignee" type="text" placeholder="Assign to">
+
+      <button onclick="addTask()">+ Add Task</button>
+
+    </div>
   </div>
 
   <!-- TASK LIST -->

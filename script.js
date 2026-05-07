@@ -59,7 +59,7 @@ function saveContacts(data) {
 
 let activeChatPhone = "";
 
-/* ---- STORAGE ---- */
+/* STORAGE */
 function getMessages() {
   return JSON.parse(localStorage.getItem("messages")) || [];
 }
@@ -68,7 +68,7 @@ function saveMessages(data) {
   localStorage.setItem("messages", JSON.stringify(data));
 }
 
-/* ---- FILTER BY CHAT ---- */
+/* FILTER CHAT */
 function getChatMessages(phone) {
   return getMessages().filter(m => m.recipientPhone === phone);
 }
@@ -97,8 +97,8 @@ function renderContactPicker() {
 
     li.innerHTML = `
       <strong>${c.firstName} ${c.lastName}</strong><br>
-      <small>${c.phone}</small>
-      ${unreadCount ? `<span class="unread"> ${unreadCount}</span>` : ""}
+      <small>${c.phone || ""}</small>
+      ${unreadCount ? `<span class="unread">${unreadCount}</span>` : ""}
     `;
 
     li.onclick = () => openChat(c.phone, c.firstName + " " + c.lastName);
@@ -108,7 +108,7 @@ function renderContactPicker() {
 }
 
 /* =====================================================
-   OPEN CHAT (THREAD SWITCH)
+   OPEN CHAT
 ===================================================== */
 
 function openChat(phone, name) {
@@ -117,7 +117,6 @@ function openChat(phone, name) {
   const title = document.getElementById("chatTitle");
   if (title) title.textContent = name;
 
-  // mark messages as read
   const messages = getMessages().map(m => {
     if (m.recipientPhone === phone) {
       m.read = true;
@@ -164,7 +163,7 @@ function sendMessage() {
 }
 
 /* =====================================================
-   RENDER CHAT THREAD (BUBBLES)
+   RENDER CHAT MESSAGES
 ===================================================== */
 
 function renderMessages() {
@@ -188,9 +187,7 @@ function renderMessages() {
   messages.forEach(m => {
     const li = document.createElement("li");
 
-    const isMe = true; // since you're only sending from your side
-
-    li.className = isMe ? "msg me" : "msg them";
+    li.className = "msg me";
 
     li.innerHTML = `
       <div>${m.text}</div>
@@ -202,10 +199,107 @@ function renderMessages() {
 }
 
 /* =====================================================
-   INIT
+   TASKS SYSTEM (FULL FIXED VERSION)
+===================================================== */
+
+function getTasks() {
+  return JSON.parse(localStorage.getItem("tasks")) || [];
+}
+
+function saveTasks(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+/* ADD TASK */
+function addTask() {
+  const text = document.getElementById("taskInput")?.value.trim();
+  const priority = document.getElementById("taskPriority")?.value;
+  const dueDate = document.getElementById("taskDueDate")?.value;
+  const assignee = document.getElementById("taskAssignee")?.value;
+
+  if (!text) return;
+
+  const tasks = getTasks();
+
+  tasks.push({
+    id: Date.now().toString(),
+    text,
+    priority,
+    dueDate,
+    assignee,
+    done: false
+  });
+
+  saveTasks(tasks);
+
+  document.getElementById("taskInput").value = "";
+  renderTasks();
+}
+
+/* TOGGLE DONE */
+function toggleTask(id) {
+  const tasks = getTasks().map(t => {
+    if (t.id === id) t.done = !t.done;
+    return t;
+  });
+
+  saveTasks(tasks);
+  renderTasks();
+}
+
+/* DELETE TASK */
+function deleteTask(id) {
+  const tasks = getTasks().filter(t => t.id !== id);
+  saveTasks(tasks);
+  renderTasks();
+}
+
+/* RENDER TASKS */
+function renderTasks() {
+  const list = document.getElementById("taskList");
+  if (!list) return;
+
+  const tasks = getTasks();
+
+  list.innerHTML = "";
+
+  if (tasks.length === 0) {
+    list.innerHTML = "<li>No tasks yet</li>";
+    return;
+  }
+
+  tasks.forEach(t => {
+    const li = document.createElement("li");
+
+    li.className = `task ${t.priority || ""}`;
+
+    li.innerHTML = `
+      <div onclick="toggleTask('${t.id}')" style="cursor:pointer;">
+        ${t.done ? "✅ " : ""}${t.text}
+      </div>
+
+      <small>
+        Priority: ${t.priority || "none"} |
+        Due: ${t.dueDate || "none"} |
+        Assigned: ${t.assignee || "none"}
+      </small>
+
+      <button onclick="deleteTask('${t.id}')"
+        style="margin-left:10px;background:red;color:white;">
+        Delete
+      </button>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+/* =====================================================
+   INIT (ONLY ONCE)
 ===================================================== */
 
 window.addEventListener("load", () => {
+  renderTasks();
   renderContactPicker();
   renderMessages();
 });
