@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Messages</title>
+
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -28,26 +30,22 @@
   ========================== -->
   <aside class="chat-sidebar">
 
-    <!-- HAMBURGER (for future toggle) -->
     <div class="sidebar-top">
       <button class="hamburger">☰</button>
       <h3>Chats</h3>
     </div>
 
-    <!-- SEARCH PEOPLE -->
     <input
       id="userSearch"
       placeholder="Search people..."
       onkeyup="renderUsers(this.value)"
     >
 
-    <!-- CREATE GROUP CHAT -->
     <div class="group-create">
       <input id="groupName" placeholder="Group name...">
       <button onclick="createGroupChat()">+ Group Chat</button>
     </div>
 
-    <!-- USER / CHAT LIST -->
     <ul id="userList"></ul>
 
   </aside>
@@ -57,23 +55,51 @@
   ========================== -->
   <section class="chat-window">
 
-    <!-- CHAT HEADER -->
     <div class="chat-header">
-      <h3 id="chatTitle">Select a user</h3>
+      <h3 id="chatTitle">Select a contact</h3>
     </div>
 
-    <!-- CHAT MESSAGES -->
+    <!-- CONTACT SELECTOR (CONNECTED TO CONTACTS SYSTEM) -->
+    <div class="card" style="margin:10px;">
+      <label><strong>Send To:</strong></label>
+
+      <select id="messageRecipient">
+        <option value="">Loading contacts...</option>
+      </select>
+    </div>
+
+    <!-- MESSAGES -->
     <ul id="messageList"></ul>
 
-    <!-- MESSAGE INPUT -->
+    <!-- INPUT -->
     <div class="message-box">
-      <input id="messageInput" placeholder="Type your message...">
-      <button onclick="sendMessage()">Send</button>
+
+      <input
+        id="messageInput"
+        placeholder="Type your message..."
+      >
+
+      <button onclick="sendMessage()">
+        Send
+      </button>
+
     </div>
 
   </section>
 
 </main>
+
+<!-- ✅ IMPORTANT: ensures dropdown loads immediately -->
+<script>
+  window.addEventListener("load", () => {
+    if (typeof loadRecipients === "function") {
+      loadRecipients();
+    }
+    if (typeof renderMessages === "function") {
+      renderMessages();
+    }
+  });
+</script>
 
 </body>
 </html>
