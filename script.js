@@ -28,6 +28,8 @@ function addToGoogleCalendar(tour) {
 }
 
 function formatDateTimeForCalendar(date, time) {
+  if (!date || !time) return "";
+
   const [year, month, day] = date.split("-").map(Number);
   const [hour, minute] = time.split(":").map(Number);
 
@@ -139,7 +141,9 @@ function addContact() {
   const firstName = document.getElementById("firstName")?.value.trim();
   const lastName = document.getElementById("lastName")?.value.trim();
   const phone = document.getElementById("phone")?.value.trim();
-  const email = document.getElementById("email")?.value.trim();
+  const email =
+    document.getElementById("contactEmail")?.value.trim() ||
+    document.getElementById("email")?.value.trim();
 
   if (!firstName || !lastName) {
     alert("Please enter first and last name");
@@ -152,8 +156,8 @@ function addContact() {
     id: Date.now().toString(),
     firstName,
     lastName,
-    phone,
-    email
+    phone: phone || "",
+    email: email || ""
   });
 
   saveContacts(contacts);
@@ -164,7 +168,13 @@ function addContact() {
   document.getElementById("firstName").value = "";
   document.getElementById("lastName").value = "";
   document.getElementById("phone").value = "";
-  document.getElementById("email").value = "";
+
+  if (document.getElementById("contactEmail")) {
+    document.getElementById("contactEmail").value = "";
+  }
+  if (document.getElementById("email")) {
+    document.getElementById("email").value = "";
+  }
 }
 
 function renderContacts() {
@@ -198,7 +208,7 @@ function renderContacts() {
 }
 
 /* =====================================================
-   MESSAGES (CONTACT LINKED SYSTEM)
+   MESSAGES
 ===================================================== */
 
 function getMessages() {
@@ -209,7 +219,7 @@ function saveMessages(data) {
   localStorage.setItem("messages", JSON.stringify(data));
 }
 
-/* POPULATE CONTACT DROPDOWN */
+/* LOAD CONTACTS INTO DROPDOWN */
 function loadRecipients() {
 
   const select = document.getElementById("messageRecipient");
@@ -220,11 +230,13 @@ function loadRecipients() {
   select.innerHTML = `<option value="">Select contact</option>`;
 
   contacts.forEach(c => {
+
     if (!c.email) return;
 
     const option = document.createElement("option");
     option.value = c.email;
     option.textContent = `${c.firstName} ${c.lastName}`;
+
     select.appendChild(option);
   });
 }
@@ -234,8 +246,7 @@ function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input?.value.trim();
 
-  const recipient =
-    document.getElementById("messageRecipient")?.value;
+  const recipient = document.getElementById("messageRecipient")?.value;
 
   if (!text) return;
 
@@ -282,7 +293,7 @@ function renderMessages() {
 }
 
 /* =====================================================
-   TASKS
+   TASKS (SAFE PLACEHOLDER)
 ===================================================== */
 
 function getTasks() {
