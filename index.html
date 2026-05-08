@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Contacts</title>
+  <title>TourSync Dashboard</title>
 
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
@@ -29,38 +29,48 @@
 
 <main class="container">
 
-  <!-- PAGE TITLE -->
-  <div class="page-title card">
-    <h2>Contacts</h2>
-    <p>Manage your tour contacts</p>
-  </div>
-
-  <!-- CONTACT FORM -->
-  <div class="card contact-form">
-
-    <input id="firstName" type="text" placeholder="First Name">
-    <input id="lastName" type="text" placeholder="Last Name">
-    <input id="phone" type="text" placeholder="Phone Number">
-    <input id="email" type="email" placeholder="Email">
-
-    <button onclick="addContact()">Save Contact</button>
-
-  </div>
-
-  <!-- SEARCH -->
+  <!-- WELCOME -->
   <div class="card">
-    <input
-      id="searchInput"
-      type="text"
-      oninput="renderContacts()"
-      placeholder="Search contacts..."
-    >
+    <h2>Dashboard</h2>
+    <p>Live overview of your tour activity</p>
   </div>
 
-  <!-- CONTACT LIST -->
-  <ul id="contactList"></ul>
+  <!-- TASK STATS -->
+  <div class="card">
+    <h3>Task Overview</h3>
+
+    <p>High Priority: <span id="statHigh">0</span></p>
+    <p>Medium Priority: <span id="statMedium">0</span></p>
+    <p>Low Priority: <span id="statLow">0</span></p>
+  </div>
+
+  <!-- UPCOMING TASKS -->
+  <div class="card">
+    <h3>Upcoming Tasks</h3>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- CONTACT COUNT -->
+  <div class="card">
+    <h3>Contacts</h3>
+
+    <p>Total Contacts: <span id="contactCount">0</span></p>
+  </div>
 
 </main>
+
+<script>
+window.addEventListener("load", () => {
+  const contacts = getContacts();
+
+  const count = document.getElementById("contactCount");
+
+  if (count) {
+    count.textContent = contacts.length;
+  }
+});
+</script>
 
 </body>
 </html>
