@@ -302,3 +302,46 @@ button:hover {
 .task.low {
   border-left: 4px solid var(--green);
 }
+
+/* =========================
+   CARD
+========================= */
+.card {
+  background: var(--panel);
+  padding: var(--space-lg);
+  border-radius: var(--radius);
+  border: 1px solid #444;
+}
+
+/* =========================
+   CONTACT FORM
+========================= */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* =========================
+   CONTACT LIST
+========================= */
+#contactList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+#contactList li {
+  background: var(--panel2);
+  padding: 12px;
+  border-radius: 10px;
+  border-left: 4px solid var(--red);
+}
+
+/* =========================
+   PAGE TITLE
+========================= */
+.page-title p {
+  color: var(--muted);
+}

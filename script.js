@@ -377,28 +377,28 @@ function renderTasks() {
   const tasks = getTasks();
 
   list.innerHTML = tasks.length ? "" : "<li>No tasks yet</li>";
+  
+tasks.forEach(t => {
+  const li = document.createElement("li");
 
-  tasks.forEach(t => {
-    const li = document.createElement("li");
+  li.className = `task ${t.priority}`;
 
-    li.className = "task";
+  li.innerHTML = `
+    <div onclick="toggleTask('${t.id}')" style="cursor:pointer;">
+      ${t.done ? "✅ " : ""}${t.text}
+    </div>
 
-    li.innerHTML = `
-      <div onclick="toggleTask('${t.id}')" style="cursor:pointer;">
-        ${t.done ? "✅ " : ""}${t.text}
-      </div>
+    <small>
+      ${t.priority || ""} |
+      ${t.dueDate || ""} |
+      ${t.assignee || ""}
+    </small>
 
-      <small>
-        ${t.priority || ""} |
-        ${t.dueDate || ""} |
-        ${t.assignee || ""}
-      </small>
+    <button onclick="deleteTask('${t.id}')">Delete</button>
+  `;
 
-      <button onclick="deleteTask('${t.id}')">Delete</button>
-    `;
-
-    list.appendChild(li);
-  });
+  list.appendChild(li);
+});
 }
 
 function updateTaskStats() {
