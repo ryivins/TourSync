@@ -11,18 +11,6 @@
 
 <body>
 
-  <div class="dashboard-grid">
-
-  <div class="card">
-    ...
-  </div>
-
-  <div class="card">
-    ...
-  </div>
-
-</div>
-
 <header class="topbar">
 
   <h1>TourSync</h1>
@@ -41,41 +29,43 @@
 
 <main class="container">
 
-  <!-- WELCOME -->
-  <div class="card">
+  <!-- PAGE TITLE -->
+  <div class="card page-title">
     <h2>Dashboard</h2>
     <p>Live overview of your tour activity</p>
   </div>
 
-  <!-- TASK STATS -->
-  <div class="card">
-    <h3>Task Overview</h3>
+  <!-- DASHBOARD GRID -->
+  <div class="dashboard-grid">
 
-    <p>High Priority: <span id="statHigh">0</span></p>
-    <p>Medium Priority: <span id="statMedium">0</span></p>
-    <p>Low Priority: <span id="statLow">0</span></p>
-  </div>
+    <!-- TASK OVERVIEW -->
+    <div class="card">
+      <h3>Task Overview</h3>
 
-  <!-- UPCOMING TASKS -->
-  <div class="card">
-    <h3>Upcoming Tasks</h3>
+      <p>High Priority: <span id="statHigh">0</span></p>
+      <p>Medium Priority: <span id="statMedium">0</span></p>
+      <p>Low Priority: <span id="statLow">0</span></p>
+    </div>
 
-    <ul id="taskList"></ul>
-  </div>
+    <!-- UPCOMING TASKS -->
+    <div class="card">
+      <h3>Upcoming Tasks</h3>
+      <ul id="taskList"></ul>
+    </div>
 
-  <!-- CONTACT COUNT -->
-  <div class="card">
-    <h3>Contacts</h3>
+    <!-- CONTACT SUMMARY -->
+    <div class="card">
+      <h3>Contacts</h3>
+      <p>Total Contacts: <span id="contactCount">0</span></p>
+    </div>
 
-    <p>Total Contacts: <span id="contactCount">0</span></p>
   </div>
 
 </main>
 
 <script>
 window.addEventListener("load", () => {
-  const contacts = getContacts();
-
+  const contacts = getContacts?.() || [];
   const count = document.getElementById("contactCount");
 
   if (count) {

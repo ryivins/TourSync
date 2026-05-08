@@ -278,6 +278,8 @@ function sendMessage() {
   renderMessages();
 }
 
+document.getElementById("messageInput").focus();
+
 function renderMessages() {
   const list = document.getElementById("messageList");
   if (!list) return;

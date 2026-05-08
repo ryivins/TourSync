@@ -262,6 +262,33 @@ button:hover {
   border-right: 1px solid rgba(255,255,255,0.05);
   padding: var(--space-md);
   overflow-y: auto;
+  
+}
+.chat-sidebar h3 {
+  margin-bottom: var(--space-sm);
+}
+
+.chat-sidebar li {
+  transition: var(--transition);
+}
+
+.chat-sidebar li {
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chat-sidebar li:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.chat-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.chat-sidebar input {
+  margin-bottom: var(--space-sm);
 }
 
 /* chat window */
@@ -271,6 +298,7 @@ button:hover {
   flex-direction: column;
   padding: var(--space-md);
   overflow: hidden;
+  min-height: 0;
 }
 
 /* =========================
@@ -294,7 +322,19 @@ button:hover {
 }
 
 #contactPicker li:hover {
-  background: var(--red);
+  background: rgba(255, 90, 95, 0.15);
+  transform: translateX(3px);
+}
+
+#contactPicker li.active {
+  background: rgba(255, 90, 95, 0.2);
+  border-left: 3px solid var(--red);
+}
+
+#contactPicker li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 /* unread badge */
@@ -307,6 +347,8 @@ button:hover {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 /* =========================
@@ -320,7 +362,17 @@ button:hover {
   flex-direction: column;
   gap: var(--space-sm);
   padding: var(--space-sm);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
+
+.message-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+
 
 /* system message */
 .system-msg {
@@ -337,7 +389,18 @@ button:hover {
   font-size: 14px;
   position: relative;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  line-height: 1.4;
+  word-wrap: break-word;
 }
+
+.msg {
+  transition: 0.2s ease;
+}
+
+.msg:hover {
+  transform: translateY(-1px);
+}
+
 
 /* sent */
 .msg.me {
@@ -360,6 +423,30 @@ button:hover {
   font-size: 10px;
   opacity: 0.7;
   margin-top: 4px;
+}
+/* =========================
+   SCHEDULE TIMELINE
+========================= */
+
+.timeline-item {
+  background: var(--panel2);
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.1);
+}
+
+.timeline-item {
+  position: relative;
 }
 
 /* =========================
@@ -439,6 +526,9 @@ button:hover {
   flex-direction: column;
   gap: var(--space-sm);
 }
+.contact-form h3 {
+  margin-bottom: var(--space-sm);
+}
 
 /* =========================
    CONTACT LIST
@@ -468,6 +558,63 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-lg);
+}
+
+/* =========================
+   CALENDAR GRID (SCHEDULE VIEW)
+========================= */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.calendar-day {
+  background: var(--panel2);
+  min-height: 80px;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 12px;
+
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.calendar-day:hover {
+  background: rgba(255, 90, 95, 0.08);
+  border-color: rgba(255, 90, 95, 0.2);
+}
+
+.calendar-day.today {
+  border: 1px solid var(--red);
+  box-shadow: 0 0 0 2px rgba(255, 90, 95, 0.2);
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.calendar-event {
+  background: rgba(255, 90, 95, 0.15);
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  margin-top: 4px;
 }
 
 @media (max-width: 768px) {
@@ -500,9 +647,8 @@ button:hover {
   }
 
   .chat-window {
-    min-height: 60vh;
-  }
-
+  min-height: 0;
+}
   .msg {
     max-width: 90%;
   }

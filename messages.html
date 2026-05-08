@@ -27,18 +27,12 @@
 
 </header>
 
-<main class="container">
+<main class="container chat-layout">
 
-  <!-- PAGE TITLE -->
-  <div class="page-title card">
-    <h2>Messages</h2>
-    <p>Chat with your tour contacts in real time</p>
-  </div>
+  <!-- LEFT SIDEBAR -->
+  <aside class="chat-sidebar">
 
-  <!-- CONTACT SEARCH -->
-  <div class="card">
-
-    <h3>Select Contact</h3>
+    <h3>Contacts</h3>
 
     <input
       id="contactSearch"
@@ -49,35 +43,37 @@
 
     <ul id="contactPicker"></ul>
 
-  </div>
+  </aside>
 
-  <!-- CHAT WINDOW -->
-  <div class="card chat-window">
+  <!-- RIGHT CHAT AREA -->
+  <section class="chat-window">
 
     <!-- CHAT HEADER -->
+  <div class="card chat-header">
     <h3 id="chatTitle">No contact selected</h3>
+   <p id="chatStatus"></p>
+</div>
 
-    <div id="chatStatus"></div>
-
-    <!-- MESSAGE LIST -->
-    <ul id="messageList"></ul>
+    <!-- MESSAGES -->
+    <div class="message-wrapper">
+  <ul id="messageList"></ul>
+</div>
 
     <!-- INPUT -->
     <div class="message-box">
 
       <input
-        id="messageInput"
-        type="text"
+       id="messageInput"
+       type="text"
         placeholder="Type your message..."
-      >
+        autocomplete="off"
+/>
 
-      <button onclick="sendMessage()">
-        Send
-      </button>
+      <button onclick="sendMessage()">Send</button>
 
     </div>
 
-  </div>
+  </section>
 
 </main>
 
