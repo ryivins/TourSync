@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>Contacts | TourSync</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Contacts</title>
 
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-
-  <!-- LOGIN GUARD -->
-  <script>
-    const user = JSON.parse(localStorage.getItem("tourCurrentUser"));
-    if (!user) window.location.href = "login.html";
-  </script>
 </head>
-
 
 <body>
 
-<!-- =========================
-     TOPBAR (MATCH DASHBOARD)
-========================= -->
 <header class="topbar">
 
   <h1>TourSync</h1>
@@ -33,51 +24,53 @@
     <a href="messages.html">Messages</a>
   </nav>
 
-  <button class="logout-btn" onclick="logout()">Logout</button>
-
 </header>
+
 <main class="container">
 
-  <!-- PAGE HEADER -->
-  <div class="card">
-    <h2>Contacts</h2>
-    <p>Manage your tour team contacts</p>
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Contacts</h2>
+      <p class="subtitle">
+        Manage artists, venues, managers, and crew
+      </p>
+    </div>
+
   </div>
 
-  <!-- CONTACT FORM -->
-  <div class="card contact-form">
+  <!-- ADD CONTACT FORM -->
+  <div class="contact-card">
 
-    <h3>Add / Edit Contact</h3>
+    <h3>Add New Contact</h3>
 
-    <input id="firstName" type="text" placeholder="First Name">
-    <input id="lastName" type="text" placeholder="Last Name">
-    <input id="phone" type="text" placeholder="Phone Number">
-    <input id="email" type="email" placeholder="Email">
+  <div class="contact-form">
 
-    <input type="hidden" id="editId">
+  <input id="firstName" class="input" placeholder="First Name">
+  <input id="lastName" class="input" placeholder="Last Name">
+  <input id="phone" class="input" placeholder="Phone">
+  <input id="email" class="input" placeholder="Email">
 
-    <button onclick="addContact()">Save Contact</button>
+</div>
+
+<button type="button" class="btn btn-primary" onclick="addContact()">
+  + Add Contact
+</button>
+
 
   </div>
 
   <!-- SEARCH -->
-  <div class="card">
-    <h3>Search</h3>
-    <input
-      id="contactSearch"
-      type="text"
-      oninput="renderContactPicker()"
-      placeholder="Search contacts..."
-    >
+  <div class="search-bar">
+
+  <input class="input" id="searchInput" placeholder="Search contacts...">
+
   </div>
 
   <!-- CONTACT LIST -->
-  <div class="card">
-    <h3>All Contacts</h3>
-    <ul id="contactList"></ul>
-  </div>
+<ul id="contactList"></ul>
 
 </main>
-
 </body>
 </html>
