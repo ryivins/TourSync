@@ -65,24 +65,20 @@ function renderContacts() {
       (c.phone || "").toLowerCase().includes(search)
     )
     .forEach(c => {
-
+    
       const li = document.createElement("li");
-      li.className = "contact-item";
+      li.className = `msg ${m.from === me ? "me" : "them"}`;
 
-      if (selectedContactId === c.id) {
-        li.classList.add("active");
-      }
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = m.text;
 
-      li.onclick = () => openContact(c.id);
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+      meta.textContent = `${m.time}`;
 
-      li.innerHTML = `
-        <strong>${c.first} ${c.last}</strong>
-        <small>${c.email || "No email"} • ${c.phone || "No phone"}</small>
-      `;
-
-      list.appendChild(li);
-    });
-}
+      li.appendChild(bubble);
+      li.appendChild(meta);
 
 function openContact(contactId) {
   selectedContactId = contactId;
@@ -124,24 +120,6 @@ function openContact(contactId) {
     </div>
   `;
 
-  renderContacts();
-}
-function saveContactNotes(id) {
-  const contacts = getContacts();
-
-  const notesEl = document.getElementById("contactNotes");
-
-  const updated = contacts.map(c => {
-    if (c.id === id) {
-      return {
-        ...c,
-        notes: notesEl ? notesEl.value : ""
-      };
-    }
-    return c;
-  });
-
-  saveContacts(updated);
   renderContacts();
 }
 

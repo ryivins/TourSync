@@ -27,49 +27,47 @@
 
 </header>
 
-<main class="container chat-layout">
+<main class="container messages-layout">
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="chat-sidebar">
+  <!-- LEFT: CHAT LIST -->
+  <aside class="messages-left">
 
-    <h3>Contacts</h3>
+    <div class="page-header">
+      <h2>Messages</h2>
+      <p class="subtitle">Team communication</p>
+    </div>
 
-    <input
-      id="contactSearch"
-      type="text"
-      placeholder="Search contacts..."
-      oninput="renderContactPicker()"
-    >
+    <input id="userSearch" class="input"
+      placeholder="Search people..."
+      onkeyup="renderUsers(this.value)">
 
-    <ul id="contactPicker"></ul>
+    <div class="group-create">
+      <input id="groupName" class="input" placeholder="Group name...">
+      <button class="btn btn-primary" onclick="createGroupChat()">
+        + Group Chat
+      </button>
+    </div>
+
+    <ul id="userList"></ul>
 
   </aside>
 
-  <!-- RIGHT CHAT AREA -->
-  <section class="chat-window">
+  <!-- RIGHT: CHAT WINDOW -->
+  <section class="messages-right">
 
-    <!-- CHAT HEADER -->
-  <div class="card chat-header">
-    <h3 id="chatTitle">No contact selected</h3>
-   <p id="chatStatus"></p>
-</div>
+    <div class="chat-header">
+      <h3 id="chatTitle">Select a conversation</h3>
+    </div>
 
-    <!-- MESSAGES -->
-    <div class="message-wrapper">
-  <ul id="messageList"></ul>
-</div>
+    <ul id="messageList"></ul>
 
-    <!-- INPUT -->
     <div class="message-box">
 
-      <input
-       id="messageInput"
-       type="text"
-        placeholder="Type your message..."
-        autocomplete="off"
-/>
+     <input id="messageInput" class="input" placeholder="Type your message...">
 
-      <button onclick="sendMessage()">Send</button>
+      <button class="btn btn-primary" onclick="sendMessage()">
+        Send
+      </button>
 
     </div>
 
