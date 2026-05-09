@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta
@@ -30,6 +31,11 @@
     <a href="messages.html">Messages</a>
   </nav>
 
+<<<<<<< HEAD
+=======
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
+>>>>>>> 9c5a3297416f4931a560bf7bd7b77801c4f0d60c
 </header>
 
 <!-- =========================
@@ -37,6 +43,7 @@
 ========================= -->
 <main class="container">
 
+<<<<<<< HEAD
   <!-- PAGE HEADER -->
   <div class="dashboard-header">
 
@@ -54,11 +61,18 @@
       + New Task
     </button>
 
+=======
+  <!-- PAGE TITLE -->
+  <div class="card page-title">
+    <h2>Dashboard</h2>
+    <p>Live overview of your tour activity</p>
+>>>>>>> 9c5a3297416f4931a560bf7bd7b77801c4f0d60c
   </div>
 
   <!-- DASHBOARD GRID -->
   <div class="dashboard-grid">
 
+<<<<<<< HEAD
     <!-- NEXT SHOW -->
     <div class="dashboard-card">
 
@@ -123,10 +137,32 @@
         Open Messages
       </button>
 
+=======
+    <!-- TASK OVERVIEW -->
+    <div class="card">
+      <h3>Task Overview</h3>
+
+      <p>High Priority: <span id="statHigh">0</span></p>
+      <p>Medium Priority: <span id="statMedium">0</span></p>
+      <p>Low Priority: <span id="statLow">0</span></p>
+    </div>
+
+    <!-- UPCOMING TASKS -->
+    <div class="card">
+      <h3>Upcoming Tasks</h3>
+      <ul id="taskList"></ul>
+    </div>
+
+    <!-- CONTACT SUMMARY -->
+    <div class="card">
+      <h3>Contacts</h3>
+      <p>Total Contacts: <span id="contactCount">0</span></p>
+>>>>>>> 9c5a3297416f4931a560bf7bd7b77801c4f0d60c
     </div>
 
   </div>
 
+<<<<<<< HEAD
   <!-- QUICK ACTIONS -->
   <section class="quick-actions">
 
@@ -154,7 +190,20 @@
 
   </section>
 
+=======
+>>>>>>> 9c5a3297416f4931a560bf7bd7b77801c4f0d60c
 </main>
+
+<script>
+window.addEventListener("load", () => {
+  const contacts = getContacts?.() || [];
+  const count = document.getElementById("contactCount");
+
+  if (count) {
+    count.textContent = contacts.length;
+  }
+});
+</script>
 
 </body>
 </html>

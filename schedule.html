@@ -1,32 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Schedule</title>
+  <title>Schedule | TourSync</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script defer src="script.js"></script>
+
+  <script>
+    window.addEventListener("load", () => {
+      if (typeof emailjs !== "undefined") {
+        emailjs.init("HM3mSVepzVht92z0r");
+      }
+    });
+  </script>
 </head>
 
 <body>
 
 <header class="topbar">
+
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
 </header>
 
 <main class="container">
-  <h2>Tour Schedule</h2>
 
+  <!-- PAGE HEADER -->
+ 
+<div class="dashboard-grid">
+
+  <!-- LEFT -->
   <div class="card">
-    <p>April 12 — Dallas, TX</p>
-    <p>April 14 — Austin, TX</p>
-    <p>April 16 — Houston, TX</p>
+
+    <h3>Add Tour Event</h3>
+
+    <input type="date" id="tourDate">
+    <input type="time" id="tourTime">
+
+    <input type="text" id="tourVenue" placeholder="Venue / City">
+    <input type="text" id="tourNotes" placeholder="Notes (optional)">
+    <input type="email" id="tourEmail" placeholder="Recipient Email">
+
+    <button onclick="addTourEvent()">
+      Send + Save Event
+    </button>
+
   </div>
+
+  <!-- RIGHT -->
+  <div class="card">
+
+    <h3>Upcoming Tours</h3>
+
+    <div id="scheduleList"></div>
+
+  </div>
+
+</div>
+
 </main>
 
 </body>

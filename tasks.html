@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Tasks</title>
+  <title>Tasks | TourSync</title>
+
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -10,44 +12,55 @@
 <body>
 
 <header class="topbar">
+
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
 </header>
 
 <main class="container">
 
-  <div class="page-title">
+  <!-- PAGE TITLE (now consistent with all pages) -->
+  <div class="page-title card">
     <h2>Tasks</h2>
     <p>Manage tour responsibilities in real time</p>
   </div>
 
-  <!-- STATS -->
-  <div class="task-stats">
-    <div id="statHigh"></div>
-    <div id="statMedium"></div>
-    <div id="statLow"></div>
-    <div id="statOverdue"></div>
+  <!-- TASK STATS -->
+  <div class="task-stats card">
+    <div>🔥 High: <span id="statHigh">0</span></div>
+    <div>🟡 Medium: <span id="statMedium">0</span></div>
+    <div>🟢 Low: <span id="statLow">0</span></div>
+    <div>⏰ Overdue: <span id="statOverdue">0</span></div>
   </div>
 
-  <!-- INPUT CARD -->
-  <div class="task-card">
+  <!-- TASK INPUT -->
+  <div class="card">
 
     <div class="task-input">
+
       <input id="taskInput" type="text" placeholder="Task name">
+
       <select id="taskPriority">
         <option value="high">High Priority</option>
         <option value="medium">Medium Priority</option>
         <option value="low">Low Priority</option>
       </select>
+
       <input id="taskDueDate" type="date">
       <input id="taskAssignee" type="text" placeholder="Assign to">
+
       <button onclick="addTask()">+ Add Task</button>
+
     </div>
 
   </div>

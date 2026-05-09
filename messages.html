@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Messages</title>
+
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -10,6 +12,7 @@
 <body>
 
 <header class="topbar">
+
   <h1>TourSync</h1>
 
   <nav>
@@ -19,56 +22,55 @@
     <a href="contacts.html">Contacts</a>
     <a href="messages.html">Messages</a>
   </nav>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
 </header>
 
-<main class="chat-layout">
+<main class="container chat-layout">
 
-  <!-- =========================
-       SIDEBAR
-  ========================== -->
+  <!-- LEFT SIDEBAR -->
   <aside class="chat-sidebar">
 
-    <!-- HAMBURGER (for future toggle) -->
-    <div class="sidebar-top">
-      <button class="hamburger">☰</button>
-      <h3>Chats</h3>
-    </div>
+    <h3>Contacts</h3>
 
-    <!-- SEARCH PEOPLE -->
     <input
-      id="userSearch"
-      placeholder="Search people..."
-      onkeyup="renderUsers(this.value)"
+      id="contactSearch"
+      type="text"
+      placeholder="Search contacts..."
+      oninput="renderContactPicker()"
     >
 
-    <!-- CREATE GROUP CHAT -->
-    <div class="group-create">
-      <input id="groupName" placeholder="Group name...">
-      <button onclick="createGroupChat()">+ Group Chat</button>
-    </div>
-
-    <!-- USER / CHAT LIST -->
-    <ul id="userList"></ul>
+    <ul id="contactPicker"></ul>
 
   </aside>
 
-  <!-- =========================
-       CHAT WINDOW
-  ========================== -->
+  <!-- RIGHT CHAT AREA -->
   <section class="chat-window">
 
     <!-- CHAT HEADER -->
-    <div class="chat-header">
-      <h3 id="chatTitle">Select a user</h3>
-    </div>
+  <div class="card chat-header">
+    <h3 id="chatTitle">No contact selected</h3>
+   <p id="chatStatus"></p>
+</div>
 
-    <!-- CHAT MESSAGES -->
-    <ul id="messageList"></ul>
+    <!-- MESSAGES -->
+    <div class="message-wrapper">
+  <ul id="messageList"></ul>
+</div>
 
-    <!-- MESSAGE INPUT -->
+    <!-- INPUT -->
     <div class="message-box">
-      <input id="messageInput" placeholder="Type your message...">
+
+      <input
+       id="messageInput"
+       type="text"
+        placeholder="Type your message..."
+        autocomplete="off"
+/>
+
       <button onclick="sendMessage()">Send</button>
+
     </div>
 
   </section>
