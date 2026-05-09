@@ -333,14 +333,60 @@ function renderMessages() {
 /* =========================
    INIT (FINAL FIX)
 ========================= */
+/* =========================
+   DASHBOARD
+========================= */
+
+function renderDashboard() {
+
+  const taskCount =
+    document.getElementById("dashboardTaskCount");
+
+  const contactCount =
+    document.getElementById("dashboardContactCount");
+
+  const messageCount =
+    document.getElementById("dashboardMessageCount");
+
+  if (taskCount) {
+
+    const activeTasks =
+      getTasks().filter(t => !t.done).length;
+
+    taskCount.textContent =
+      `${activeTasks} Active Tasks`;
+  }
+
+  if (contactCount) {
+
+    contactCount.textContent =
+      `${getContacts().length} Contacts`;
+  }
+
+  if (messageCount) {
+
+    messageCount.textContent =
+      `${getUsers().length} Conversations`;
+  }
+}
 
 window.addEventListener("load", () => {
+
   initializeDemoData();
 
+  renderDashboard();
+
   renderContacts();
+
   renderTasks();
+
+  renderTaskStats?.();
+
   renderUsers();
 
   const users = getUsers();
-  if (users.length) openChat(users[0].id);
+
+  if (users.length) {
+    openChat(users[0].id);
+  }
 });

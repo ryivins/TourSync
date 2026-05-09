@@ -2,39 +2,158 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>TourSync Dashboard</title>
+
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
 
 <body>
 
+<!-- =========================
+     TOPBAR
+========================= -->
 <header class="topbar">
+
   <h1>TourSync</h1>
-<nav>
-  <a href="index.html">Dashboard</a>
-  <a href="schedule.html">Schedule</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="contacts.html">Contacts</a>
-  <a href="messages.html">Messages</a>
-</nav>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="contacts.html">Contacts</a>
+    <a href="messages.html">Messages</a>
+  </nav>
+
 </header>
 
+<!-- =========================
+     MAIN DASHBOARD
+========================= -->
 <main class="container">
-  <h2>Dashboard</h2>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Next Show</h3>
-      <p>Dallas, TX — April 12</p>
+  <!-- PAGE HEADER -->
+  <div class="dashboard-header">
+
+    <div>
+      <h2>Dashboard</h2>
+      <p class="subtitle">
+        Tour operations overview
+      </p>
     </div>
 
-    <div class="card">
-      <h3>Quick Stats</h3>
-      <p>3 upcoming shows</p>
-      <p>5 active tasks</p>
-    </div>
+    <button
+      class="dashboard-btn"
+      onclick="window.location.href='tasks.html'"
+    >
+      + New Task
+    </button>
+
   </div>
+
+  <!-- DASHBOARD GRID -->
+  <div class="dashboard-grid">
+
+    <!-- NEXT SHOW -->
+    <div class="dashboard-card">
+
+      <h3>Next Show</h3>
+
+      <div class="card-content">
+        <p>Dallas, TX</p>
+        <small>April 12 • 8:00 PM</small>
+      </div>
+
+    </div>
+
+    <!-- TASK COUNT -->
+    <div class="dashboard-card clickable">
+
+      <h3>Tasks</h3>
+
+      <div class="card-content">
+        <p id="dashboardTaskCount">0 Active Tasks</p>
+        <small>Manage tour responsibilities</small>
+      </div>
+
+      <button
+        onclick="window.location.href='tasks.html'"
+      >
+        Open Tasks
+      </button>
+
+    </div>
+
+    <!-- CONTACT COUNT -->
+    <div class="dashboard-card clickable">
+
+      <h3>Contacts</h3>
+
+      <div class="card-content">
+        <p id="dashboardContactCount">0 Contacts</p>
+        <small>Artists, venues, managers</small>
+      </div>
+
+      <button
+        onclick="window.location.href='contacts.html'"
+      >
+        Open Contacts
+      </button>
+
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="dashboard-card clickable">
+
+      <h3>Messages</h3>
+
+      <div class="card-content">
+        <p id="dashboardMessageCount">0 Conversations</p>
+        <small>Recent communication activity</small>
+      </div>
+
+      <button
+        onclick="window.location.href='messages.html'"
+      >
+        Open Messages
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <section class="quick-actions">
+
+    <h3>Quick Actions</h3>
+
+    <div class="quick-grid">
+
+      <button onclick="window.location.href='tasks.html'">
+        Create Task
+      </button>
+
+      <button onclick="window.location.href='contacts.html'">
+        Add Contact
+      </button>
+
+      <button onclick="window.location.href='messages.html'">
+        Open Inbox
+      </button>
+
+      <button onclick="window.location.href='schedule.html'">
+        View Schedule
+      </button>
+
+    </div>
+
+  </section>
+
 </main>
 
 </body>
