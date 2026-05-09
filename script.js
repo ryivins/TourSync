@@ -1,6 +1,11 @@
 /* =========================
+   TOURSYNC APP - CLEAN BUILD
+========================= */
+
+/* =========================
    CONTACT SYSTEM
 ========================= */
+
 let selectedContactId = null;
 
 function getContacts() {
@@ -22,13 +27,13 @@ function addContact() {
   const contacts = getContacts();
 
   contacts.push({
-  id: crypto.randomUUID(),
-  first,
-  last,
-  phone,
-  email,
-  notes: ""
-});
+    id: crypto.randomUUID(),
+    first,
+    last,
+    phone,
+    email,
+    notes: ""
+  });
 
   saveContacts(contacts);
   renderContacts();
@@ -46,14 +51,12 @@ function renderContacts() {
   const search =
     document.getElementById("searchInput")?.value.toLowerCase() || "";
 
-  list.innerHTML = "";
-
   const contacts = getContacts();
 
+  list.innerHTML = "";
+
   if (contacts.length === 0) {
-    list.innerHTML = `
-      <li class="empty-state">No contacts yet. Add your first contact above.</li>
-    `;
+    list.innerHTML = `<li class="empty-state">No contacts yet. Add your first contact above.</li>`;
     return;
   }
 
@@ -65,30 +68,35 @@ function renderContacts() {
       (c.phone || "").toLowerCase().includes(search)
     )
     .forEach(c => {
-    
       const li = document.createElement("li");
-      li.className = `msg ${m.from === me ? "me" : "them"}`;
+      li.className = "contact-item";
 
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.textContent = m.text;
+      if (selectedContactId === c.id) {
+        li.classList.add("active");
+      }
 
-      const meta = document.createElement("div");
-      meta.className = "msg-meta";
-      meta.textContent = `${m.time}`;
+      li.onclick = () => openContact(c.id);
 
-      li.appendChild(bubble);
-      li.appendChild(meta);
+      li.innerHTML = `
+        <strong>${c.first} ${c.last}</strong>
+        <small>${c.email || "No email"} • ${c.phone || "No phone"}</small>
+      `;
 
-function openContact(contactId) {
-  selectedContactId = contactId;
+      list.appendChild(li);
+    });
+}
 
-  const contact = getContacts().find(c => c.id === contactId);
+function openContact(id) {
+  selectedContactId = id;
+
+  const contact = getContacts().find(c => c.id === id);
   if (!contact) return;
 
-  const details = document.getElementById("contactDetails");
+  const panel = document.getElementById("contactDetails");
 
-  details.innerHTML = `
+  if (!panel) return;
+
+  panel.innerHTML = `
     <div class="card">
 
       <h3>${contact.first} ${contact.last}</h3>
@@ -96,25 +104,20 @@ function openContact(contactId) {
       <p><strong>Phone:</strong> ${contact.phone || "N/A"}</p>
       <p><strong>Email:</strong> ${contact.email || "N/A"}</p>
 
-      <hr style="margin: 10px 0; opacity: 0.3;">
+      <hr style="margin:10px 0; opacity:0.3;">
 
       <label><strong>Notes</strong></label>
 
-      <textarea id="contactNotes" class="input" rows="6"
-        placeholder="Add notes...">${contact.notes || ""}</textarea>
+      <textarea id="contactNotes" class="input" rows="6">${contact.notes || ""}</textarea>
 
-      <div style="margin-top: 10px; display:flex; gap:10px;">
-
-        <button class="btn btn-primary"
-          onclick="saveContactNotes('${contact.id}')">
+      <div style="margin-top:10px; display:flex; gap:10px;">
+        <button class="btn btn-primary" onclick="saveContactNotes('${contact.id}')">
           Save Notes
         </button>
 
-        <button class="btn btn-secondary"
-          onclick="editContact('${contact.id}')">
-          Edit Contact
+        <button class="btn btn-secondary" onclick="editContact('${contact.id}')">
+          Edit
         </button>
-
       </div>
 
     </div>
@@ -123,31 +126,36 @@ function openContact(contactId) {
   renderContacts();
 }
 
+function saveContactNotes(id) {
+  const notes = document.getElementById("contactNotes")?.value || "";
+
+  const updated = getContacts().map(c =>
+    c.id === id ? { ...c, notes } : c
+  );
+
+  saveContacts(updated);
+  renderContacts();
+  openContact(id);
+}
 
 function editContact(id) {
-  const contacts = getContacts();
-
-  const updated = contacts.map(c => {
+  const updated = getContacts().map(c => {
     if (c.id !== id) return c;
-
-    const first = prompt("Edit first name:", c.first) || c.first;
-    const last = prompt("Edit last name:", c.last) || c.last;
-    const phone = prompt("Edit phone:", c.phone) || c.phone;
-    const email = prompt("Edit email:", c.email) || c.email;
 
     return {
       ...c,
-      first,
-      last,
-      phone,
-      email
+      first: prompt("First name:", c.first) || c.first,
+      last: prompt("Last name:", c.last) || c.last,
+      phone: prompt("Phone:", c.phone) || c.phone,
+      email: prompt("Email:", c.email) || c.email
     };
   });
 
   saveContacts(updated);
   renderContacts();
-  openContact(id); // refresh panel
+  openContact(id);
 }
+
 /* =========================
    TASK SYSTEM
 ========================= */
@@ -182,7 +190,14 @@ function addTask() {
 }
 
 function toggleTask(id) {
-  saveTasks(getTasks().map(t => t.id === id ? { ...t, done: !t.done } : t));
+  saveTasks(
+    getTasks().map(t => t.id === id ? { ...t, done: !t.done } : t)
+  );
+  renderTasks();
+}
+
+function deleteTask(id) {
+  saveTasks(getTasks().filter(t => t.id !== id));
   renderTasks();
 }
 
@@ -190,9 +205,16 @@ function renderTasks() {
   const list = document.getElementById("taskList");
   if (!list) return;
 
+  const tasks = getTasks();
+
   list.innerHTML = "";
 
-  getTasks().forEach(t => {
+  if (tasks.length === 0) {
+    list.innerHTML = `<li class="empty-state">No tasks yet. Add your first task above.</li>`;
+    return;
+  }
+
+  tasks.forEach(t => {
     const li = document.createElement("li");
     li.className = `task ${t.priority} ${t.done ? "done" : ""}`;
 
@@ -207,22 +229,26 @@ function renderTasks() {
     const meta = document.createElement("small");
     meta.textContent = `${t.dueDate || "No due date"} | ${t.assignedTo || "Unassigned"}`;
 
+    const del = document.createElement("button");
+    del.textContent = "Delete";
+    del.className = "btn btn-secondary";
+    del.onclick = () => deleteTask(t.id);
+
     li.appendChild(checkbox);
     li.appendChild(text);
     li.appendChild(document.createElement("br"));
     li.appendChild(meta);
+    li.appendChild(del);
 
     list.appendChild(li);
   });
 }
 
 /* =========================
-   MESSAGING SYSTEM (FIXED)
+   MESSAGING SYSTEM
 ========================= */
 
 let currentChatUser = null;
-
-/* ---------- STORAGE ---------- */
 
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
@@ -248,28 +274,19 @@ function setActiveUser(id) {
   localStorage.setItem("activeUser", id);
 }
 
-/* ---------- CHAT KEY ---------- */
-
 function getChatId(a, b) {
   return [a, b].sort().join("__");
 }
 
-/* ---------- DEMO DATA (HARD RESET SAFE) ---------- */
-
 function initializeDemoData() {
-  if (!getActiveUser()) {
-    setActiveUser("me");
-  }
+  if (!getActiveUser()) setActiveUser("me");
 
-  let users = getUsers();
-
-  if (!Array.isArray(users) || users.length === 0) {
-    users = [
+  if (getUsers().length === 0) {
+    saveUsers([
       { id: "u1", name: "Matt Klein" },
       { id: "u2", name: "Sidney Castillo" },
       { id: "u3", name: "Jonah Payne" }
-    ];
-    saveUsers(users);
+    ]);
   }
 
   const me = getActiveUser();
@@ -277,58 +294,26 @@ function initializeDemoData() {
   const chats = {};
 
   chats[getChatId(me, "u1")] = [
-    { from: "u1", text: "Hey, are we still meeting?", time: "9:04 AM" },
-    { from: me, text: "Yes — 2pm at the museum entrance.", time: "9:06 AM" }
-  ];
-
-  chats[getChatId(me, "u2")] = [
-    { from: "u2", text: "Got the schedule 👍", time: "8:12 AM" },
-    { from: me, text: "Perfect, I added the new venue.", time: "8:15 AM" }
-  ];
-
-  chats[getChatId(me, "u3")] = [
-    { from: "u3", text: "I'll check it out", time: "7:58 AM" },
-    { from: me, text: "Cool — let me know if anything changes.", time: "8:05 AM" }
+    { from: "u1", text: "Hey!", time: "9:00 AM" },
+    { from: me, text: "Yo!", time: "9:01 AM" }
   ];
 
   saveChats(chats);
-}
-
-/* ---------- SIDEBAR ---------- */
-
-function getLastMessage(me, other) {
-  const chats = getChats();
-  const id = getChatId(me, other);
-  const msgs = chats[id];
-
-  if (!msgs || !msgs.length) return "No messages yet";
-
-  const last = msgs[msgs.length - 1];
-  return `${last.from}: ${last.text}`;
 }
 
 function renderUsers() {
   const list = document.getElementById("userList");
   if (!list) return;
 
-  const users = getUsers();
   const me = getActiveUser();
 
   list.innerHTML = "";
 
-  users.forEach(u => {
+  getUsers().forEach(u => {
     const li = document.createElement("li");
     li.className = "chat-preview";
 
-    const name = document.createElement("strong");
-    name.textContent = u.name;
-
-    const preview = document.createElement("small");
-    preview.textContent = getLastMessage(me, u.id);
-
-    li.appendChild(name);
-    li.appendChild(document.createElement("br"));
-    li.appendChild(preview);
+    li.innerHTML = `<strong>${u.name}</strong>`;
 
     li.onclick = () => openChat(u.id);
 
@@ -336,15 +321,13 @@ function renderUsers() {
   });
 }
 
-/* ---------- CHAT ---------- */
+function openChat(id) {
+  currentChatUser = id;
 
-function openChat(userId) {
-  currentChatUser = userId;
-
-  const user = getUsers().find(u => u.id === userId);
+  const user = getUsers().find(u => u.id === id);
 
   const title = document.getElementById("chatTitle");
-  if (title) title.textContent = "Chat with " + (user?.name || userId);
+  if (title) title.textContent = user ? user.name : "Chat";
 
   renderMessages();
 }
@@ -356,6 +339,7 @@ function sendMessage() {
   if (!text || !currentChatUser) return;
 
   const me = getActiveUser();
+
   const chats = getChats();
   const id = getChatId(me, currentChatUser);
 
@@ -371,7 +355,6 @@ function sendMessage() {
 
   input.value = "";
   renderMessages();
-  renderUsers();
 }
 
 function renderMessages() {
@@ -381,12 +364,13 @@ function renderMessages() {
   const me = getActiveUser();
 
   if (!currentChatUser) {
-    list.innerHTML = "<li>Select a conversation</li>";
+    list.innerHTML = `<li class="empty-state">Select a conversation</li>`;
     return;
   }
 
   const chats = getChats();
   const id = getChatId(me, currentChatUser);
+
   const messages = chats[id] || [];
 
   list.innerHTML = "";
@@ -395,14 +379,10 @@ function renderMessages() {
     const li = document.createElement("li");
     li.className = `msg ${m.from === me ? "me" : "them"}`;
 
-    const text = document.createElement("div");
-    text.textContent = m.text;
-
-    const meta = document.createElement("small");
-    meta.textContent = `${m.from} • ${m.time}`;
-
-    li.appendChild(text);
-    li.appendChild(meta);
+    li.innerHTML = `
+      <div class="bubble">${m.text}</div>
+      <small>${m.time}</small>
+    `;
 
     list.appendChild(li);
   });
@@ -411,62 +391,38 @@ function renderMessages() {
 }
 
 /* =========================
-   INIT (FINAL FIX)
-========================= */
-/* =========================
-   DASHBOARD
+   DASHBOARD + INIT
 ========================= */
 
 function renderDashboard() {
+  const taskCount = document.getElementById("dashboardTaskCount");
+  const contactCount = document.getElementById("dashboardContactCount");
+  const messageCount = document.getElementById("dashboardMessageCount");
 
-  const taskCount =
-    document.getElementById("dashboardTaskCount");
-
-  const contactCount =
-    document.getElementById("dashboardContactCount");
-
-  const messageCount =
-    document.getElementById("dashboardMessageCount");
-
-  if (taskCount) {
-
-    const activeTasks =
-      getTasks().filter(t => !t.done).length;
-
-    taskCount.textContent =
-      `${activeTasks} Active Tasks`;
-  }
-
-  if (contactCount) {
-
-    contactCount.textContent =
-      `${getContacts().length} Contacts`;
-  }
-
-  if (messageCount) {
-
-    messageCount.textContent =
-      `${getUsers().length} Conversations`;
-  }
+  if (taskCount) taskCount.textContent = `${getTasks().length} Tasks`;
+  if (contactCount) contactCount.textContent = `${getContacts().length} Contacts`;
+  if (messageCount) messageCount.textContent = `${getUsers().length} Chats`;
 }
 
-window.addEventListener("load", () => {
+function resetApp() {
+  localStorage.clear();
+  location.reload();
+}
 
+document.addEventListener("DOMContentLoaded", () => {
   initializeDemoData();
 
+  renderContacts();
+  renderTasks();
+  renderUsers();
   renderDashboard();
 
-  renderContacts();
-
-  renderTasks();
-
-  renderTaskStats?.();
-
-  renderUsers();
-
   const users = getUsers();
+  if (users.length) openChat(users[0].id);
 
-  if (users.length) {
-    openChat(users[0].id);
-  }
+  document.querySelectorAll("nav a").forEach(link => {
+    if (link.href === window.location.href) {
+      link.classList.add("active");
+    }
+  });
 });

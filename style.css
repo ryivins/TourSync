@@ -23,70 +23,6 @@
   --gold: #c9a227;
   --green: #2a9d8f;
 }
-/* =========================
-   GLOBAL UI SYSTEM
-========================= */
-
-.btn {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s ease;
-  font-weight: bold;
-}
-
-.btn-primary {
-  background: var(--red);
-  color: white;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: var(--panel2);
-  color: var(--text);
-  border: 1px solid #444;
-}
-
-.btn-secondary:hover {
-  border-color: var(--red);
-}
-/* =========================
-   GLOBAL INPUT SYSTEM
-========================= */
-
-.input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: var(--text);
-  outline: none;
-}
-
-.input:focus {
-  border-color: var(--red);
-}
-/* =========================
-   GLOBAL CARD SYSTEM
-========================= */
-
-.card {
-  background: var(--panel);
-  border: 1px solid #444;
-  border-radius: 14px;
-  padding: 20px;
-  transition: 0.2s ease;
-}
-
-.card:hover {
-  border-color: var(--red);
-  transform: translateY(-2px);
-}
 
 /* =========================
    BODY
@@ -129,11 +65,92 @@ nav a:hover {
   opacity: 1;
 }
 
+nav a.active {
+  color: var(--red);
+  opacity: 1;
+  font-weight: bold;
+}
+
 /* =========================
    PAGE CONTAINER
 ========================= */
 .container {
   padding: 25px;
+}
+
+/* =========================
+   GLOBAL UI SYSTEM
+========================= */
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid #444;
+}
+
+.btn-secondary:hover {
+  border-color: var(--red);
+}
+
+/* =========================
+   INPUT SYSTEM
+========================= */
+.input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: var(--text);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--red);
+}
+
+/* =========================
+   CARD SYSTEM
+========================= */
+.card {
+  background: var(--panel);
+  border: 1px solid #444;
+  border-radius: 14px;
+  padding: 20px;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--red);
+  transform: translateY(-2px);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+  font-style: italic;
 }
 
 /* =========================
@@ -144,9 +161,7 @@ nav a:hover {
   height: calc(100vh - 80px);
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 .chat-sidebar {
   width: 300px;
   background: var(--panel);
@@ -160,46 +175,21 @@ nav a:hover {
   border-bottom: 1px solid #444;
 }
 
-.chat-sidebar input {
-  margin: 8px 10px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: var(--text);
-}
-
-.chat-sidebar button {
-  margin: 0 10px 10px 10px;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: var(--red);
-  color: white;
-  cursor: pointer;
-}
-
-/* =========================
-   USERS LIST
-========================= */
+/* USERS */
 #userList {
   list-style: none;
   overflow-y: auto;
   flex: 1;
 }
 
-/* =========================
-   CHAT PREVIEW (FIXED FOR YOUR JS)
-========================= */
+/* CHAT PREVIEW */
 .chat-preview {
   padding: 14px;
   border-bottom: 1px solid #444;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
   gap: 5px;
-
   transition: 0.2s;
 }
 
@@ -207,16 +197,13 @@ nav a:hover {
   background: var(--panel2);
 }
 
-/* ACTIVE CHAT (optional but useful) */
 .chat-preview.active {
   background: var(--panel2);
   border-left: 4px solid var(--red);
 }
 
-/* FIXED STYLING FOR JS ELEMENTS */
 .chat-preview strong {
   font-size: 18px;
-  font-weight: bold;
   color: var(--text);
 }
 
@@ -225,9 +212,7 @@ nav a:hover {
   color: var(--muted);
 }
 
-/* =========================
-   CHAT WINDOW
-========================= */
+/* CHAT WINDOW */
 .chat-window {
   flex: 1;
   display: flex;
@@ -239,101 +224,18 @@ nav a:hover {
   border-bottom: 1px solid #444;
 }
 
-/* =========================
-   MESSAGE LIST
-========================= */
+/* MESSAGE LIST */
 #messageList {
   flex: 1;
   list-style: none;
   padding: 20px;
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   gap: 14px;
-
-  scroll-behavior: smooth;
 }
 
-/* =========================
-   MESSAGE BUBBLES
-========================= */
-.msg {
-  max-width: 65%;
-  padding: 10px 14px;
-  border-radius: 14px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  word-break: break-word;
-}
-
-/* message text safety */
-.msg div {
-  word-break: break-word;
-}
-
-/* YOU */
-.msg.me {
-  background: var(--red);
-  color: white;
-  align-self: flex-end;
-}
-
-/* THEM */
-.msg.them {
-  background: var(--panel2);
-  color: var(--text);
-  align-self: flex-start;
-}
-
-/* timestamp */
-.msg small {
-  font-size: 11px;
-  opacity: 0.7;
-}
-/* =========================
-   MESSAGE UPGRADE LAYER
-========================= */
-
-.msg {
-  gap: 4px; /* slightly tighter for modern look */
-}
-
-/* new bubble wrapper */
-.msg .bubble {
-  padding: 10px 14px;
-  border-radius: 18px;
-  word-break: break-word;
-  line-height: 1.4;
-}
-
-/* YOU */
-.msg.me .bubble {
-  background: var(--red);
-  color: white;
-  border-bottom-right-radius: 6px;
-}
-
-/* THEM */
-.msg.them .bubble {
-  background: var(--panel2);
-  color: var(--text);
-  border-bottom-left-radius: 6px;
-}
-
-/* timestamp upgrade */
-.msg small {
-  font-size: 11px;
-  opacity: 0.6;
-  margin-left: 6px;
-}
-
-/* =========================
-   MESSAGE INPUT
-========================= */
+/* MESSAGE BOX */
 .message-box {
   display: flex;
   gap: 10px;
@@ -342,89 +244,51 @@ nav a:hover {
   background: var(--panel);
 }
 
-.message-box input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: var(--text);
+/* =========================
+   MESSAGES
+========================= */
+.msg {
+  max-width: 65%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.message-box button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
+.msg .bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.msg.me {
+  align-self: flex-end;
+}
+
+.msg.me .bubble {
   background: var(--red);
   color: white;
-  cursor: pointer;
-}
-.messages-layout {
-  display: flex;
-  height: calc(100vh - 80px);
+  border-bottom-right-radius: 6px;
 }
 
-/* LEFT SIDE */
-.messages-left {
-  width: 300px;
-  border-right: 1px solid #444;
-  padding-right: 10px;
-  display: flex;
-  flex-direction: column;
+.msg.them {
+  align-self: flex-start;
 }
 
-/* RIGHT SIDE */
-.messages-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* USER LIST */
-#userList {
-  list-style: none;
-  overflow-y: auto;
-  flex: 1;
-}
-
-/* CHAT ITEMS */
-.chat-preview {
-  padding: 14px;
-  border-bottom: 1px solid #444;
-  cursor: pointer;
-}
-
-.chat-preview:hover {
+.msg.them .bubble {
   background: var(--panel2);
+  color: var(--text);
+  border-bottom-left-radius: 6px;
 }
 
-.chat-preview.active {
-  border-left: 4px solid var(--red);
-  background: var(--panel2);
-}
-
-/* MESSAGE AREA */
-#messageList {
-  flex: 1;
-  overflow-y: auto;
-  list-style: none;
-  padding: 20px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* MESSAGE INPUT */
-.message-box {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  border-top: 1px solid #444;
+.msg small {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-left: 6px;
 }
 
 /* =========================
-   TASK SYSTEM
+   TASKS
 ========================= */
 .task {
   background: var(--panel);
@@ -448,181 +312,33 @@ nav a:hover {
 }
 
 /* =========================
-   CONTACTS
+   CONTACTS LAYOUT
 ========================= */
-#contactList li {
-  background: var(--panel);
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid #444;
+.contacts-layout {
+  display: flex;
+  height: calc(100vh - 80px);
 }
 
-/* =========================
-   DELETE BUTTON
-========================= */
-.delete {
-  color: var(--red);
-  cursor: pointer;
-  font-weight: bold;
+.contacts-left {
+  width: 40%;
+  min-width: 320px;
+  border-right: 1px solid #444;
+  padding-right: 15px;
+  overflow-y: auto;
 }
 
-/* =========================
-   FOOTER
-========================= */
-footer {
-  text-align: center;
+.contacts-right {
+  flex: 1;
   padding: 20px;
-  color: var(--muted);
-  border-top: 1px solid #444;
+  overflow-y: auto;
 }
 
-/* =========================
-   DASHBOARD
-========================= */
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.subtitle {
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.dashboard-btn {
-  background: var(--red);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* =========================
-   DASHBOARD GRID
-========================= */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(250px, 1fr));
-
-  gap: 20px;
-}
-
-/* =========================
-   DASHBOARD CARDS
-========================= */
-
-.dashboard-card {
-  background: var(--panel);
-  border: 1px solid #444;
-
-  border-radius: 14px;
-
-  padding: 22px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  transition: 0.2s ease;
-}
-
-.dashboard-card.clickable:hover {
-  transform: translateY(-4px);
-  border-color: var(--red);
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.card-content p {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.card-content small {
-  color: var(--muted);
-}
-
-.dashboard-card button {
-  background: var(--red);
-  color: white;
-
-  border: none;
-
-  padding: 10px 14px;
-
-  border-radius: 8px;
-
-  cursor: pointer;
-}
-
-/* =========================
-   QUICK ACTIONS
-========================= */
-
-.quick-actions {
-  margin-top: 40px;
-}
-
-.quick-actions h3 {
-  margin-bottom: 20px;
-}
-
-.quick-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(180px, 1fr));
-
-  gap: 15px;
-}
-
-.quick-grid button {
-  background: var(--panel);
-
-  border: 1px solid #444;
-
-  color: white;
-
-  padding: 18px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.quick-grid button:hover {
-  background: var(--panel2);
-  border-color: var(--red);
-}
-/* =========================
-   CONTACTS PAGE
-========================= */
-
-.page-header {
-  margin-bottom: 20px;
-}
-
-/* FORM CARD */
+/* CONTACT FORM */
 .contact-card {
   background: var(--panel);
   border: 1px solid #444;
-
   padding: 20px;
   border-radius: 14px;
-
   margin-bottom: 20px;
 }
 
@@ -633,94 +349,11 @@ footer {
   margin-top: 15px;
 }
 
-/* now uses global system */
-.contact-form .input {
-  width: 100%;
-}
-
-/* SEARCH */
 .search-bar {
   margin: 20px 0;
 }
 
-.search-bar .input {
-  width: 100%;
-}
-
-/* CONTACT ITEM */
-.contact-item {
-  background: var(--panel);
-  border: 1px solid #444;
-
-  padding: 15px;
-  border-radius: 12px;
-
-  margin-bottom: 10px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  transition: 0.2s ease;
-}
-
-.contact-item:hover {
-  transform: translateY(-2px);
-  border-color: var(--red);
-}
-
-.contact-item small {
-  display: block;
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-.contact-panel {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-
-  width: 320px;
-  background: var(--panel);
-  border: 1px solid #444;
-  border-radius: 14px;
-
-  padding: 20px;
-
-  z-index: 1000;
-}
-
-.contact-view textarea {
-  width: 100%;
-  margin-top: 6px;
-  resize: none;
-}
-
-.hidden {
-  display: none;
-}
-.contacts-layout {
-  display: flex;
-  height: calc(100vh - 80px);
-}
-
-/* LEFT SIDE */
-.contacts-left {
-  width: 40%;
-  min-width: 320px;
-  border-right: 1px solid #444;
-  padding-right: 15px;
-  overflow-y: auto;
-}
-
-/* RIGHT SIDE */
-.contacts-right {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* CONTACT LIST ITEM FEEL */
+/* CONTACT ITEMS */
 .contact-item {
   background: var(--panel);
   border: 1px solid #444;
@@ -736,27 +369,64 @@ footer {
   transform: translateY(-2px);
 }
 
-/* ACTIVE STATE */
 .contact-item.active {
   border-color: var(--red);
   background: var(--panel2);
 }
-/* ACTIONS */
+
+.contact-item small {
+  color: var(--muted);
+  margin-top: 5px;
+  display: block;
+}
+
 .contact-actions button {
   background: #5c1f25;
   color: white;
-
   border: none;
   padding: 8px 12px;
-
   border-radius: 6px;
-
   cursor: pointer;
 }
 
-/* EMPTY STATE */
-.empty-state {
+/* CONTACT PANEL */
+.contact-panel {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 320px;
+  background: var(--panel);
+  border: 1px solid #444;
+  border-radius: 14px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
   text-align: center;
   padding: 20px;
-  opacity: 0.6;
+  color: var(--muted);
+  border-top: 1px solid #444;
 }
