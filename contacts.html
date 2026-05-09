@@ -26,50 +26,53 @@
 
 </header>
 
-<main class="container">
+<main class="container contacts-layout">
 
-  <!-- HEADER -->
-  <div class="page-header">
+  <!-- LEFT: CONTACT LIST -->
+  <section class="contacts-left">
 
-    <div>
+    <div class="page-header">
       <h2>Contacts</h2>
-      <p class="subtitle">
-        Manage artists, venues, managers, and crew
-      </p>
+      <p class="subtitle">Manage artists, venues, managers, and crew</p>
     </div>
 
-  </div>
+    <div class="contact-card">
 
-  <!-- ADD CONTACT FORM -->
-  <div class="contact-card">
+      <div class="contact-form">
 
-    <h3>Add New Contact</h3>
+        <input id="firstName" class="input" placeholder="First Name">
+        <input id="lastName" class="input" placeholder="Last Name">
+        <input id="phone" class="input" placeholder="Phone">
+        <input id="email" class="input" placeholder="Email">
 
-  <div class="contact-form">
+      </div>
 
-  <input id="firstName" class="input" placeholder="First Name">
-  <input id="lastName" class="input" placeholder="Last Name">
-  <input id="phone" class="input" placeholder="Phone">
-  <input id="email" class="input" placeholder="Email">
+      <button type="button" class="btn btn-primary" onclick="addContact()">
+        + Add Contact
+      </button>
 
-</div>
+    </div>
 
-<button type="button" class="btn btn-primary" onclick="addContact()">
-  + Add Contact
-</button>
+    <div class="search-bar">
+      <input class="input" id="searchInput" placeholder="Search contacts...">
+    </div>
 
+    <ul id="contactList"></ul>
 
-  </div>
+  </section>
 
-  <!-- SEARCH -->
-  <div class="search-bar">
+  <!-- RIGHT: CONTACT DETAIL PANEL -->
+  <section class="contacts-right">
 
-  <input class="input" id="searchInput" placeholder="Search contacts...">
+    <div id="contactPanel">
 
-  </div>
+      <div id="contactDetails" class="empty-state">
+        Select a contact to view details
+      </div>
 
-  <!-- CONTACT LIST -->
-<ul id="contactList"></ul>
+    </div>
+
+  </section>
 
 </main>
 </body>

@@ -1,6 +1,7 @@
 /* =========================
    CONTACT SYSTEM
 ========================= */
+let selectedContactId = null;
 
 function getContacts() {
   return JSON.parse(localStorage.getItem("contacts")) || [];
@@ -21,12 +22,13 @@ function addContact() {
   const contacts = getContacts();
 
   contacts.push({
-    id: crypto.randomUUID(),
-    first,
-    last,
-    phone,
-    email
-  });
+  id: crypto.randomUUID(),
+  first,
+  last,
+  phone,
+  email,
+  notes: ""
+});
 
   saveContacts(contacts);
   renderContacts();
@@ -38,7 +40,6 @@ function addContact() {
 }
 
 function renderContacts() {
-
   const list = document.getElementById("contactList");
   if (!list) return;
 
@@ -51,9 +52,7 @@ function renderContacts() {
 
   if (contacts.length === 0) {
     list.innerHTML = `
-      <li class="empty-state">
-        No contacts yet. Add your first contact above.
-      </li>
+      <li class="empty-state">No contacts yet. Add your first contact above.</li>
     `;
     return;
   }
@@ -70,38 +69,106 @@ function renderContacts() {
       const li = document.createElement("li");
       li.className = "contact-item";
 
-      // LEFT SIDE (INFO)
-      const info = document.createElement("div");
+      if (selectedContactId === c.id) {
+        li.classList.add("active");
+      }
 
-      info.innerHTML = `
+      li.onclick = () => openContact(c.id);
+
+      li.innerHTML = `
         <strong>${c.first} ${c.last}</strong>
         <small>${c.email || "No email"} • ${c.phone || "No phone"}</small>
       `;
 
-      // ACTIONS
-      const actions = document.createElement("div");
-      actions.className = "contact-actions";
-
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "Delete";
-
-      delBtn.onclick = () => {
-
-        const updated =
-          getContacts().filter(contact => contact.id !== c.id);
-
-        saveContacts(updated);
-
-        renderContacts();
-      };
-
-      actions.appendChild(delBtn);
-
-      li.appendChild(info);
-      li.appendChild(actions);
-
       list.appendChild(li);
     });
+}
+
+function openContact(contactId) {
+  selectedContactId = contactId;
+
+  const contact = getContacts().find(c => c.id === contactId);
+  if (!contact) return;
+
+  const details = document.getElementById("contactDetails");
+
+  details.innerHTML = `
+    <div class="card">
+
+      <h3>${contact.first} ${contact.last}</h3>
+
+      <p><strong>Phone:</strong> ${contact.phone || "N/A"}</p>
+      <p><strong>Email:</strong> ${contact.email || "N/A"}</p>
+
+      <hr style="margin: 10px 0; opacity: 0.3;">
+
+      <label><strong>Notes</strong></label>
+
+      <textarea id="contactNotes" class="input" rows="6"
+        placeholder="Add notes...">${contact.notes || ""}</textarea>
+
+      <div style="margin-top: 10px; display:flex; gap:10px;">
+
+        <button class="btn btn-primary"
+          onclick="saveContactNotes('${contact.id}')">
+          Save Notes
+        </button>
+
+        <button class="btn btn-secondary"
+          onclick="editContact('${contact.id}')">
+          Edit Contact
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  renderContacts();
+}
+function saveContactNotes(id) {
+  const contacts = getContacts();
+
+  const notesEl = document.getElementById("contactNotes");
+
+  const updated = contacts.map(c => {
+    if (c.id === id) {
+      return {
+        ...c,
+        notes: notesEl ? notesEl.value : ""
+      };
+    }
+    return c;
+  });
+
+  saveContacts(updated);
+  renderContacts();
+}
+
+
+function editContact(id) {
+  const contacts = getContacts();
+
+  const updated = contacts.map(c => {
+    if (c.id !== id) return c;
+
+    const first = prompt("Edit first name:", c.first) || c.first;
+    const last = prompt("Edit last name:", c.last) || c.last;
+    const phone = prompt("Edit phone:", c.phone) || c.phone;
+    const email = prompt("Edit email:", c.email) || c.email;
+
+    return {
+      ...c,
+      first,
+      last,
+      phone,
+      email
+    };
+  });
+
+  saveContacts(updated);
+  renderContacts();
+  openContact(id); // refresh panel
 }
 /* =========================
    TASK SYSTEM
